@@ -72,12 +72,12 @@ echo "Installing fastest mirrorlists"
 
   #blackarch-mirrorlist
   cp -r /etc/pacman.d/blackarch-mirrorlist.backup /etc/pacman.d/blackarch-mirrorlist
-  sed 's/^#Server = https:/Server = https:/g' /etc/pacman.d/blackarch-mirrorlist  
+  sed 's/^#Server = https:/Server = https:/g' > /etc/pacman.d/blackarch-mirrorlist  
 
   #archlinux mirrorlists
   curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist 
-  sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
-  rankmirrors -n 10 /etc/pacman.d/mirrorlist
+  sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
+  rankmirrors -n 10 > /etc/pacman.d/mirrorlist
   # mv -v mirror-fastest.txt /etc/pacman.d/mirrorlist
 sleep 1s
 clear
@@ -109,7 +109,8 @@ echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
 echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting ready in 9 seconds"
+echo "Getting ready in 5 seconds"
+sleep 5s
 clear
 
 lsblk
@@ -139,15 +140,11 @@ case "$partitionutility" in
   ;;
 esac
 echo ""$partitionutility" is the selected disk utility tool for partition."
-sleep 3s
+sleep 2s
 clear
 
 echo "Getting ready for formatting partitions!"
-echo "root and boot partitions are mandatory."
-echo "home and swap partitions are optional but recommended!"
-echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting ready in 5 seconds"
-sleep 5s
+sleep 2s
 "$partitionutility" "$drive"
 clear
 
@@ -179,11 +176,11 @@ case "$filesystemtype" in
   ;;
 esac
 echo ""$filesystemtype" is the selected file system type."
-sleep 3s
+sleep 2s
 clear
 
 echo "Getting ready for formatting drives."
-sleep 3s
+sleep 2s
 lsblk
 echo "Enter the root partition (eg: /dev/sda1): "
 read rootpartition
@@ -239,7 +236,8 @@ pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-u
 #Gen fstab
 echo "generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
-sleep 1s
+cat /etc/fstab
+sleep 3s
 clear 
 
 #Setup for post-installation
@@ -251,7 +249,7 @@ clear
 #Unmount drives
 echo "unmounting all the drives"
 umount -R /mnt
-sleep 1s
+sleep 2s
 clear
 
 echo -ne "
@@ -262,7 +260,7 @@ echo -ne "
 │    rebooting in 5s      │
 ╰─────────────────────────╯
 "
-echo "Base Installation Finished. REBOOTING IN 10 SECONDS!!!"
+echo "Base Installation Finished. REBOOTING IN 5 SECONDS!!!"
 sleep 5s
 reboot
 
@@ -300,21 +298,16 @@ read hostname
 echo $hostname > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
-sleep 1s
+sleep 2s
 clear
 
 #Setting up hosts
 echo "setting up hosts file"
 echo "127.0.0.1       localhost" >> /etc/hosts
 echo "::1             localhost" >> /etc/hosts
-echo "127.0.1.1       $hostname.localdomain $hostname" >> /etc/hosts
-sleep 1s
-clear
-
-#checking hosts
-echo "checking /etc/hosts file"
+echo "127.0.0.1       $hostname.localdomain $hostname" >> /etc/hosts
 cat /etc/hosts
-sleep 1s
+sleep 2s
 clear
 
 # Install needed pkgs and tools by PACMAN..
@@ -377,11 +370,14 @@ mesa alsa-firmware alsa-lib'
   #xfce
   packages+='xfce4 xfce4-goodies'
 
+  #Browser
+  packages+='torbrowser-launcher'
+
   #blackarch
   packages+='blackarch-menus blackarch-config-cursor blackarch-config-icons blackarch-config-xfce'
 
   #blackarch-slim-tools
-  packages+='aircrack-ng amass arp-scan aquatone binwalk bulk-extractor bully burpsuite cewl chaos-client chntpw commix crackmapexec creddump crunch davtest dbd dirb dirbuster dmitry dns2tcp dnschef dnsenum dnsrecon dnsx enum4linux exiv2 exploitdb faradaysec fern-wifi-cracker ffuf fierce findomain fping gobuster guymager hashcat hashcat-utils hashdeep hashid hash-identifier hping hotpatch httpx hydra ike-scan inetsim iodine john kismet laudanum lbd legion lulzbuster macchanger magicrescue maltego maskprocessor massdns masscan metasploit msfdb mimikatz mitmproxy multimac nbtscan ncrack netdiscover netmask netsed netsniff-ng ngrep nikto nmap nuclei nuclei-templates onesixtyone openbsd-netcat ophcrack patator pdfid pdf-parser pipal pixiewps powersploit proxychains-ng proxytunnel proxify pth-toolkit ptunnel pwnat radare2 reaver rebind recon-ng redsocks responder rsmangler sakis3g samdump2 sbd scalpel scrounge-ntfs seclists set skipfish sleuthkit smbmap snmpcheck socat sploitctl spiderfoot spooftooph sqlmap ssldump sslscan sslsplit sslyze statsprocessor stunnel subfinder swaks tcpdump tcpick tcpreplay thc-ipv6 thc-pptp-bruter tor theharvester udptunnel unix-privesc-check voiphopper wafw00f wce webshells weevely wfuzz whatweb whois wifite windows-binaries winexe wireshark-qt wordlistctl wpscan zaproxy zdns zgrab2 zmap   torbrowser-launcher   '
+  packages+='aircrack-ng amass arp-scan aquatone binwalk bulk-extractor bully burpsuite cewl chaos-client chntpw commix crackmapexec creddump crunch davtest dbd dirb dirbuster dmitry dns2tcp dnschef dnsenum dnsrecon dnsx enum4linux exiv2 exploitdb faradaysec fern-wifi-cracker ffuf fierce findomain fping gobuster guymager hashcat hashcat-utils hashdeep hashid hash-identifier hping hotpatch httpx hydra ike-scan inetsim iodine john kismet laudanum lbd legion lulzbuster macchanger magicrescue maltego maskprocessor massdns masscan metasploit msfdb mimikatz mitmproxy multimac nbtscan ncrack netdiscover netmask netsed netsniff-ng ngrep nikto nmap nuclei nuclei-templates onesixtyone openbsd-netcat ophcrack patator pdfid pdf-parser pipal pixiewps powersploit proxychains-ng proxytunnel proxify pth-toolkit ptunnel pwnat radare2 reaver rebind recon-ng redsocks responder rsmangler sakis3g samdump2 sbd scalpel scrounge-ntfs seclists set skipfish sleuthkit smbmap snmpcheck socat sploitctl spiderfoot spooftooph sqlmap ssldump sslscan sslsplit sslyze statsprocessor stunnel subfinder swaks tcpdump tcpick tcpreplay thc-ipv6 thc-pptp-bruter tor theharvester udptunnel unix-privesc-check voiphopper wafw00f wce webshells weevely wfuzz whatweb whois wifite windows-binaries winexe wireshark-qt wordlistctl wpscan zaproxy zdns zgrab2 zmap'
 
 }
 
@@ -392,40 +388,42 @@ clear
 # Install needed pkgs and tools by AUR..
 echo "Installing needed pkgs and tools by AUR"
 
-# pikaur: AUR helper
-git clone https://aur.archlinux.org/pikaur.git
-cd pikaur
-makepkg -fsri
-cd ..
-# yay-bin: AUR helper
-git clone https://aur.archlinux.org/yay-bin.git
-cd yay-bin
-makepkg -fsri
-cd ..
-# remove dir 
-rm -rf yay-bin
-rm -rf pikaur
-sleep 1s
-clear
+  # pikaur: AUR helper
+  git clone https://aur.archlinux.org/pikaur.git
+  cd pikaur
+  makepkg -fsri
+  cd ..
+  
+  # yay-bin: AUR helper
+  git clone https://aur.archlinux.org/yay-bin.git
+  cd yay-bin
+  makepkg -fsri
+  cd ..
+  
+  # remove dir 
+  rm -rf yay-bin
+  rm -rf pikaur
+  sleep 1s
+  clear
 
 # Install pkgs and tools by AUR..
 install_packages() {
   
   #Browser
-  aur_pkgs+='barve-bin' 
+  aurpkgs+='barve-bin librewolf-bin' 
 
   #password manager
-  aur_pkgs+='bitwarden-rofi bitwarden-cli-bin' 
+  aurpkgs+='bitwarden-rofi bitwarden-cli-bin' 
 
   #code-editor
-  aurpkg+='vscodium-bin todotxt' 
+  aurpkgs+='vscodium-bin todotxt' 
 
   #Sync 
-  aur_pkgs+='megasync-bin syncthing-bin'
+  aurpkgs+='megasync-bin syncthing-bin'
 
 }
 
-pikaur -S --needed --noconfirm $aurpkg
+pikaur -S --needed --noconfirm $aurpkgs
 sleep 1s 
 clear
 
@@ -433,7 +431,7 @@ clear
 lsblk
 echo "Enter the boot partition to install bootloader. (eg: /dev/sda4): "
 read efipartition
-efidirectory="/boot/EFI/"
+efidirectory="/boot/efi/"
 if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
 fi
@@ -443,11 +441,26 @@ clear
 #Install grub
 lsblk
 sleep 2s 
-echo "Installing grub bootloader in /boot/efi parttiton"
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+echo "Installing grub bootloader in /boot parttiton"
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 1s
 clear
+
+#Gen fstab
+echo "generating fstab file"
+genfstab -U /mnt >> /mnt/etc/fstab
+cat /etc/fstab
+sleep 3s
+clear 
+
+#Personal config Setup
+git clone https://github.com/MikuX-Dev/ArchFiery.git
+cp -r ArchFiery/personal/shell/bash/* /etc/skel/
+cp -r ArchFiery/personal/shell/zsh/* /etc/skel/
+cp -r ArchFiery/wallpaper/* /usr/share/backgrounds/
+cp -r ArchFiery/themes/* /usr/share/themes/
+cp -r ArchFiery/icons/* /usr/share/icons/
 
 #Setting root user
 echo "Enter password for root user:"
@@ -473,13 +486,20 @@ sleep 2
 
 #Enable services
 echo "Enabling services.."
+systemctl enable irqbalance.service 
+systemctl enable udisks2.service
+systemctl enable httpd.service
+systemctl enable cronie.service
+systemctl enable sshd.service
+systemctl enable cups.service
 systemctl enable org.cups.cupsd.service
-systemctl enable lightdm
-systemctl enable NetworkManager
-systemctl enable bluetooth
+systemctl enable lightdm.service
+systemctl enable NetworkManager.service
+systemctl enable bluetooth.service
 sleep 2s
 clear
 
+#Personal
 #Installing fastest mirrors
 echo "Installing fastest mirrorlists"
   
@@ -495,8 +515,12 @@ echo "Installing fastest mirrorlists"
   curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist 
   sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
   # mv -v mirror-fastest.txt /etc/pacman.d/mirrorlist
+pacman -Syyu --noconfirm
 sleep 1s
 clear
+
+###edit sudo 
+echo 'Defaults env_keep += "HOME"' | sudo tee -a /etc/sudoers
 
 #End
 echo -ne "
