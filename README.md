@@ -36,8 +36,8 @@ Follow the on-screen instructions to complete the installation.
 
 To configure [ArchFiery](https://github.com/MikuX-Dev/ArchFiery), you'll need to fork the repository and edit the packages and tools. Locate the following lines in the script:
 
-- [`Install needed pkgs and tools by PACMAN..`]
-- [`# Install needed pkgs and tools by AUR..`]
+- `Install needed pkgs and tools by PACMAN..`
+- `# Install needed pkgs and tools by AUR..`
 
 Make the necessary changes according to your requirements.
 
