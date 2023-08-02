@@ -24,8 +24,10 @@ Ensure that you have an internet connection on the Arch ISO. If you have a wirel
 
 - Make sure the script is executable by running the following command:
     
+    ```
     chmod +x ArchFiery
 
+    ```
 - Finally, launch the script:
     
     ./ArchFiery
