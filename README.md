@@ -75,6 +75,6 @@ This project is licensed under the GNU General Public License v3.0. For more det
 
 Special thanks to the following individuals for their contributions:
 
-[Bugswriter](https://github.com/Bugswriter/arch-linux-magic) for arch-linux-magic
-[MatMoul](https://github.com/MatMoul/archfi) for archfi
+- [Bugswriter](https://github.com/Bugswriter/arch-linux-magic) for arch-linux-magic,
+- [MatMoul](https://github.com/MatMoul/archfi) for archfi.
 
