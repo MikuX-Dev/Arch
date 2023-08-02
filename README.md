@@ -41,17 +41,6 @@ To configure [ArchFiery](https://github.com/MikuX-Dev/ArchFiery), you'll need to
 
 Make the necessary changes according to your requirements.
 
-## License:
-
-This project is licensed under the GNU General Public License v3.0. For more details, please refer to the [LICENSE](https://github.com/MikuX-Dev/ArchFiery/blob/master/LICENSE) file.
-
-## Credits:
-
-Special thanks to the following individuals for their contributions:
-
-[Bugswriter](https://github.com/Bugswriter/arch-linux-magic) for arch-linux-magic
-[MatMoul](https://github.com/MatMoul/archfi) for archfi
-
 ## TODOs
 
 - [ ] Interactive User Interface: Create a user-friendly and interactive interface for [ArchFiery](https://github.com/MikuX-Dev/ArchFiery), similar to [MatMoul](https://github.com/MatMoul/archfi). This can include menus, prompts, and clear instructions to guide the user through the installation process.
@@ -77,3 +66,15 @@ Special thanks to the following individuals for their contributions:
 - [ ] Comprehensive Documentation: Create detailed documentation or a user guide that explains how to use [ArchFiery](https://github.com/MikuX-Dev/ArchFiery), including step-by-step instructions and explanations of each option. This will help users understand the installation process and troubleshoot any issues they may encounter.
 
 Remember that [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) should respect the Arch Linux principles of simplicity, minimalism, and user choice while incorporating features inspired by [MatMoul](https://github.com/MatMoul/archfi).
+
+## License:
+
+This project is licensed under the GNU General Public License v3.0. For more details, please refer to the [LICENSE](https://github.com/MikuX-Dev/ArchFiery/blob/master/LICENSE) file.
+
+## Credits:
+
+Special thanks to the following individuals for their contributions:
+
+[Bugswriter](https://github.com/Bugswriter/arch-linux-magic) for arch-linux-magic
+[MatMoul](https://github.com/MatMoul/archfi) for archfi
+
