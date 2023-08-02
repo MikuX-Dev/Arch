@@ -15,22 +15,21 @@ To install ArchFiery, follow these steps:
 Ensure that you have an internet connection on the Arch ISO. If you have a wireless connection, you can use the [`iwctl`](https://wiki.archlinux.org/index.php/Iwd#iwctl) command. For detailed instructions, refer to the [Network configuration](https://wiki.archlinux.org/index.php/Network_configuration) guide in the Arch Linux documentation.  
 
 - Clone the [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) repository using the following command:
-
+    ```
     git clone https://github.com/MikuX-Dev/ArchFiery.git
-
+    ```
 - Change to the [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) directory:    
-    
+    ```
     cd ArchFiery
-
-- Make sure the script is executable by running the following command:
-    
+    ```
+- Make sure the script is executable by running the following command: 
     ```
     chmod +x ArchFiery
     ```
 - Finally, launch the script:
-    
+    ```
     ./ArchFiery
-
+    ```
 Follow the on-screen instructions to complete the installation.
 
 ## Configuration:
