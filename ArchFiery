@@ -67,18 +67,20 @@ clear
 echo "Installing fastest mirrorlists"
   
   #backup mirrorlist
+  echo "backingup mirrorlists"
   mv -v /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
   mv -v /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
 
   #blackarch-mirrorlist
+  echo "blackarch-mirrorlist setup"
   cp -r /etc/pacman.d/blackarch-mirrorlist.backup /etc/pacman.d/blackarch-mirrorlist
   sed 's/^#Server = https:/Server = https:/g' > /etc/pacman.d/blackarch-mirrorlist  
 
   #archlinux mirrorlists
+  echo "archlinux-mirrorlist setup"
   curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist 
   sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/mirrorlist
-  # mv -v mirror-fastest.txt /etc/pacman.d/mirrorlist
 sleep 1s
 clear
 
@@ -237,7 +239,7 @@ pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-u
 echo "generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
-sleep 3s
+sleep 2s
 clear 
 
 #Setup for post-installation
@@ -265,6 +267,64 @@ sleep 5s
 reboot
 
 #part2
+#starting post_install
+echo -ne "
+╭─────── ArchFiery ───────╮
+│      post_install       │
+│     starting in 5s      │
+╰─────────────────────────╯
+"
+sleep 5s 
+clear
+
+#Enabling multilib repo.
+echo "Enabling multilib repo"
+# Check if multilib repository exists in pacman.conf
+if grep -q "\[multilib\]" /etc/pacman.conf; then
+    # Multilib repository exists, remove comment if it is commented out
+  sudo sed -i '/^\[multilib\]/,/Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
+else
+    # Multilib repository does not exist, add it to pacman.conf
+  echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | sudo tee -a /etc/pacman.conf
+for
+clear
+
+#Enabling Community repo.
+echo "Enabling community repo"
+# Check if community repository exists in pacman.conf
+if grep -q "\[community\]" /etc/pacman.conf; then
+    # Community repository exists, remove comment if it is commented out
+  sudo sed -i '/^\[community\]/,/Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
+else
+    # Community repository does not exist, add it to pacman.conf
+  echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | sudo tee -a /etc/pacman.conf
+for
+pacman -Syy --noconfirm pacman-contrib
+clear
+
+#Installing fastest mirrors
+echo "Installing fastest mirrorlists"  
+  #backup mirrorlist
+  echo "backingup mirrorlists"
+  mv -v /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+  mv -v /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
+
+  #blackarch-mirrorlist
+  echo "blackarch-mirrorlist setup"
+  cp -r /etc/pacman.d/blackarch-mirrorlist.backup /etc/pacman.d/blackarch-mirrorlist
+  sed 's/^#Server = https:/Server = https:/g' /etc/pacman.d/blackarch-mirrorlist  
+
+  #archlinux mirrorlists
+  echo "archlinux-mirrorlist setup"
+  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist 
+  sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
+  rankmirrors -n 10 > /etc/pacman.d/mirrorlist
+pacman -Syyu --noconfirm archlinux-keyring blackarch-keyring 
+pacman-key --init
+pacman-key --populate
+sleep 1s
+clear
+
 #Replace Asia/kolkata with your timezone
 echo "setting timezone"
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
@@ -281,13 +341,13 @@ clear
 
 #Setting lang
 echo "setting LANG variable"
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
+sed -i 's/^#LANG=en_US.UTF-8/LANG=en_US.UTF-8/g' /etc/locale.conf
 sleep 1s
 clear
 
 #Setting console keyboard
 echo "setting console keyboard layout"
-echo "KEYMAP=us" > /etc/vconsole.conf
+sed -i 's/^#KEYMAP=us/KEYMAP=us/g' /etc/vconsole.conf
 sleep 1s
 clear
 
@@ -380,14 +440,12 @@ mesa alsa-firmware alsa-lib'
   packages+='aircrack-ng amass arp-scan aquatone binwalk bulk-extractor bully burpsuite cewl chaos-client chntpw commix crackmapexec creddump crunch davtest dbd dirb dirbuster dmitry dns2tcp dnschef dnsenum dnsrecon dnsx enum4linux exiv2 exploitdb faradaysec fern-wifi-cracker ffuf fierce findomain fping gobuster guymager hashcat hashcat-utils hashdeep hashid hash-identifier hping hotpatch httpx hydra ike-scan inetsim iodine john kismet laudanum lbd legion lulzbuster macchanger magicrescue maltego maskprocessor massdns masscan metasploit msfdb mimikatz mitmproxy multimac nbtscan ncrack netdiscover netmask netsed netsniff-ng ngrep nikto nmap nuclei nuclei-templates onesixtyone openbsd-netcat ophcrack patator pdfid pdf-parser pipal pixiewps powersploit proxychains-ng proxytunnel proxify pth-toolkit ptunnel pwnat radare2 reaver rebind recon-ng redsocks responder rsmangler sakis3g samdump2 sbd scalpel scrounge-ntfs seclists set skipfish sleuthkit smbmap snmpcheck socat sploitctl spiderfoot spooftooph sqlmap ssldump sslscan sslsplit sslyze statsprocessor stunnel subfinder swaks tcpdump tcpick tcpreplay thc-ipv6 thc-pptp-bruter tor theharvester udptunnel unix-privesc-check voiphopper wafw00f wce webshells weevely wfuzz whatweb whois wifite windows-binaries winexe wireshark-qt wordlistctl wpscan zaproxy zdns zgrab2 zmap'
 
 }
-
 pacman -S --needed --noconfirm $packages 
 sleep 1s 
 clear
 
 # Install needed pkgs and tools by AUR..
 echo "Installing needed pkgs and tools by AUR"
-
   # pikaur: AUR helper
   git clone https://aur.archlinux.org/pikaur.git
   cd pikaur
@@ -405,7 +463,6 @@ echo "Installing needed pkgs and tools by AUR"
   rm -rf pikaur
   sleep 1s
   clear
-
 # Install pkgs and tools by AUR..
 install_packages() {
   
@@ -478,8 +535,9 @@ clear
 
 #Adding sudo previliages to the user you created
 echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."
-sleep 3s
+sleep 1s
 echo "Giving sudo access to "$username"!"
+#sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
 echo "$username ALL=(ALL) ALL" >> /etc/sudoers.d/$username
 clear
 sleep 2
@@ -499,27 +557,7 @@ systemctl enable bluetooth.service
 sleep 2s
 clear
 
-#Personal
-#Installing fastest mirrors
-echo "Installing fastest mirrorlists"
-  
-  #backup mirrorlist
-  mv -v /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-  mv -v /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
-
-  #blackarch-mirrorlist
-  cp -r /etc/pacman.d/blackarch-mirrorlist.backup /etc/pacman.d/blackarch-mirrorlist
-  sed 's/^#Server = https:/Server = https:/g' /etc/pacman.d/blackarch-mirrorlist  
-
-  #archlinux mirrorlists
-  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist 
-  sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
-  # mv -v mirror-fastest.txt /etc/pacman.d/mirrorlist
-pacman -Syyu --noconfirm
-sleep 1s
-clear
-
-###edit sudo 
+#edit sudo 
 echo 'Defaults env_keep += "HOME"' | sudo tee -a /etc/sudoers
 
 #End
