@@ -1,61 +1,6 @@
 #!/usr/bin/env bash
 clear
 
-# Function to display the help message
-show_help() {
-  echo "Usage: ArchFiery [options]"
-  echo ""
-  echo "Options:"
-  echo "  -h, --help      Show this help message and exit"
-  echo "  -e, --edit      Edit your necessary packages and tools before executing ArchFiery"
-  echo ""
-}
-
-# Check for help option
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-  show_help
-  exit 0
-fi 
-
-# Function to install a text editor (nano or vim)
-install_editor() {
-  local editor="$1"
-  echo "The chosen text editor is not installed. Installing $editor..."
-  sudo pacman -S --noconfirm "$editor"
-}
-
-# Check for edit option
-if [[ "$1" == "-e" || "$1" == "--edit" ]]; then
-  # Prompt user to choose a text editor
-  read -p "Choose a text editor (nano/vim): " chosen_editor
-
-  # Check if the chosen editor is supported
-  if [[ "$chosen_editor" != "nano" && "$chosen_editor" != "vim" ]]; then
-    echo "Unsupported text editor. Please choose 'nano' or 'vim'."
-    exit 1
-  fi
-
-  # Check if the chosen editor is installed
-  if ! command -v "$chosen_editor" &> /dev/null; then
-    read -p "The '$chosen_editor' text editor is not installed. Do you want to install it? (y/n): " choice
-    if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
-      install_editor "$chosen_editor"
-    else
-      echo "You need a text editor to proceed with the editing. Exiting..."
-      exit 1
-    fi
-  fi
-
-  # Your code to open the necessary files for editing using the chosen editor
-  if [[ "$chosen_editor" == "nano" ]]; then
-    nano ArchFiery
-  elif [[ "$chosen_editor" == "vim" ]]; then
-    vim ArchFiery
-  fi
-  exit 0
-fi 
-
-
 #Main Start
 echo -ne "
 ╭─────── ArchFiery ───────╮

@@ -6,17 +6,21 @@ Just a simple bash script to install Arch Linux after you have booted on the off
 
 With this script, you can install Arch Linux with two simple terminal commands.
 
-This wizard is made to install minimum packages (Base, bootloader and optionally ArchFiery).
-
-At the end of this wizard, you can install or launch [ArchFiery](https://github.com/MikuX-Dev/) (Arch Linux Desktop Install) to install and configure desktop packages.
+This wizard is made to install packages (Base, bootloader, optionally [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) and [Blackarch-tools](https://blackarch.org/tools) "minimum-tools" or "full-tools").
 
 ## How to use
 
-First, boot with the [last Arch Linux image](https://www.archlinux.org/download/) with a [bootable device](https://wiki.archlinux.org/index.php/USB_flash_installation_media).
+First fork this repo and edit the packages and tools by finding this --> "# Install needed pkgs and tools by PACMAN.." and "# Install needed pkgs and tools by AUR.." 
+
+Then, boot with the [last Arch Linux image](https://www.archlinux.org/download/) with a [bootable device](https://wiki.archlinux.org/index.php/USB_flash_installation_media).
 
 Then make sure you have Internet connection on the Arch iso. If you have a wireless connection the [`iwctl`](https://wiki.archlinux.org/index.php/Iwd#iwctl) command might be useful to you. You can also read the [Network configuration](https://wiki.archlinux.org/index.php/Network_configuration) from the Arch Linux guide for more detailed instructions.
 
 Then download the script with from the command line:
+
+clone your repo:
+
+    git clone https://github.com/[`$USERNAME`]/ArchFiery.git
 
 use this instead:
 
