@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 clear
 
 #Main Start
@@ -13,16 +14,7 @@ echo -ne "
 echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.08.1 (GPL-3.0)"
 sleep 1s 
 clear
-#echo -ne "
-#╭────────────────────────╮
-#│ CHECK FOR HELP COMMAND │
-#│------------------------│
-#│      ArchFiery -h      │
-#│          OR            │
-#│    ArchFiery --help    │
-#╰────────────────────────╯
-#"
-#sleep 1s
+
 echo "Installation guide starts now.."
 sleep 2s
 clear
@@ -99,6 +91,7 @@ timedatectl set-ntp true
 sleep 1s
 clear
 
+#Setting up drive
 echo "Setting Up drive"
 lsblk
 echo "Enter the drive to install arch linux on it. (/dev/...)"
@@ -233,7 +226,7 @@ clear
 # Installing base system with lts-kernel, intel-ucode and duel boot system too
 echo "Installing Base system with lts kernel!!!"
 sleep 1s
-pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode mkinitcpio-firmware grub efibootmgr os-prober
+pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode
 
 #Gen fstab
 echo "generating fstab file"
@@ -243,26 +236,26 @@ sleep 2s
 clear 
 
 #Setup for post-installation
-sed '1,/^#part2$/d' ArchFiery > /mnt/post_install.sh
+sed '1,/^#part2$/d' ArchFiery.sh > /mnt/post_install.sh
 chmod +x /mnt/post_install.sh
 arch-chroot /mnt ./post_install.sh
 clear
+sleep 1s
 
 #Unmount drives
 echo "unmounting all the drives"
 umount -R /mnt
-sleep 2s
+sleep 1s
 clear
 
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │      Installation       │
 │        completed        │
-│post_install after reboot│
 │    rebooting in 5s      │
 ╰─────────────────────────╯
 "
-echo "Base Installation Finished. REBOOTING IN 5 SECONDS!!!"
+echo "Installation Finished. REBOOTING IN 5 SECONDS!!!"
 sleep 5s
 reboot
 
@@ -312,16 +305,21 @@ echo "Installing fastest mirrorlists"
   #blackarch-mirrorlist
   echo "blackarch-mirrorlist setup"
   cp -r /etc/pacman.d/blackarch-mirrorlist.backup /etc/pacman.d/blackarch-mirrorlist
-  sed 's/^#Server = https:/Server = https:/g' /etc/pacman.d/blackarch-mirrorlist  
-
+  sed -i 's/^#Server = https:/Server = https:/g' /etc/pacman.d/blackarch-mirrorlist  
+  rankmirrors -n 10 > /etc/pacman.d/blackarch-mirrorlist
   #archlinux mirrorlists
   echo "archlinux-mirrorlist setup"
   curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist 
   sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/mirrorlist
-pacman -Syyu --noconfirm archlinux-keyring blackarch-keyring 
+pacman -Syy --noconfirm archlinux-keyring blackarch-keyring 
 pacman-key --init
 pacman-key --populate
+pacman -Fyy 
+pacman-db-upgrade
+updatedb
+sync
+pacman -Syy
 sleep 1s
 clear
 
@@ -334,14 +332,14 @@ clear
 
 #Gen locale
 echo "generating locale"
-echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
 locale-gen
 sleep 1s
 clear
 
 #Setting lang
 echo "setting LANG variable"
-sed -i 's/^#LANG=en_US.UTF-8/LANG=en_US.UTF-8/g' /etc/locale.conf
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
 sleep 1s
 clear
 
@@ -358,16 +356,16 @@ read hostname
 echo $hostname > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
-sleep 2s
+sleep 1s
 clear
 
 #Setting up hosts
 echo "setting up hosts file"
 echo "127.0.0.1       localhost" >> /etc/hosts
 echo "::1             localhost" >> /etc/hosts
-echo "127.0.0.1       $hostname.localdomain $hostname" >> /etc/hosts
+echo "127.0.1.1       $hostname" >> /etc/hosts
 cat /etc/hosts
-sleep 2s
+sleep 1s
 clear
 
 # Install needed pkgs and tools by PACMAN..
@@ -400,8 +398,11 @@ mesa alsa-firmware alsa-lib'
   #archive tools
   packages+='ack xarchiver p7zip zip unzip gzip tar bzip3 unrar xz zstd'
 
+  #Document Viewer
+  packages+='libreoffice-still'
+
   #dev tools
-  packages+='f2fs-tools ntfs-3g mtools dosfstools devtools npm qemu-tools qemu-emulators-full qemu-system-x86-firmware cargo make go lua perl ruby rust rustup cmake gcc gcc-libs gdb clang llvm ccache curl wget sed'
+  packages+='archiso f2fs-tools automake gawk gammu gnome-keyring ntfs-3g mtools dosfstools devtools multilib-devel npm qemu-tools qemu-emulators-full qemu-system-x86-firmware cargo make go lua perl ruby rust rustup cmake gcc gcc-libs gdb ppp rp-pppoe pptpclient reiserfsprogs  clang llvm ccache curl wget sed'
 
   #lightdm lockscreen
   packages+='lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings'
@@ -413,7 +414,7 @@ mesa alsa-firmware alsa-lib'
   packages+='xdg-user-dirs-gtk xdg-desktop-portal-gtk'
 
   #other
-  packages+='gvfs-mtp gvfs apache udisks2 cronie gnome-keyring irqbalance plocate arch-install-scripts arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib'
+  packages+='arch-wiki-docs linux-lts-docs linux-hardened-docs  gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
 
   #application
   packages+='hexchat htop galculator fwupd ufw redshift ddrescue'
@@ -422,16 +423,16 @@ mesa alsa-firmware alsa-lib'
   packages+='openssh gnupg'
 
   #fonts
-  packages+='noto-fonts ttf-bitstream-vera ttf-dejavu ttf-droid ttf-inconsolata ttf-indic-otf ttf-liberation ttf-jetbrains-mono-nerd ttf-hack-nerd ttf-firacode-nerd'
+  packages+='noto-fonts fontconfig ttf-bitstream-vera ttf-dejavu ttf-droid ttf-inconsolata ttf-indic-otf ttf-liberation ttf-jetbrains-mono-nerd ttf-hack-nerd ttf-firacode-nerd'
 
   #xorg
   packages+='xorg xorg-server xorg-xinit xcompmgr'
 
-  #xfce
-  packages+='xfce4 xfce4-goodies'
+  #System 
+  packages+='xfce4 xfce4-goodies plank ranger trash-cli ncdu mkinitcpio-archiso mkinitcpio-nfs-utils nfs-utils nilfs-utils nvme-cli nbd ndisc6 obsidian feh menumaker openconnect partclone gparted '
 
   #Browser
-  packages+='torbrowser-launcher'
+  packages+='tor'
 
   #blackarch
   packages+='blackarch-menus blackarch-config-cursor blackarch-config-icons blackarch-config-xfce'
@@ -461,13 +462,18 @@ echo "Installing needed pkgs and tools by AUR"
   # remove dir 
   rm -rf yay-bin
   rm -rf pikaur
-  sleep 1s
   clear
 # Install pkgs and tools by AUR..
 install_packages() {
   
   #Browser
-  aurpkgs+='barve-bin librewolf-bin' 
+  aurpkgs+='barve-bin librewolf-bin tor-browser' 
+
+  #libreoffice 
+  aurpkgs+='libreoffice-extension-languagetool'
+
+  #other
+  packages+='mkinitcpio-firmware mkinitcpio-openswap mkinitcpio-numlock i2p'
 
   #password manager
   aurpkgs+='bitwarden-rofi bitwarden-cli-bin' 
@@ -493,13 +499,14 @@ if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
 fi
 mount "$efipartition" "$efidirectory"
+sleep 1s 
 clear
 
 #Install grub
 lsblk
 sleep 2s 
-echo "Installing grub bootloader in /boot parttiton"
-grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+echo "Installing grub bootloader in /boot/efi parttiton"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 1s
 clear
@@ -508,16 +515,27 @@ clear
 echo "generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
-sleep 3s
+sleep 2s
 clear 
 
-#Personal config Setup
-git clone https://github.com/MikuX-Dev/ArchFiery.git
-cp -r ArchFiery/personal/shell/bash/* /etc/skel/
-cp -r ArchFiery/personal/shell/zsh/* /etc/skel/
-cp -r ArchFiery/wallpaper/* /usr/share/backgrounds/
-cp -r ArchFiery/themes/* /usr/share/themes/
-cp -r ArchFiery/icons/* /usr/share/icons/
+#edit sudo 
+echo 'Defaults env_keep += "HOME"' | sudo tee -a /etc/sudoers
+
+#Personal user config Setup
+git clone https://github.com/MikuX-Dev/dotfiles.git
+#shell
+cp -r dotfiles/shell/bash/* /etc/skel/
+cp -r dotfiles/shell/zsh/* /etc/skel/
+#themes
+cp -r dotfiles/themes/* /usr/share/themes/
+cp -r dotfiles/icons/* /usr/share/icons/
+#config
+#cp -r dotfiles/config/* /etc/
+#wallpaper
+cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
+#grub-theme
+cp -r dotfiles/themes/grub/src/* /usr/share/grub/themes/
+grub-mkconfig -o /boot/grub/grub.cfg
 
 #Setting root user
 echo "Enter password for root user:"
@@ -528,7 +546,7 @@ clear
 echo "Adding regular user!"
 echo "Enter username to add a regular user: "
 read username
-useradd -m -G wheel -s /bin/bash $username
+useradd -m -G wheel -s /bin/zsh $username
 echo "Enter password for "$username": "
 passwd $username
 clear
@@ -544,21 +562,10 @@ sleep 2
 
 #Enable services
 echo "Enabling services.."
-systemctl enable irqbalance.service 
-systemctl enable udisks2.service
-systemctl enable httpd.service
-systemctl enable cronie.service
-systemctl enable sshd.service
-systemctl enable cups.service
-systemctl enable org.cups.cupsd.service
-systemctl enable lightdm.service
-systemctl enable NetworkManager.service
-systemctl enable bluetooth.service
+enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'cups.service' 'org.cups.cupsd.service' 'lightdm.service' 'NetworkManager.service' 'bluetooth.service')
+systemctl enable ${enable_services[@]}
 sleep 2s
 clear
-
-#edit sudo 
-echo 'Defaults env_keep += "HOME"' | sudo tee -a /etc/sudoers
 
 #End
 echo -ne "
