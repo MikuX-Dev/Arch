@@ -82,6 +82,7 @@ echo "Updating Keyrings.."
 pacman -Syy --needed --noconfirm archlinux-keyring blackarch-keyring 
 pacman-key --init
 pacman-key --populate
+pacman -Syy
 sleep 1s
 clear
 
@@ -226,7 +227,7 @@ clear
 # Installing base system with lts-kernel, intel-ucode and duel boot system too
 echo "Installing Base system with lts kernel!!!"
 sleep 1s
-pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode
+pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode 
 
 #Gen fstab
 echo "generating fstab file"
@@ -312,12 +313,11 @@ echo "Installing fastest mirrorlists"
   curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist 
   sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/mirrorlist
-pacman -Syy --noconfirm archlinux-keyring blackarch-keyring 
+pacman -S --noconfirm archlinux-keyring blackarch-keyring 
 pacman-key --init
 pacman-key --populate
 pacman -Fyy 
 pacman-db-upgrade
-updatedb
 sync
 pacman -Syy
 sleep 1s
@@ -414,7 +414,7 @@ mesa alsa-firmware alsa-lib'
   packages+='xdg-user-dirs-gtk xdg-desktop-portal-gtk'
 
   #other
-  packages+='arch-wiki-docs linux-lts-docs linux-hardened-docs  gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
+  packages+='arch-wiki-docs linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
 
   #application
   packages+='hexchat htop galculator fwupd ufw redshift ddrescue'
@@ -431,7 +431,7 @@ mesa alsa-firmware alsa-lib'
   #System 
   packages+='xfce4 xfce4-goodies plank ranger trash-cli ncdu mkinitcpio-archiso mkinitcpio-nfs-utils nfs-utils nilfs-utils nvme-cli nbd ndisc6 obsidian feh menumaker openconnect partclone gparted '
 
-  #Browser
+  #privacy
   packages+='tor'
 
   #blackarch
@@ -507,6 +507,7 @@ lsblk
 sleep 2s 
 echo "Installing grub bootloader in /boot/efi parttiton"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+sed -i "s/^#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g" 
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 1s
 clear
@@ -515,7 +516,7 @@ clear
 echo "generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
-sleep 2s
+sleep 3s
 clear 
 
 #edit sudo 
@@ -546,7 +547,7 @@ clear
 echo "Adding regular user!"
 echo "Enter username to add a regular user: "
 read username
-useradd -m -G wheel -s /bin/zsh $username
+useradd -m -G wheel -s /bin/bash $username
 echo "Enter password for "$username": "
 passwd $username
 clear
@@ -555,33 +556,15 @@ clear
 echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."
 sleep 1s
 echo "Giving sudo access to "$username"!"
-#sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
-echo "$username ALL=(ALL) ALL" >> /etc/sudoers.d/$username
+sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
+#echo "$username ALL=(ALL) ALL" >> /etc/sudoers.d/$username
 clear
-sleep 2
+sleep 1s
 
 #Enable services
 echo "Enabling services.."
 enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'cups.service' 'org.cups.cupsd.service' 'lightdm.service' 'NetworkManager.service' 'bluetooth.service')
 systemctl enable ${enable_services[@]}
-sleep 2s
+sleep 1s
 clear
 
-#End
-echo -ne "
-╭─────── ArchFiery ───────╮
-│      Installation       │
-│        completed        │
-│    reboot your device   │
-╰─────────────────────────╯
-"
-
-#Unmounting drives
-echo "unmounting all the drives"
-umount -R /mnt
-sleep 2s
-
-#remove sh file
-rm -rf /mnt/post_install.sh
-
-exit 
