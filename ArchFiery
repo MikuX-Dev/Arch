@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 clear 
 
-# blackarch-installer version
-VERSION='1.2.24'
+# archfiery version
+VERSION='1.0.0'
 
 # path to blackarch-installer
 BI_PATH='/usr/share/blackarch-installer'
@@ -226,7 +226,7 @@ err()
 banner()
 {
   columns="$(tput cols)"
-  str="--==[ blackarch-installer v$VERSION ]==--"
+  str="--==[ ArchFiery v$VERSION ]==--"
 
   printf "${BLUEB}%*s${NC}\n" "${COLUMNS:-$(tput cols)}" | tr ' ' '-'
 
