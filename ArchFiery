@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
-################################################################################
-#                                                                              #
-# blackarch-installer - Official Installer for BlackArch Linux                 #
-#                                                                              #
-# AUTHOR                                                                       #
-# noptrix@nullsecurity.net                                                     #
-#                                                                              #
-################################################################################
-
+clear 
 
 # blackarch-installer version
 VERSION='1.2.24'
