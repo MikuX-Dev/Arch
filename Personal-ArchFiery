@@ -13,7 +13,6 @@ echo -ne "
 "
 echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.08.1 (GPL-3.0)"
 sleep 1s 
-clear
 
 echo "Installation guide starts now.."
 sleep 2s
@@ -227,7 +226,7 @@ clear
 # Installing base system with lts-kernel, intel-ucode and duel boot system too
 echo "Installing Base system with lts kernel!!!"
 sleep 1s
-pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode 
+pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g
 
 #Gen fstab
 echo "generating fstab file"
@@ -241,12 +240,12 @@ sed '1,/^#part2$/d' ArchFiery.sh > /mnt/post_install.sh
 chmod +x /mnt/post_install.sh
 arch-chroot /mnt ./post_install.sh
 clear
-sleep 1s
+sleep 2s
 
 #Unmount drives
 echo "unmounting all the drives"
 umount -R /mnt
-sleep 1s
+sleep 2s
 clear
 
 echo -ne "
@@ -332,7 +331,7 @@ clear
 
 #Gen locale
 echo "generating locale"
-sed -i 's/#\(en_US\.UTF-8\)/\1/' /etc/locale.gen
+ /etc/locale.gen
 locale-gen
 sleep 1s
 clear
@@ -345,7 +344,7 @@ clear
 
 #Setting console keyboard
 echo "setting console keyboard layout"
-sed -i 's/^#KEYMAP=us/KEYMAP=us/g' /etc/vconsole.conf
+sed -i 's/#KEYMAP=us/KEYMAP=us/g' /etc/vconsole.conf
 sleep 1s
 clear
 
@@ -402,7 +401,7 @@ mesa alsa-firmware alsa-lib'
   packages+='libreoffice-still'
 
   #dev tools
-  packages+='archiso f2fs-tools automake gawk gammu gnome-keyring ntfs-3g mtools dosfstools devtools multilib-devel npm qemu-tools qemu-emulators-full qemu-system-x86-firmware cargo make go lua perl ruby rust rustup cmake gcc gcc-libs gdb ppp rp-pppoe pptpclient reiserfsprogs  clang llvm ccache curl wget sed'
+  packages+='archiso f2fs-tools automake gawk gammu gnome-keyring mtools dosfstools devtools multilib-devel npm qemu-tools qemu-emulators-full qemu-system-x86-firmware cargo make go lua perl ruby rust rustup cmake gcc gcc-libs gdb ppp rp-pppoe pptpclient reiserfsprogs  clang llvm ccache curl wget sed'
 
   #lightdm lockscreen
   packages+='lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings'
@@ -462,7 +461,7 @@ echo "Installing needed pkgs and tools by AUR"
   # remove dir 
   rm -rf yay-bin
   rm -rf pikaur
-  clear
+  
 # Install pkgs and tools by AUR..
 install_packages() {
   
@@ -507,7 +506,7 @@ lsblk
 sleep 2s 
 echo "Installing grub bootloader in /boot/efi parttiton"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
-sed -i "s/^#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g" 
+sed -i "s/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g" 
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 1s
 clear
@@ -557,7 +556,6 @@ echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."
 sleep 1s
 echo "Giving sudo access to "$username"!"
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
-#echo "$username ALL=(ALL) ALL" >> /etc/sudoers.d/$username
 clear
 sleep 1s
 

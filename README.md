@@ -1,5 +1,7 @@
 # ArchFiery
 
+# NOTE: Personal-ArchFiery script is for me not for other's
+
 ## Introduction:
 
 ### Personal archlinux installer script :)
