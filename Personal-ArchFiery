@@ -315,6 +315,7 @@ echo "Installing fastest mirrorlists"
 pacman -S --noconfirm archlinux-keyring blackarch-keyring 
 pacman-key --init
 pacman-key --populate
+updatedb
 pacman -Fyy 
 pacman-db-upgrade
 sync
@@ -331,7 +332,7 @@ clear
 
 #Gen locale
 echo "generating locale"
- /etc/locale.gen
+sed -i "s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
 locale-gen
 sleep 1s
 clear
@@ -447,23 +448,24 @@ clear
 # Install needed pkgs and tools by AUR..
 echo "Installing needed pkgs and tools by AUR"
   # pikaur: AUR helper
-  git clone https://aur.archlinux.org/pikaur.git
-  cd pikaur
+  git clone https://aur.archlinux.org/pikaur.git ~/aur/pikaur
+  cd ~/aur/pikaur
   makepkg -fsri
-  cd ..
+  cd 
   
   # yay-bin: AUR helper
-  git clone https://aur.archlinux.org/yay-bin.git
-  cd yay-bin
+  git clone https://aur.archlinux.org/yay-bin.git ~/aur/yay-bin
+  cd ~/aur/yay-bin
   makepkg -fsri
-  cd ..
+  cd 
   
   # remove dir 
-  rm -rf yay-bin
-  rm -rf pikaur
+  #rm -rf yay-bin
+  #rm -rf pikaur
   
 # Install pkgs and tools by AUR..
 install_packages() {
+  local aurpkgs=''
   
   #Browser
   aurpkgs+='barve-bin librewolf-bin tor-browser' 
@@ -472,7 +474,7 @@ install_packages() {
   aurpkgs+='libreoffice-extension-languagetool'
 
   #other
-  packages+='mkinitcpio-firmware mkinitcpio-openswap mkinitcpio-numlock i2p'
+  aurpkgs+='mkinitcpio-firmware mkinitcpio-openswap mkinitcpio-numlock i2p'
 
   #password manager
   aurpkgs+='bitwarden-rofi bitwarden-cli-bin' 
@@ -522,18 +524,24 @@ clear
 echo 'Defaults env_keep += "HOME"' | sudo tee -a /etc/sudoers
 
 #Personal user config Setup
+echo "setting up Personal dotfiles"
 git clone https://github.com/MikuX-Dev/dotfiles.git
 #shell
+echo "Installing shell"
 cp -r dotfiles/shell/bash/* /etc/skel/
 cp -r dotfiles/shell/zsh/* /etc/skel/
 #themes
+echo "Installing themes"
 cp -r dotfiles/themes/* /usr/share/themes/
 cp -r dotfiles/icons/* /usr/share/icons/
 #config
-#cp -r dotfiles/config/* /etc/
+echo "Installing configs"
+cp -r dotfiles/config/* /etc/
 #wallpaper
+echo "Installing wallpaper"
 cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
 #grub-theme
+echo "Installing grub-theme"
 cp -r dotfiles/themes/grub/src/* /usr/share/grub/themes/
 grub-mkconfig -o /boot/grub/grub.cfg
 
