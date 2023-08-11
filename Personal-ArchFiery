@@ -630,7 +630,7 @@ git clone https://github.com/MikuX-Dev/dotfiles.git
 #shell
 echo "Installing shell"
 cp -r dotfiles/shell/bash/* /etc/skel/
-cp -r dotfiles/shell/zsh/* /etc/skel/
+#cp -r dotfiles/shell/zsh/* /etc/skel/
 #themes
 echo "Installing themes"
 cp -r dotfiles/themes/* /usr/share/themes/
@@ -644,6 +644,7 @@ cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
 #grub-theme
 echo "Installing grub-theme"
 cp -r dotfiles/themes/grub/src/* /usr/share/grub/themes/
+sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/        "'
 grub-mkconfig -o /boot/grub/grub.cfg
 #remove folder
 rm -rf dotfiles
