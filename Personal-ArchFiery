@@ -298,13 +298,14 @@ sleep 1s
 clear
 
 lsblk
-sleep 3s
+sync
+sleep 2s
 clear
 
 # Installing base system with lts-kernel, intel-ucode and duel boot system too
 echo "Installing Base system with lts kernel!!!"
 sleep 1s
-pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g
+pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g nvme-cli
 
 #Gen fstab
 echo "generating fstab file"
@@ -502,7 +503,7 @@ mesa alsa-firmware alsa-lib'
   packages+='xdg-user-dirs-gtk xdg-desktop-portal-gtk'
 
   #other
-  packages+='arch-wiki-docs linux-firmware intel-ucode ntfs-3g base base-devel linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
+  packages+='arch-wiki-docs linux-firmware intel-ucode ntfs-3g base smartmontools base-devel linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
 
   #application
   packages+='hexchat htop galculator fwupd ufw redshift ddrescue'
