@@ -65,7 +65,7 @@ check_inet_conn()
   title 'Network Setup > Connection Check'
   wprintf '[+] Checking for Internet connection...'
 
-  if ! curl -s http://www.yahoo.com/ > $VERBOSE
+  if ! curl -s https://www.duckduckgo.com/ > $VERBOSE
   then
     err 'No Internet connection! Check your network (settings).'
     exit $FAILURE
@@ -604,7 +604,7 @@ sleep 1s
 read -p "Do you want to use os-prober? (y/n): " use_os_prober
 if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
-  sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+  sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
   os-prober
   sleep 1s
   grub-mkconfig -o /boot/grub/grub.cfg
@@ -644,7 +644,7 @@ cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
 #grub-theme
 echo "Installing grub-theme"
 cp -r dotfiles/themes/grub/src/* /usr/share/grub/themes/
-sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/        "'
+sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/nexsecuros/theme.txt"/g'
 grub-mkconfig -o /boot/grub/grub.cfg
 #remove folder
 rm -rf dotfiles
