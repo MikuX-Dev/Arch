@@ -1,6 +1,6 @@
 # ArchFiery
 
-# NOTE: Personal-ArchFiery script is for me not for other's
+# NOTE: Personal-ArchFiery script is for me not for other's "IT HAVE SOME ISSUES"
 
 ## Introduction:
 

@@ -3,6 +3,77 @@
 clear
 
 #Main Start
+
+# Exit on CTRL + c
+ctrl_c() {
+  err "Keyboard Interrupt detected, leaving..."
+  exit $FAILURE
+}
+
+trap ctrl_c 2
+
+# check exit status
+check()
+{
+  es=$1
+  func="$2"
+  info="$3"
+
+  if [ "$es" -ne 0 ]
+  then
+    echo
+    warn "Something went wrong with $func. $info."
+    sleep 5
+  fi
+}
+
+# check boot mode
+check_boot_mode()
+{
+  efivars=$(ls /sys/firmware/efi/efivars > /dev/null 2>&1; echo $?)
+  if [ "$efivars" -eq "0" ]
+  then
+     BOOT_MODE="uefi"
+  fi
+
+  return $SUCCESS
+}
+
+# check for environment issues
+check_env()
+{
+  if [ -f '/var/lib/pacman/db.lck' ]
+  then
+    err 'pacman locked - Please remove /var/lib/pacman/db.lck'
+  fi
+}
+
+# check user id
+check_uid()
+{
+  if [ "$(id -u)" != '0' ]
+  then
+    err 'You must be root to run the BlackArch installer!'
+  fi
+
+  return $SUCCESS
+}
+
+# check for internet connection
+check_inet_conn()
+{
+  title 'Network Setup > Connection Check'
+  wprintf '[+] Checking for Internet connection...'
+
+  if ! curl -s http://www.yahoo.com/ > $VERBOSE
+  then
+    err 'No Internet connection! Check your network (settings).'
+    exit $FAILURE
+  fi
+
+}
+
+#
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │  Installation starting  │
@@ -11,7 +82,7 @@ echo -ne "
 │       and enjoy         │
 ╰─────────────────────────╯
 "
-echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.08.1 (GPL-3.0)"
+echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.8 (GPL-3.0)"
 sleep 1s 
 
 echo "Installation guide starts now.."
@@ -27,7 +98,7 @@ if grep -q "\[multilib\]" /etc/pacman.conf; then
 else
     # Multilib repository does not exist, add it to pacman.conf
   echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | sudo tee -a /etc/pacman.conf
-for
+fi
 sleep 1s
 clear
 
@@ -40,7 +111,7 @@ if grep -q "\[community\]" /etc/pacman.conf; then
 else
     # Community repository does not exist, add it to pacman.conf
   echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | sudo tee -a /etc/pacman.conf
-for
+fi
 sleep 1s
 clear
 
@@ -214,9 +285,16 @@ esac
 clear
 
 lsblk
-read -p "Enter the boot partition. (eg. /dev/sda4): " bootpartition
-mkfs.fat -F 32 "$bootpartition"
-mount $bootpartition /mnt/boot
+read -p "Do you want to use a separate boot partition or use the EFI partition of windows? (boot/efi): " setbootpartition
+if [[ $setbootpartition == "boot" ]]; then
+  echo "Setting up a separate boot partition..."
+  read -p "Enter the boot partition (e.g., /dev/sda4): " bootpartition
+  mkfs.fat -F 32 "$bootpartition"
+  mount "$bootpartition" /mnt/boot
+else
+  echo "Using the EFI partition for boot..."
+fi
+sleep 1s
 clear
 
 lsblk
@@ -295,6 +373,16 @@ for
 pacman -Syy --noconfirm pacman-contrib
 clear
 
+#curl blackarch strap.sh 
+curl -O https://blackarch.org/strap.sh
+echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
+chmod +x strap.sh
+./strap.sh
+pacman -Syy --needed --noconfirm
+rm -rf strap.sh 
+sleep 1s
+clear
+
 #Installing fastest mirrors
 echo "Installing fastest mirrorlists"  
   #backup mirrorlist
@@ -313,9 +401,9 @@ echo "Installing fastest mirrorlists"
   sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/mirrorlist
 pacman -S --noconfirm archlinux-keyring blackarch-keyring 
+pacman -Syy
 pacman-key --init
 pacman-key --populate
-updatedb
 pacman -Fyy 
 pacman-db-upgrade
 sync
@@ -414,7 +502,7 @@ mesa alsa-firmware alsa-lib'
   packages+='xdg-user-dirs-gtk xdg-desktop-portal-gtk'
 
   #other
-  packages+='arch-wiki-docs linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
+  packages+='arch-wiki-docs linux-firmware intel-ucode ntfs-3g base base-devel linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
 
   #application
   packages+='hexchat htop galculator fwupd ufw redshift ddrescue'
@@ -448,16 +536,16 @@ clear
 # Install needed pkgs and tools by AUR..
 echo "Installing needed pkgs and tools by AUR"
   # pikaur: AUR helper
-  git clone https://aur.archlinux.org/pikaur.git ~/aur/pikaur
-  cd ~/aur/pikaur
+  git clone https://aur.archlinux.org/pikaur.git /aur/pikaur
+  cd pikaur
   makepkg -fsri
-  cd 
+  cd .. 
   
   # yay-bin: AUR helper
-  git clone https://aur.archlinux.org/yay-bin.git ~/aur/yay-bin
-  cd ~/aur/yay-bin
+  git clone https://aur.archlinux.org/yay-bin.git /aur/yay-bin
+  cd yay-bin
   makepkg -fsri
-  cd 
+  cd ..
   
   # remove dir 
   #rm -rf yay-bin
@@ -493,7 +581,7 @@ clear
 
 #Setting boot partition "EFI"
 lsblk
-echo "Enter the boot partition to install bootloader. (eg: /dev/sda4): "
+echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
 read efipartition
 efidirectory="/boot/efi/"
 if [ ! -d "$efidirectory" ]; then
@@ -507,9 +595,21 @@ clear
 lsblk
 sleep 2s 
 echo "Installing grub bootloader in /boot/efi parttiton"
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
-sed -i "s/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g" 
+grub-install
 grub-mkconfig -o /boot/grub/grub.cfg
+sleep 1s
+
+#os-prober 
+read -p "Do you want to use os-prober? (y/n): " use_os_prober
+if [[ $use_os_prober =~ ^[Yy]$ ]]; then
+  echo "Enabling os-prober..."
+  sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+  os-prober
+  sleep 1s
+  grub-mkconfig -o /boot/grub/grub.cfg
+else
+  echo "os-prober not enabled. Generating fstab..."
+fi
 sleep 1s
 clear
 
@@ -517,7 +617,7 @@ clear
 echo "generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
-sleep 3s
+sleep 2s
 clear 
 
 #edit sudo 
@@ -544,6 +644,8 @@ cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
 echo "Installing grub-theme"
 cp -r dotfiles/themes/grub/src/* /usr/share/grub/themes/
 grub-mkconfig -o /boot/grub/grub.cfg
+#remove folder
+rm -rf dotfiles
 
 #Setting root user
 echo "Enter password for root user:"
