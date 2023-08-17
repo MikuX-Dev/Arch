@@ -168,7 +168,9 @@ echo "Installing fastest mirrorlists"
 
   #blackarch-mirrorlist
   echo "Blackarch-mirrorlist setup"
-  sed 's/^#Server = https:/Server = https:/g' > /etc/pacman.d/blackarch-mirrorlist
+  sed -i 's/^#Server = https:/Server = https:/g' > /etc/pacman.d/blackarch-mirrorlist
+  rankmirrors -n 10 > /etc/pacman.d/blackarch-mirrorlist
+  sleep 1s
 
   #archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
@@ -181,10 +183,7 @@ clear
 #Updating Keyrings
 echo "Internet Connection is a must to begin."
 echo "Updating Keyrings.."
-pacman -Syy --needed --noconfirm archlinux-keyring blackarch-keyring
-pacman-key --init
-pacman-key --populate
-pacman -Syy
+pacman -Syy --needed --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
 sleep 1s
 clear
 
@@ -420,27 +419,21 @@ clear
 echo "Installing fastest mirrorlists"
   #backup mirrorlist
   echo "Backingup mirrorlists"
-  mv -v /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-  mv -v /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
+  cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+  cp -r /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
 
   #blackarch-mirrorlist
   echo "Blackarch-mirrorlist setup"
-  cp -r /etc/pacman.d/blackarch-mirrorlist.backup /etc/pacman.d/blackarch-mirrorlist
   sed -i 's/^#Server = https:/Server = https:/g' /etc/pacman.d/blackarch-mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/blackarch-mirrorlist
+  sleep 1s
+
   #archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
   curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
   sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/mirrorlist
-pacman -S --noconfirm archlinux-keyring blackarch-keyring
-pacman -Syy
-pacman-key --init
-pacman-key --populate
-pacman -Fyy
-pacman-db-upgrade
-sync
-pacman -Syy
+pacman -Syy --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && pacman -Fyy --noconfirm && pacman-db-upgrade --noconfirm && sync --noconfirm && pacman -Syy --noconfirm 
 sleep 1s
 clear
 
