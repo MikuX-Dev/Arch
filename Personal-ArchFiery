@@ -459,7 +459,7 @@ clear
 
 #Setting console keyboard
 echo "Setting console keyboard layout"
-sed -i 's/#KEYMAP=us/KEYMAP=us/g' /etc/vconsole.conf
+echo 'KEYMAP=us' > /etc/vconsole.conf
 sleep 1s
 clear
 
