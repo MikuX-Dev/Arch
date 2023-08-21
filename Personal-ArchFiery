@@ -127,7 +127,7 @@ echo "Enabling multilib repo"
 # Check if multilib repository exists in pacman.conf
 if grep -q "\[multilib\]" /etc/pacman.conf; then
     # Multilib repository exists, remove comment if it is commented out
-
+  sudo sed -i '/^\[multilib\]/,/Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
 else
     # Multilib repository does not exist, add it to pacman.conf
   echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | sudo tee -a /etc/pacman.conf
