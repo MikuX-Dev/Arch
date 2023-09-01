@@ -85,10 +85,10 @@ echo -ne "
 ╰─────────────────────────╯
 "
 echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.8 (GPL-3.0)"
-sleep 1s
+sleep 3s
 
 echo "Installation guide starts now.."
-sleep 2s
+sleep 3s
 clear
 
 #Enabling multilib repo.
@@ -101,7 +101,7 @@ else
     # Multilib repository does not exist, add it to pacman.conf
   echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 fi
-sleep 1s
+sleep 3s
 clear
 
 #Enabling Community repo.
@@ -114,7 +114,7 @@ else
     # Community repository does not exist, add it to pacman.conf
   echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 fi
-sleep 1s
+sleep 3s
 clear
 
 #curl blackarch strap.sh
@@ -124,7 +124,7 @@ chmod +x strap.sh
 ./strap.sh
 pacman -Syyu --needed --noconfirm pacman-contrib
 rm -rf strap.sh
-sleep 1s
+sleep 3s
 clear
 
 #Installing fastest mirrors
@@ -137,29 +137,26 @@ echo "Installing fastest mirrorlists"
 
   #blackarch-mirrorlist
   echo "Blackarch-mirrorlist setup"
-  sed -i 's/^#Server = https:/Server = https:/g' > /etc/pacman.d/blackarch-mirrorlist
-  rankmirrors -n 10 > /etc/pacman.d/blackarch-mirrorlist
-  sleep 1s
+  curl https://raw.githubusercontent.com/MikuX-Dev/docker-archiso/main/blackarch-mirrorlist -o /etc/pacman.d/blackarch-mirrorlist 
+  sleep 3s
 
   #archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
-  sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
-  rankmirrors -n 10 > /etc/pacman.d/mirrorlist
-sleep 1s
+  sh -c "curl https://archlinux.org/mirrorlist/\?country=all\&protocol=http\&protocol=https\&ip_version=4\&ip_version=6\&use_mirror_status=on -o /etc/pacman.d/mirrorlist && sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist"
+sleep 3s
 clear
 
 #Updating Keyrings
 echo "Internet Connection is a must to begin."
 echo "Updating Keyrings.."
 pacman -Syy --needed --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
-sleep 1s
+sleep 3s
 clear
 
 #Setting up system clock
 echo "Ensuring if the system clock is accurate."
 timedatectl set-ntp true
-sleep 1s
+sleep 3s
 clear
 
 #Setting up drive
@@ -168,15 +165,15 @@ lsblk
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
 read drive
-sleep 2s
+sleep 3s
 clear
 
 echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
 echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting ready in 5 seconds"
-sleep 5s
+echo "Getting ready in 9 seconds"
+sleep 9s
 clear
 
 lsblk
@@ -206,11 +203,11 @@ case "$partitionutility" in
   ;;
 esac
 echo ""$partitionutility" is the selected disk utility tool for partition."
-sleep 2s
+sleep 3s
 clear
 
 echo "Getting ready for formatting partitions!"
-sleep 2s
+sleep 3s
 "$partitionutility" "$drive"
 clear
 
@@ -242,11 +239,11 @@ case "$filesystemtype" in
   ;;
 esac
 echo ""$filesystemtype" is the selected file system type."
-sleep 2s
+sleep 3s
 clear
 
 echo "Getting ready for formatting drives."
-sleep 2s
+sleep 3s
 lsblk
 echo "Enter the root partition (eg: /dev/sda1): "
 read rootpartition
@@ -294,24 +291,24 @@ if [[ $setbootpartition == "boot" ]]; then
 else
   echo "Using the EFI partition for boot..."
 fi
-sleep 1s
+sleep 3s
 clear
 
 lsblk
 sync
-sleep 2s
+sleep 3s
 clear
 
 # Installing base system with lts-kernel, intel-ucode and duel boot system too
 echo "Installing Base system with lts kernel!!!"
-sleep 1s
+sleep 3s
 pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g nvme-cli
 
 #Gen fstab
 echo "Generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
-sleep 2s
+sleep 3s
 clear
 
 #Setup for post-installation
@@ -319,23 +316,23 @@ sed '1,/^#part2$/d' ArchFiery.sh > /mnt/post_install.sh
 chmod +x /mnt/post_install.sh
 arch-chroot /mnt ./post_install.sh
 clear
-sleep 2s
+sleep 3s
 
 #Unmount drives
 echo "unmounting all the drives"
 umount -R /mnt
-sleep 2s
+sleep 3s
 clear
 
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │      Installation       │
 │        completed        │
-│    rebooting in 5s      │
+│    rebooting in 9s      │
 ╰─────────────────────────╯
 "
-echo "Installation Finished. REBOOTING IN 5 SECONDS!!!"
-sleep 5s
+echo "Installation Finished. REBOOTING IN 9 SECONDS!!!"
+sleep 9s
 reboot
 
 #part2
@@ -343,10 +340,10 @@ reboot
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │      post_install       │
-│     starting in 5s      │
+│     starting in 9s      │
 ╰─────────────────────────╯
 "
-sleep 5s
+sleep 9s
 clear
 
 #Enabling multilib repo.
@@ -381,11 +378,12 @@ chmod +x strap.sh
 ./strap.sh
 pacman -Syy --needed --noconfirm
 rm -rf strap.sh
-sleep 1s
+sleep 3s
 clear
 
 #Installing fastest mirrors
 echo "Installing fastest mirrorlists"
+
   #backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
@@ -393,43 +391,39 @@ echo "Installing fastest mirrorlists"
 
   #blackarch-mirrorlist
   echo "Blackarch-mirrorlist setup"
-  sed -i 's/^#Server = https:/Server = https:/g' /etc/pacman.d/blackarch-mirrorlist
-  rankmirrors -n 10 > /etc/pacman.d/blackarch-mirrorlist
-  sleep 1s
+  curl https://raw.githubusercontent.com/MikuX-Dev/docker-archiso/main/blackarch-mirrorlist -o /etc/pacman.d/blackarch-mirrorlist 
+  sleep 3s
 
   #archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
-  sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
-  rankmirrors -n 10 > /etc/pacman.d/mirrorlist
-pacman -Syy --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && pacman -Fyy --noconfirm && pacman-db-upgrade --noconfirm && sync --noconfirm && pacman -Syy --noconfirm 
-sleep 1s
+  sh -c "curl https://archlinux.org/mirrorlist/\?country=all\&protocol=http\&protocol=https\&ip_version=4\&ip_version=6\&use_mirror_status=on -o /etc/pacman.d/mirrorlist && sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist"
+sleep 3s
 clear
 
 #Replace Asia/kolkata with your timezone
 echo "Setting timezone"
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
-sleep 1s
+sleep 3s
 clear
 
 #Gen locale
 echo "Generating locale"
 sed -i "s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
 locale-gen
-sleep 1s
+sleep 3s
 clear
 
 #Setting lang
 echo "Setting LANG variable"
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
-sleep 1s
+sleep 3s
 clear
 
 #Setting console keyboard
 echo "Setting console keyboard layout"
 echo 'KEYMAP=us' > /etc/vconsole.conf
-sleep 1s
+sleep 3s
 clear
 
 #Setup hostname
@@ -439,7 +433,7 @@ read hostname
 echo $hostname > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
-sleep 1s
+sleep 3s
 clear
 
 #Setting up hosts
@@ -448,7 +442,7 @@ echo "127.0.0.1       localhost" >> /etc/hosts
 echo "::1             localhost" >> /etc/hosts
 echo "127.0.1.1       $hostname" >> /etc/hosts
 cat /etc/hosts
-sleep 1s
+sleep 3s
 clear
 
 # Install needed pkgs and tools by PACMAN..
@@ -457,7 +451,7 @@ install_packages() {
   local packages=''
 
   #networkmanager etc..
-  packages+='network-manager-applet networkmanager network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc modemmanager dhclient dhcpcd'
+  packages+='archlinux-tweak-tool-git network-manager-applet networkmanager network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc modemmanager dhclient dhcpcd'
 
   #bluetooth etc..
   packages+='bluez bluez-utils bluez-tools bluez-libs blueman pulseaudio pulseaudio-bluetooth pulseaudio-alsa pavucontrol alsa-utils mesa alsa-firmware alsa-lib'
@@ -496,7 +490,7 @@ install_packages() {
   packages+='xdg-user-dirs-gtk xdg-desktop-portal-gtk'
 
   #other
-  packages+='arch-wiki-docs linux-firmware pkgfile intel-ucode ntfs-3g base smartmontools base-devel linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
+  packages+='arch-wiki-docs linux-firmware pkgfile intel-ucode ntfs-3g base smartmontools base-devel linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell rofi profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
 
   #application
   packages+='hexchat htop galculator fwupd ufw redshift ddrescue'
@@ -556,7 +550,7 @@ install_packages() {
   xf86-video-voodoo xorg-server xorg-xbacklight xorg-xinit xterm'
 },
 pacman -S --needed --noconfirm $packages
-sleep 1s
+sleep 3s
 clear
 
 # Install needed pkgs and tools by AUR..
@@ -594,7 +588,7 @@ install_packages() {
 },
 
 yay -S --needed --noconfirm $aurpkgs
-sleep 1s
+sleep 3s
 clear
 
 #Setting boot partition "EFI"
@@ -606,16 +600,16 @@ if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
 fi
 mount "$efipartition" "$efidirectory"
-sleep 1s
+sleep 3s
 clear
 
 #Install grub
 lsblk
-sleep 2s
+sleep 3s
 echo "Installing grub bootloader in /boot/efi parttiton"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
-sleep 2s
+sleep 3s
 
 #os-prober
 read -p "Are you duelbooting? (y/n): " use_os_prober
@@ -623,19 +617,12 @@ if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
   os-prober
-  sleep 1s
+  sleep 3s
   grub-mkconfig -o /boot/grub/grub.cfg
 else
   echo "Os-prober not enabled. Generating fstab..."
 fi
-sleep 1s
-clear
-
-#Gen fstab
-echo "Generating fstab file"
-genfstab -U /mnt >> /mnt/etc/fstab
-cat /etc/fstab
-sleep 2s
+sleep 3s
 clear
 
 #edit sudo
@@ -644,40 +631,41 @@ echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
 # Personal dotfiles
 echo "Setting up Personal dotfiles"
 git clone https://github.com/MikuX-Dev/dotfiles.git
-sleep 1s
+git clone https://gihtub.com/MiKuX-Dev/ArchFirey.git
+sleep 3s
 # bash
 echo "Installing shell"
 cp -r dotfiles/shell/bash/* /etc/skel/
-sleep 1s
-#cp -r dotfiles/shell/zsh/* /etc/skel/
+sleep 3s
+cp -r dotfiles/shell/zsh/* /etc/skel/
 # theme
 echo "Installing themes"
 cp -r dotfiles/themes/* /usr/share/themes/
 cp -r dotfiles/icons/* /usr/share/icons/
-sleep 1s
+sleep 3s
 # config
 echo "Installing configs"
 cp -r dotfiles/config/* /etc/
-sleep 1s
+sleep 3s
 #wallpaper
 echo "Installing wallpaper"
 cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
-sleep 1s
+sleep 3s
 #grub-theme
 echo "Installing grub-theme"
 cp -r dotfiles/themes/grub/src/* /usr/share/grub/themes/
 sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/nexsecuros/theme.txt"/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
-sleep 1s
-#remove folder
+sleep 3s
+# #remove folder
 rm -rf dotfiles
-sleep 1s
+sleep 3s
 clear
 
 #Setting root user
 echo "Enter password for root user:"
 passwd
-sleep 1s
+sleep 3s
 clear
 
 #Setting regular user
@@ -687,21 +675,21 @@ read username
 useradd -m -G wheel -s /bin/bash $username
 echo "Enter password for "$username": "
 passwd $username
-sleep 1s
+sleep 3s
 clear
 
 #Adding sudo previliages to the user you created
 echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."
-sleep 1s
+sleep 3s
 echo "Giving sudo access to "$username"!"
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
 clear
-sleep 1s
+sleep 3s
 
 #Enable services
 echo "Enabling services.."
 enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'cups.service' 'org.cups.cupsd.service' 'lightdm.service' 'NetworkManager.service' 'bluetooth.service')
 systemctl enable ${enable_services[@]}
-sleep 1s
+sleep 3s
 clear
 
