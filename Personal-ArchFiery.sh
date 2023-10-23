@@ -2,80 +2,9 @@
 
 clear
 
-#Main Start
-# #
-# # Exit on CTRL + c
-# ctrl_c() {
-#   err "Keyboard Interrupt detected, leaving..."
-#   exit $FAILURE
-# }
+--TODO: changes 1s to 3s and 2s to 3s and extend the time
 
-# trap ctrl_c 2
-
-# # check exit status
-# check() {
-#   es=$1
-#   func="$2"
-#   info="$3"
-
-#   if [ "$es" -ne 0 ]
-#   then
-#     echo
-#     warn "Something went wrong with $func. $info."
-#     sleep 5
-#   fi
-# }
-
-# # check boot mode
-# check_boot_mode() {
-#   efivars=$(ls /sys/firmware/efi/efivars > /dev/null 2>&1; echo $?)
-#   if [ "$efivars" -eq "0" ]
-#   then
-#      BOOT_MODE="uefi"
-#   fi
-
-#   return $SUCCESS
-# }
-
-# # check for environment issues
-# check_env() {
-#   if [ -f '/var/lib/pacman/db.lck' ]
-#   then
-#     err 'pacman locked - Please remove /var/lib/pacman/db.lck'
-#   fi
-# }
-
-# # check user id
-# check_uid() {
-#   if [ "$(id -u)" != '0' ]
-#   then
-#     err 'You must be root to run the BlackArch installer!'
-#   fi
-
-#   return $SUCCESS
-# }
-
-# # check for internet connection
-# check_inet_connection() {
-#   title 'Network Setup > Connection Check'
-#   wprintf '[+] Checking for Internet connection...'
-
-#   if ! curl -s https://www.duckduckgo.com/ > $VERBOSE
-#   then
-#     err 'No Internet connection! Check your network (settings).'
-#     exit $FAILURE
-#   fi
-# }
-
-# main(){
-#   # do some ENV checks
-#   sleep_clear 0
-#   check_uid
-#   check_env
-#   check_boot_mode
-# }
-
-#
+# Start
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │  Installation starting  │
@@ -85,13 +14,13 @@ echo -ne "
 ╰─────────────────────────╯
 "
 echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.8 (GPL-3.0)"
-sleep 1s
+sleep 5s
 
-echo "Installation guide starts now.."
-sleep 2s
+echo "Installation guide starts now..."
+sleep 3s
 clear
 
-#Enabling multilib repo.
+# Enabling multilib repo.
 echo "Enabling multilib repo"
 # Check if multilib repository exists in pacman.conf
 if grep -q "\[multilib\]" /etc/pacman.conf; then
@@ -101,10 +30,10 @@ else
     # Multilib repository does not exist, add it to pacman.conf
   echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 fi
-sleep 1s
+sleep 3s
 clear
 
-#Enabling Community repo.
+# Enabling Community repo.
 echo "Enabling community repo"
 # Check if community repository exists in pacman.conf
 if grep -q "\[community\]" /etc/pacman.conf; then
@@ -114,61 +43,63 @@ else
     # Community repository does not exist, add it to pacman.conf
   echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 fi
-sleep 1s
+sleep 3s
 clear
 
-#curl blackarch strap.sh
+# Curl blackarch strap.sh
+--TODO: add like do you or not
 curl -O https://blackarch.org/strap.sh
 echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
 chmod +x strap.sh
 ./strap.sh
 pacman -Syyu --needed --noconfirm pacman-contrib
 rm -rf strap.sh
-sleep 1s
+sleep 3s
 clear
 
-#Installing fastest mirrors
+# Installing fastest mirrors
 echo "Installing fastest mirrorlists"
 
-  #backup mirrorlist
+  # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+  --TODO: add like if blackarch is curl the key then do blackarch if not then dont 
   cp -r /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
-
-  #blackarch-mirrorlist
+  
+  # Blackarch-mirrorlist 
+  --TODO: here too
   echo "Blackarch-mirrorlist setup"
   sed -i 's/^#Server = https:/Server = https:/g' > /etc/pacman.d/blackarch-mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/blackarch-mirrorlist
-  sleep 1s
 
-  #archlinux mirrorlists
+  # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
   curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
   sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/mirrorlist
-sleep 1s
+sleep 3s
 clear
 
-#Updating Keyrings
+# Updating Keyrings
 echo "Internet Connection is a must to begin."
 echo "Updating Keyrings.."
-pacman -Syy --needed --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
-sleep 1s
+pacman -Syy --needed --noconfirm archlinux-keyring here too== blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
+sleep 3s
 clear
 
-#Setting up system clock
+# Setting up system clock
 echo "Ensuring if the system clock is accurate."
 timedatectl set-ntp true
-sleep 1s
+sleep 3s
 clear
 
-#Setting up drive
+# Setting up drive
 echo "Setting Up drive"
 lsblk
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
 read drive
-sleep 2s
+sleep 5s
 clear
 
 echo "Getting ready for creating partitions!"
@@ -206,11 +137,11 @@ case "$partitionutility" in
   ;;
 esac
 echo ""$partitionutility" is the selected disk utility tool for partition."
-sleep 2s
+sleep 5s
 clear
 
 echo "Getting ready for formatting partitions!"
-sleep 2s
+sleep 3s
 "$partitionutility" "$drive"
 clear
 
@@ -242,11 +173,11 @@ case "$filesystemtype" in
   ;;
 esac
 echo ""$filesystemtype" is the selected file system type."
-sleep 2s
+sleep 3s
 clear
 
 echo "Getting ready for formatting drives."
-sleep 2s
+sleep 3s
 lsblk
 echo "Enter the root partition (eg: /dev/sda1): "
 read rootpartition
@@ -294,18 +225,18 @@ if [[ $setbootpartition == "boot" ]]; then
 else
   echo "Using the EFI partition for boot..."
 fi
-sleep 1s
+sleep 3s
 clear
 
 lsblk
 sync
-sleep 2s
+sleep 5s
 clear
 
 # Installing base system with lts-kernel, intel-ucode and duel boot system too
 echo "Installing Base system with lts kernel!!!"
-sleep 1s
-pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g nvme-cli
+sleep 3s
+pacstrap /mnt base base-devel linux linux-headers linux-firmware intel-ucode ntfs-3g nvme-cli
 
 #Gen fstab
 echo "Generating fstab file"
