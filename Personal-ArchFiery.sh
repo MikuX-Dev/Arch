@@ -528,7 +528,7 @@ yay -S --needed --noconfirm $aurpkgs
 sleep 1s
 clear
 
-#Setting boot partition "EFI"
+# Setting boot partition "EFI"
 lsblk
 echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
 read efipartition
@@ -540,7 +540,7 @@ mount "$efipartition" "$efidirectory"
 sleep 1s
 clear
 
-#Install grub
+# Install grub
 lsblk
 sleep 2s
 echo "Installing grub bootloader in /boot/efi parttiton"
@@ -548,91 +548,93 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB 
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 2s
 
-#os-prober
+# os-prober
 read -p "Are you duelbooting? (y/n): " use_os_prober
 if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
   os-prober
-  sleep 1s
+  sleep 2s
   grub-mkconfig -o /boot/grub/grub.cfg
 else
   echo "Os-prober not enabled. Generating fstab..."
 fi
-sleep 1s
+sleep 3s
 clear
 
-#Gen fstab
+# Gen fstab
 echo "Generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
-sleep 2s
+sleep 5s
 clear
 
 #edit sudo
-echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
+#echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
 
 # Personal dotfiles
-echo "Setting up Personal dotfiles"
-git clone https://github.com/MikuX-Dev/dotfiles.git
-sleep 1s
+#echo "Setting up Personal dotfiles"
+#git clone https://github.com/MikuX-Dev/dotfiles.git
+#sleep 3s
 # bash
-echo "Installing shell"
-cp -r dotfiles/shell/bash/* /etc/skel/
-sleep 1s
+#echo "Installing shell"
+#cp -r dotfiles/shell/bash/* /etc/skel/
+#sleep 2s
 #cp -r dotfiles/shell/zsh/* /etc/skel/
 # theme
-echo "Installing themes"
-cp -r dotfiles/themes/* /usr/share/themes/
-cp -r dotfiles/icons/* /usr/share/icons/
-sleep 1s
+#echo "Installing themes"
+#cp -r dotfiles/themes/* /usr/share/themes/
+#cp -r dotfiles/icons/* /usr/share/icons/
+#sleep 2s
 # config
-echo "Installing configs"
-cp -r dotfiles/config/* /etc/
-sleep 1s
+#echo "Installing configs"
+#cp -r dotfiles/config/* /etc/
+#sleep 2s
 #wallpaper
-echo "Installing wallpaper"
-cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
-sleep 1s
-#grub-theme
+#echo "Installing wallpaper"
+#cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
+#sleep 2s
+
+# grub-theme
 echo "Installing grub-theme"
-cp -r dotfiles/themes/grub/src/* /usr/share/grub/themes/
+git clone https://github.com/MikuX-Dev/ArchFiery.git
+cp -r ArchFiery/grub/src/* /usr/share/grub/themes/
 sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/nexsecuros/theme.txt"/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
-sleep 1s
+sleep 3s
 #remove folder
-rm -rf dotfiles
-sleep 1s
+rm -rf ArchFiery/
+sleep 2s
 clear
 
-#Setting root user
+# Setting root user
 echo "Enter password for root user:"
 passwd
-sleep 1s
+sleep 3s
 clear
 
 #Setting regular user
 echo "Adding regular user!"
 echo "Enter username to add a regular user: "
 read username
-useradd -m -G wheel -s /bin/bash $username
+useradd -m -G wheel -s /bin/zsh $username
 echo "Enter password for "$username": "
 passwd $username
-sleep 1s
+sleep 3s
 clear
 
-#Adding sudo previliages to the user you created
+# Adding sudo previliages to the user you created
 echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."
-sleep 1s
+sleep 2s
 echo "Giving sudo access to "$username"!"
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
 clear
-sleep 1s
+sleep 3s
 
-#Enable services
+# Enable services
 echo "Enabling services.."
 enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'cups.service' 'org.cups.cupsd.service' 'lightdm.service' 'NetworkManager.service' 'bluetooth.service')
 systemctl enable ${enable_services[@]}
-sleep 1s
+sleep 3s
 clear
 
