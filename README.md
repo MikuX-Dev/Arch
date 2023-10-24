@@ -1,9 +1,5 @@
 # ArchFiery
-
-# NOTE: Personal-ArchFiery script is for me not for other's "IT HAVE SOME ISSUES"
-
 ## Introduction:
-
 ### Personal archlinux installer script :)
 
 ArchFiery is a simple bash script designed to facilitate the installation of Arch Linux after booting from the official Arch Linux installationmedia. With just two terminal commands, you can easily install Arch Linux. This script is specifically created to install packages such as the base system, bootloader, and optionally [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) and [Blackarch-tools](https://blackarch.org/tools) ("minimum-tools" or "full-tools").
