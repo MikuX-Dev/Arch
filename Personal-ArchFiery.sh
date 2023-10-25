@@ -83,7 +83,7 @@ clear
 # Updating Keyrings
 echo "Internet Connection is a must to begin."
 echo "Updating Keyrings.."
-pacman -Syy --needed --noconfirm archlinux-keyring here too== blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
+pacman -Syy --needed --noconfirm archlinux-keyring --TODO: here too== blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
 sleep 3s
 clear
 
@@ -99,7 +99,7 @@ lsblk
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
 read drive
-sleep 5s
+sleep 3s
 clear
 
 echo "Getting ready for creating partitions!"
@@ -141,7 +141,7 @@ sleep 5s
 clear
 
 echo "Getting ready for formatting partitions!"
-sleep 3s
+sleep 5s
 "$partitionutility" "$drive"
 clear
 
@@ -242,7 +242,7 @@ pacstrap /mnt base base-devel linux linux-headers linux-firmware intel-ucode ntf
 echo "Generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
-sleep 2s
+sleep 3s
 clear
 
 #Setup for post-installation
@@ -250,12 +250,12 @@ sed '1,/^#part2$/d' ArchFiery.sh > /mnt/post_install.sh
 chmod +x /mnt/post_install.sh
 arch-chroot /mnt ./post_install.sh
 clear
-sleep 2s
+sleep 3s
 
 #Unmount drives
 echo "unmounting all the drives"
 umount -R /mnt
-sleep 2s
+sleep 3s
 clear
 
 echo -ne "
@@ -290,6 +290,7 @@ else
     # Multilib repository does not exist, add it to pacman.conf
   echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 for
+sleep 3s
 clear
 
 #Enabling Community repo.
@@ -303,16 +304,17 @@ else
   echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 for
 pacman -Syy --noconfirm pacman-contrib
+sleep 3s
 clear
 
-#curl blackarch strap.sh
+# curl personal strap.sh
+--TODO: HERE ALSO
 curl -O https://blackarch.org/strap.sh
-echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
 chmod +x strap.sh
 ./strap.sh
 pacman -Syy --needed --noconfirm
 rm -rf strap.sh
-sleep 1s
+sleep 3s
 clear
 
 #Installing fastest mirrors
@@ -320,13 +322,6 @@ echo "Installing fastest mirrorlists"
   #backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-  cp -r /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
-
-  #blackarch-mirrorlist
-  echo "Blackarch-mirrorlist setup"
-  sed -i 's/^#Server = https:/Server = https:/g' /etc/pacman.d/blackarch-mirrorlist
-  rankmirrors -n 10 > /etc/pacman.d/blackarch-mirrorlist
-  sleep 1s
 
   #archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
@@ -334,33 +329,33 @@ echo "Installing fastest mirrorlists"
   sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
   rankmirrors -n 10 > /etc/pacman.d/mirrorlist
 pacman -Syy --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && pacman -Fyy --noconfirm && pacman-db-upgrade --noconfirm && sync --noconfirm && pacman -Syy --noconfirm 
-sleep 1s
+sleep 3s
 clear
 
 #Replace Asia/kolkata with your timezone
 echo "Setting timezone"
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
-sleep 1s
+sleep 3s
 clear
 
 #Gen locale
 echo "Generating locale"
 sed -i "s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
 locale-gen
-sleep 1s
+sleep 3s
 clear
 
 #Setting lang
 echo "Setting LANG variable"
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
-sleep 1s
+sleep 3s
 clear
 
 #Setting console keyboard
 echo "Setting console keyboard layout"
 echo 'KEYMAP=us' > /etc/vconsole.conf
-sleep 1s
+sleep 3s
 clear
 
 #Setup hostname
@@ -370,7 +365,7 @@ read hostname
 echo $hostname > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
-sleep 1s
+sleep 3s
 clear
 
 #Setting up hosts
@@ -379,7 +374,7 @@ echo "127.0.0.1       localhost" >> /etc/hosts
 echo "::1             localhost" >> /etc/hosts
 echo "127.0.1.1       $hostname" >> /etc/hosts
 cat /etc/hosts
-sleep 1s
+sleep 3s
 clear
 
 # Install needed pkgs and tools by PACMAN..
@@ -447,12 +442,6 @@ install_packages() {
   #privacy
   packages+='tor'
 
-  #blackarch
-  packages+='blackarch-menus blackarch-config-cursor blackarch-config-icons blackarch-config-xfce'
-
-  #blackarch-slim-tools
-  packages+='aircrack-ng amass arp-scan aquatone binwalk bulk-extractor bully burpsuite cewl chaos-client chntpw commix crackmapexec creddump crunch davtest dbd dirb dirbuster dmitry dns2tcp dnschef dnsenum dnsrecon dnsx enum4linux exiv2 exploitdb faradaysec fern-wifi-cracker ffuf fierce findomain fping gobuster guymager hashcat hashcat-utils hashdeep hashid hash-identifier hping hotpatch httpx hydra ike-scan inetsim iodine john kismet laudanum lbd legion lulzbuster macchanger magicrescue maltego maskprocessor massdns masscan metasploit msfdb mimikatz mitmproxy multimac nbtscan ncrack netdiscover netmask netsed netsniff-ng ngrep nikto nmap nuclei nuclei-templates onesixtyone openbsd-netcat ophcrack patator pdfid pdf-parser pipal pixiewps powersploit proxychains-ng proxytunnel proxify pth-toolkit ptunnel pwnat radare2 reaver rebind recon-ng redsocks responder rsmangler sakis3g samdump2 sbd scalpel scrounge-ntfs seclists set skipfish sleuthkit smbmap snmpcheck socat sploitctl spiderfoot spooftooph sqlmap ssldump sslscan sslsplit sslyze statsprocessor stunnel subfinder swaks tcpdump tcpick tcpreplay thc-ipv6 thc-pptp-bruter tor theharvester udptunnel unix-privesc-check voiphopper wafw00f wce webshells weevely wfuzz whatweb whois wifite windows-binaries winexe wireshark-qt wordlistctl wpscan zaproxy zdns zgrab2 zmap'
-
   packages+='arch-install-scripts pkgfile'
 
   packages+='bluez bluez-hid2hci bluez-tools bluez-utils'
@@ -487,7 +476,7 @@ install_packages() {
   xf86-video-voodoo xorg-server xorg-xbacklight xorg-xinit xterm'
 },
 pacman -S --needed --noconfirm $packages
-sleep 1s
+sleep 3s
 clear
 
 # Install needed pkgs and tools by AUR..
@@ -497,7 +486,6 @@ echo "Installing needed pkgs and tools by AUR"
   cd yay-bin
   makepkg -fsri
   cd ..
-
 # remove dir
 rm -rf yay-bin
 
@@ -525,7 +513,7 @@ install_packages() {
 },
 
 yay -S --needed --noconfirm $aurpkgs
-sleep 1s
+sleep 3s
 clear
 
 # Setting boot partition "EFI"
@@ -537,7 +525,7 @@ if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
 fi
 mount "$efipartition" "$efidirectory"
-sleep 1s
+sleep 3s
 clear
 
 # Install grub
@@ -546,7 +534,7 @@ sleep 2s
 echo "Installing grub bootloader in /boot/efi parttiton"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
-sleep 2s
+sleep 3s
 
 # os-prober
 read -p "Are you duelbooting? (y/n): " use_os_prober
