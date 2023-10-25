@@ -46,7 +46,7 @@ fi
 sleep 3s
 clear
 
-# Curl blackarch strap.sh
+# Curl personal strap.sh
 --TODO: add like do you or not
 curl -O https://blackarch.org/strap.sh
 echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
@@ -63,14 +63,6 @@ echo "Installing fastest mirrorlists"
   # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-  --TODO: add like if blackarch is curl the key then do blackarch if not then dont 
-  cp -r /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
-  
-  # Blackarch-mirrorlist 
-  --TODO: here too
-  echo "Blackarch-mirrorlist setup"
-  sed -i 's/^#Server = https:/Server = https:/g' > /etc/pacman.d/blackarch-mirrorlist
-  rankmirrors -n 10 > /etc/pacman.d/blackarch-mirrorlist
 
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
@@ -83,7 +75,7 @@ clear
 # Updating Keyrings
 echo "Internet Connection is a must to begin."
 echo "Updating Keyrings.."
-pacman -Syy --needed --noconfirm archlinux-keyring --TODO: here too== blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
+pacman -Syy --needed --noconfirm archlinux-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
 sleep 3s
 clear
 
