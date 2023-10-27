@@ -2,8 +2,6 @@
 
 clear
 
---TODO: changes 1s to 3s and 2s to 3s and extend the time
-
 # Start
 echo -ne "
 ╭─────── ArchFiery ───────╮
@@ -43,17 +41,6 @@ else
     # Community repository does not exist, add it to pacman.conf
   echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 fi
-sleep 3s
-clear
-
-# Curl personal strap.sh
---TODO: add like do you or not
-curl -O https://blackarch.org/strap.sh
-echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
-chmod +x strap.sh
-./strap.sh
-pacman -Syyu --needed --noconfirm pacman-contrib
-rm -rf strap.sh
 sleep 3s
 clear
 
