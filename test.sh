@@ -17,14 +17,13 @@ sleep 5s
 echo "Installation guide starts now..."
 sleep 3s
 # Clean up the Pacman cache
-pacman -Scc --noconfirm --quiet && rm -rf /var/cache/pacman/pkg/*
+paccache -r
 sleep 2s
 # Update
 echo "updateing first"
 pacman -Syy reflector rsync curl --noconfirm
 sleep 3s
 clear
-
 
 # Enabling multilib repo.
 echo "Enabling multilib repo"
@@ -61,10 +60,11 @@ echo "Installing fastest mirrorlists"
 
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
+  curl https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
   sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
   pacman -Syy --noconfirm
-  reflector --verbose -l 200 -n 20 --sort rate --download-timeout 15 --save /etc/pacman.d/mirrorlist
+  sleep 2s
+  reflector --verbose -l 50 -n 20 --sort rate --download-timeout 25 --save /etc/pacman.d/mirrorlist
 sleep 3s
 clear
 
@@ -294,16 +294,20 @@ for
 sleep 3s
 clear
 
-#Installing fastest mirrors
+# Installing fastest mirrors
 echo "Installing fastest mirrorlists"
-  #backup mirrorlist
+
+  # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 
-  #archlinux mirrorlists
+  # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  reflector --verbose -l 200 -n 20 --sort rate --save /etc/pacman.d/mirrorlist
-  pacman -Syy --noconfirm && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && pacman -Fyy --noconfirm && pacman-db-upgrade --noconfirm && sync --noconfirm 
+  curl https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
+  sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
+  pacman -Syy --noconfirm
+  sleep 2s
+  reflector --verbose -l 50 -n 20 --sort rate --download-timeout 25 --save /etc/pacman.d/mirrorlist
 sleep 3s
 clear
 
