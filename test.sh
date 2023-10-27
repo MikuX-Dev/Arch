@@ -15,6 +15,9 @@ echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.8 (GPL-3.0)"
 sleep 5s
 
 echo "Installation guide starts now..."
+sleep 3s
+# Clean up the Pacman cache
+pacman -Scc --noconfirm --quiet && rm -rf /var/cache/pacman/pkg/*
 sleep 2s
 # Update
 echo "updateing first"
@@ -58,7 +61,10 @@ echo "Installing fastest mirrorlists"
 
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  reflector --verbose -l 200 -n 20 --sort rate --save /etc/pacman.d/mirrorlist
+  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
+  sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
+  pacman -Syy --noconfirm
+  reflector --verbose -l 200 -n 20 --sort rate --download-timeout 15 --save /etc/pacman.d/mirrorlist
 sleep 3s
 clear
 
