@@ -11,9 +11,8 @@ echo -ne "
 │       and enjoy         │
 ╰─────────────────────────╯
 "
-echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.8 (GPL-3.0)"
+echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.27.10 (GPL-3.0)"
 sleep 5s
-
 echo "Installation guide starts now..."
 sleep 3s
 # Clean up the Pacman cache
@@ -25,32 +24,15 @@ pacman -Syy reflector rsync curl --noconfirm
 sleep 3s
 clear
 
-# Enable the multilib and community repositories
-# Check if multilib and community entries are already in pacman.conf
-multilib_exist=$(grep -c "^\[multilib\]$" /etc/pacman.conf)
-community_exist=$(grep -c "^\[community\]$" /etc/pacman.conf)
-# Check if multilib and community sections are enabled
-multilib_enabled=$(grep -c "^[multilib]$" /etc/pacman.conf)
-community_enabled=$(grep -c "^[community]$" /etc/pacman.conf)
-# If [multilib] section is not present, add it
-if [ "$multilib_exist" -eq 0 ]; then
-  echo "[multilib]" | sudo tee -a /etc/pacman.conf
+# Check if multilib and community repositories are enabled
+if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
+    # Repositories are already enabled, remove any commented-out lines
+    sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
+    sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
+else
+    # Repositories are not enabled, add them
+    echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 fi
-# If [multilib] section is present but commented, remove the comment symbol
-if [ "$multilib_enabled" -eq 0 ]; then
-  sudo sed -i '/^\[multilib\]$/,/^\[/ s/^#//' /etc/pacman.conf
-fi
-# If [community] section is not present, add it
-if [ "$community_exist" -eq 0 ]; then
-  echo "[community]" | sudo tee -a /etc/pacman.conf
-fi
-# If [community] section is present but commented, remove the comment symbol
-if [ "$community_enabled" -eq 0 ]; then
-  sudo sed -i '/^\[community\]$/,/^\[/ s/^#//' /etc/pacman.conf
-fi
-# Optionally, print a message to inform the user
-pacman -Syy
-echo "Multilib and Community repositories have been enabled in /etc/pacman.conf."
 
 # Installing fastest mirrors
 read -p "Do you want fastest mirrors? [Y/n] " fm
@@ -262,31 +244,15 @@ echo -ne "
 sleep 5s
 clear
 
-# Enable the multilib and community repositories
-# Check if multilib and community entries are already in pacman.conf
-multilib_exist=$(grep -c "^\[multilib\]$" /etc/pacman.conf)
-community_exist=$(grep -c "^\[community\]$" /etc/pacman.conf)
-# Check if multilib and community sections are enabled
-multilib_enabled=$(grep -c "^[multilib]$" /etc/pacman.conf)
-community_enabled=$(grep -c "^[community]$" /etc/pacman.conf)
-# If [multilib] section is not present, add it
-if [ "$multilib_exist" -eq 0 ]; then
-  echo "[multilib]" | sudo tee -a /etc/pacman.conf
+# Check if multilib and community repositories are enabled
+if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
+    # Repositories are already enabled, remove any commented-out lines
+    sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
+    sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
+else
+    # Repositories are not enabled, add them
+    echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 fi
-# If [multilib] section is present but commented, remove the comment symbol
-if [ "$multilib_enabled" -eq 0 ]; then
-  sudo sed -i '/^\[multilib\]$/,/^\[/ s/^#//' /etc/pacman.conf
-fi
-# If [community] section is not present, add it
-if [ "$community_exist" -eq 0 ]; then
-  echo "[community]" | sudo tee -a /etc/pacman.conf
-fi
-# If [community] section is present but commented, remove the comment symbol
-if [ "$community_enabled" -eq 0 ]; then
-  sudo sed -i '/^\[community\]$/,/^\[/ s/^#//' /etc/pacman.conf
-fi
-# Optionally, print a message to inform the user
-echo "Multilib and Community repositories have been enabled in /etc/pacman.conf."
 
 # Installing fastest mirrors
 reap -p "Do you want fastest mirrors? [Y/n] " fm
