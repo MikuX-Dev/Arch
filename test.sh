@@ -399,20 +399,18 @@ install_packages() {
   packages+='xdg-user-dirs-gtk xdg-desktop-portal-gtk'
 
   #other
-  packages+='arch-wiki-docs linux-firmware pkgfile intel-ucode ntfs-3g base smartmontools base-devel linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
+  packages+='arch-wiki-docs linux-firmware pkgfile intel-ucode ntfs-3g base smartmontools base-devel gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
 
   #ssh and gnupg
   packages+='openssh gnupg'
-  
+
   #System
-  packages+='ncdu mkinitcpio-archiso mkinitcpio-nfs-utils nfs-utils nilfs-utils nvme-cli nbd ndisc6 feh menumaker openconnect partclone gparted '
+  packages+='ncdu mkinitcpio-archiso mkinitcpio-nfs-utils nfs-utils nilfs-utils nvme-cli nbd ndisc6 obsidian feh menumaker openconnect partclone gparted '
 
   #privacy
   packages+='tor'
 
   packages+='arch-install-scripts pkgfile'
-
-  packages+='hexedit nano vim'
 
   packages+='cifs-utils dmraid dosfstools exfat-utils f2fs-tools
   gpart gptfdisk mtools nilfs-utils ntfs-3g partclone parted partimage'
@@ -427,6 +425,8 @@ install_packages() {
   dnscrypt-proxy dnsmasq dnsutils fwbuilder gnu-netcat ipw2100-fw ipw2200-fw iw
   iwd lftp nfs-utils ntp openconnect openssh openvpn ppp pptpclient rfkill
   rp-pppoe socat vpnc wget wireless_tools wpa_supplicant wvdial xl2tpd'
+
+  packages+='virtualbox-host-modules-arch virtualbox-guest-utils virtualbox-guest-utils-nox'
 },
 pacman -S --needed --noconfirm $packages
 sleep 3s
@@ -445,24 +445,9 @@ rm -rf yay-bin
 # Install pkgs and tools by AUR..
 install_packages() {
   local aurpkgs=''
-
-  #Browser
-  aurpkgs+='barve-bin librewolf-bin tor-browser mullvad-browser-bin'
-
-  #libreoffice
-  aurpkgs+='libreoffice-extension-languagetool'
-
+  
   #other
-  aurpkgs+='mkinitcpio-firmware mkinitcpio-openswap mkinitcpio-numlock i2p i2pd'
-
-  #password manager
-  aurpkgs+='bitwarden-rofi bitwarden-cli-bin'
-
-  #code-editor
-  aurpkgs+='vscodium-bin todotxt'
-
-  #Sync
-  aurpkgs+='megasync-bin syncthing-bin'
+  aurpkgs+='mkinitcpio-firmware mkinitcpio-openswap mkinitcpio-numlock'
 },
 
 yay -S --needed --noconfirm $aurpkgs
@@ -574,7 +559,7 @@ sleep 3s
 
 # Enable services
 echo "Enabling services.."
-enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'cups.service' 'org.cups.cupsd.service' 'lightdm.service' 'NetworkManager.service' 'bluetooth.service')
+enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service'')
 systemctl enable ${enable_services[@]}
 sleep 3s
 clear
