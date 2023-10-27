@@ -2,80 +2,9 @@
 
 clear
 
-#Main Start
-# #
-# # Exit on CTRL + c
-# ctrl_c() {
-#   err "Keyboard Interrupt detected, leaving..."
-#   exit $FAILURE
-# }
+--TODO: changes 1s to 3s and 2s to 3s and extend the time
 
-# trap ctrl_c 2
-
-# # check exit status
-# check() {
-#   es=$1
-#   func="$2"
-#   info="$3"
-
-#   if [ "$es" -ne 0 ]
-#   then
-#     echo
-#     warn "Something went wrong with $func. $info."
-#     sleep 5
-#   fi
-# }
-
-# # check boot mode
-# check_boot_mode() {
-#   efivars=$(ls /sys/firmware/efi/efivars > /dev/null 2>&1; echo $?)
-#   if [ "$efivars" -eq "0" ]
-#   then
-#      BOOT_MODE="uefi"
-#   fi
-
-#   return $SUCCESS
-# }
-
-# # check for environment issues
-# check_env() {
-#   if [ -f '/var/lib/pacman/db.lck' ]
-#   then
-#     err 'pacman locked - Please remove /var/lib/pacman/db.lck'
-#   fi
-# }
-
-# # check user id
-# check_uid() {
-#   if [ "$(id -u)" != '0' ]
-#   then
-#     err 'You must be root to run the BlackArch installer!'
-#   fi
-
-#   return $SUCCESS
-# }
-
-# # check for internet connection
-# check_inet_connection() {
-#   title 'Network Setup > Connection Check'
-#   wprintf '[+] Checking for Internet connection...'
-
-#   if ! curl -s https://www.duckduckgo.com/ > $VERBOSE
-#   then
-#     err 'No Internet connection! Check your network (settings).'
-#     exit $FAILURE
-#   fi
-# }
-
-# main(){
-#   # do some ENV checks
-#   sleep_clear 0
-#   check_uid
-#   check_env
-#   check_boot_mode
-# }
-
-#
+# Start
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │  Installation starting  │
@@ -85,13 +14,13 @@ echo -ne "
 ╰─────────────────────────╯
 "
 echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.8 (GPL-3.0)"
-sleep 3s
+sleep 5s
 
-echo "Installation guide starts now.."
+echo "Installation guide starts now..."
 sleep 3s
 clear
 
-#Enabling multilib repo.
+# Enabling multilib repo.
 echo "Enabling multilib repo"
 # Check if multilib repository exists in pacman.conf
 if grep -q "\[multilib\]" /etc/pacman.conf; then
@@ -104,7 +33,7 @@ fi
 sleep 3s
 clear
 
-#Enabling Community repo.
+# Enabling Community repo.
 echo "Enabling community repo"
 # Check if community repository exists in pacman.conf
 if grep -q "\[community\]" /etc/pacman.conf; then
@@ -117,7 +46,8 @@ fi
 sleep 3s
 clear
 
-#curl blackarch strap.sh
+# Curl personal strap.sh
+--TODO: add like do you or not
 curl -O https://blackarch.org/strap.sh
 echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
 chmod +x strap.sh
@@ -127,39 +57,35 @@ rm -rf strap.sh
 sleep 3s
 clear
 
-#Installing fastest mirrors
+# Installing fastest mirrors
 echo "Installing fastest mirrorlists"
 
-  #backup mirrorlist
+  # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-  cp -r /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
 
-  #blackarch-mirrorlist
-  echo "Blackarch-mirrorlist setup"
-  curl https://raw.githubusercontent.com/MikuX-Dev/docker-archiso/main/blackarch-mirrorlist -o /etc/pacman.d/blackarch-mirrorlist 
-  sleep 3s
-
-  #archlinux mirrorlists
+  # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  sh -c "curl https://archlinux.org/mirrorlist/\?country=all\&protocol=http\&protocol=https\&ip_version=4\&ip_version=6\&use_mirror_status=on -o /etc/pacman.d/mirrorlist && sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist"
+  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
+  sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
+  rankmirrors -n 10 > /etc/pacman.d/mirrorlist
 sleep 3s
 clear
 
-#Updating Keyrings
+# Updating Keyrings
 echo "Internet Connection is a must to begin."
 echo "Updating Keyrings.."
-pacman -Syy --needed --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
+pacman -Syy --needed --noconfirm archlinux-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
 sleep 3s
 clear
 
-#Setting up system clock
+# Setting up system clock
 echo "Ensuring if the system clock is accurate."
 timedatectl set-ntp true
 sleep 3s
 clear
 
-#Setting up drive
+# Setting up drive
 echo "Setting Up drive"
 lsblk
 echo "Enter the drive to install arch linux on it. (/dev/...)"
@@ -172,8 +98,8 @@ echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
 echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting ready in 9 seconds"
-sleep 9s
+echo "Getting ready in 5 seconds"
+sleep 5s
 clear
 
 lsblk
@@ -203,11 +129,11 @@ case "$partitionutility" in
   ;;
 esac
 echo ""$partitionutility" is the selected disk utility tool for partition."
-sleep 3s
+sleep 5s
 clear
 
 echo "Getting ready for formatting partitions!"
-sleep 3s
+sleep 5s
 "$partitionutility" "$drive"
 clear
 
@@ -296,13 +222,13 @@ clear
 
 lsblk
 sync
-sleep 3s
+sleep 5s
 clear
 
 # Installing base system with lts-kernel, intel-ucode and duel boot system too
 echo "Installing Base system with lts kernel!!!"
 sleep 3s
-pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware intel-ucode ntfs-3g nvme-cli
+pacstrap /mnt base base-devel linux linux-headers linux-firmware intel-ucode ntfs-3g nvme-cli
 
 #Gen fstab
 echo "Generating fstab file"
@@ -328,11 +254,11 @@ echo -ne "
 ╭─────── ArchFiery ───────╮
 │      Installation       │
 │        completed        │
-│    rebooting in 9s      │
+│    rebooting in 5s      │
 ╰─────────────────────────╯
 "
-echo "Installation Finished. REBOOTING IN 9 SECONDS!!!"
-sleep 9s
+echo "Installation Finished. REBOOTING IN 5 SECONDS!!!"
+sleep 5s
 reboot
 
 #part2
@@ -340,10 +266,10 @@ reboot
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │      post_install       │
-│     starting in 9s      │
+│     starting in 5s      │
 ╰─────────────────────────╯
 "
-sleep 9s
+sleep 5s
 clear
 
 #Enabling multilib repo.
@@ -356,6 +282,7 @@ else
     # Multilib repository does not exist, add it to pacman.conf
   echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 for
+sleep 3s
 clear
 
 #Enabling Community repo.
@@ -369,11 +296,12 @@ else
   echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 for
 pacman -Syy --noconfirm pacman-contrib
+sleep 3s
 clear
 
-#curl blackarch strap.sh
+# curl personal strap.sh
+--TODO: HERE ALSO
 curl -O https://blackarch.org/strap.sh
-echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
 chmod +x strap.sh
 ./strap.sh
 pacman -Syy --needed --noconfirm
@@ -383,20 +311,16 @@ clear
 
 #Installing fastest mirrors
 echo "Installing fastest mirrorlists"
-
   #backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-  cp -r /etc/pacman.d/blackarch-mirrorlist /etc/pacman.d/blackarch-mirrorlist.backup
-
-  #blackarch-mirrorlist
-  echo "Blackarch-mirrorlist setup"
-  curl https://raw.githubusercontent.com/MikuX-Dev/docker-archiso/main/blackarch-mirrorlist -o /etc/pacman.d/blackarch-mirrorlist 
-  sleep 3s
 
   #archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  sh -c "curl https://archlinux.org/mirrorlist/\?country=all\&protocol=http\&protocol=https\&ip_version=4\&ip_version=6\&use_mirror_status=on -o /etc/pacman.d/mirrorlist && sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist"
+  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
+  sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
+  rankmirrors -n 10 > /etc/pacman.d/mirrorlist
+pacman -Syy --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && pacman -Fyy --noconfirm && pacman-db-upgrade --noconfirm && sync --noconfirm && pacman -Syy --noconfirm 
 sleep 3s
 clear
 
@@ -451,22 +375,13 @@ install_packages() {
   local packages=''
 
   #networkmanager etc..
-  packages+='archlinux-tweak-tool-git network-manager-applet networkmanager network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc modemmanager dhclient dhcpcd'
-
-  #bluetooth etc..
-  packages+='bluez bluez-utils bluez-tools bluez-libs blueman pulseaudio pulseaudio-bluetooth pulseaudio-alsa pavucontrol alsa-utils mesa alsa-firmware alsa-lib'
+  packages+='network-manager-applet networkmanager network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc modemmanager dhclient dhcpcd'
 
   #video drive etc..
   packages+='xf86-video-intel xf86-video-fbdev vulkan-intel vulkan-icd-loader xf86-video-openchrome xf86-video-vesa xf86-input-void xf86-input-libinput libinput xf86-input-evdev xf86-input-elographics'
 
-  #print service
-  packages+='cups system-config-printer'
-
   #text editor
   packages+='vim neovim nano'
-
-  #terminal
-  packages+='tmux'
 
   #git
   packages+='git git-lfs'
@@ -474,14 +389,8 @@ install_packages() {
   #archive tools
   packages+='ack xarchiver p7zip zip unzip gzip tar bzip3 unrar xz zstd'
 
-  #Document Viewer
-  packages+='libreoffice-still'
-
   #dev tools
   packages+='archiso f2fs-tools automake gawk gammu gnome-keyring mtools dosfstools devtools multilib-devel npm qemu-tools qemu-emulators-full qemu-system-x86-firmware cargo make go lua perl ruby rust rustup cmake gcc gcc-libs gdb ppp rp-pppoe pptpclient reiserfsprogs  clang llvm ccache curl wget sed'
-
-  #lightdm lockscreen
-  packages+='lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings'
 
   #shell
   packages+='zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting zsh-completions bash-completion'
@@ -490,48 +399,23 @@ install_packages() {
   packages+='xdg-user-dirs-gtk xdg-desktop-portal-gtk'
 
   #other
-  packages+='arch-wiki-docs linux-firmware pkgfile intel-ucode ntfs-3g base smartmontools base-devel linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell rofi profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
-
-  #application
-  packages+='hexchat htop galculator fwupd ufw redshift ddrescue'
+  packages+='arch-wiki-docs linux-firmware pkgfile intel-ucode ntfs-3g base smartmontools base-devel linux-lts-docs linux-hardened-docs gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
 
   #ssh and gnupg
   packages+='openssh gnupg'
-
-  #fonts
-  packages+='noto-fonts fontconfig ttf-bitstream-vera ttf-dejavu ttf-droid ttf-inconsolata ttf-indic-otf ttf-liberation ttf-jetbrains-mono-nerd ttf-hack-nerd ttf-firacode-nerd'
-
-  #xorg
-  packages+='xorg xorg-server xorg-xinit xcompmgr'
-
+  
   #System
-  packages+='xfce4 xfce4-goodies plank ranger trash-cli ncdu mkinitcpio-archiso mkinitcpio-nfs-utils nfs-utils nilfs-utils nvme-cli nbd ndisc6 obsidian feh menumaker openconnect partclone gparted '
+  packages+='ncdu mkinitcpio-archiso mkinitcpio-nfs-utils nfs-utils nilfs-utils nvme-cli nbd ndisc6 feh menumaker openconnect partclone gparted '
 
   #privacy
   packages+='tor'
 
-  #blackarch
-  packages+='blackarch-menus blackarch-config-cursor blackarch-config-icons blackarch-config-xfce'
-
-  #blackarch-slim-tools
-  packages+='aircrack-ng amass arp-scan aquatone binwalk bulk-extractor bully burpsuite cewl chaos-client chntpw commix crackmapexec creddump crunch davtest dbd dirb dirbuster dmitry dns2tcp dnschef dnsenum dnsrecon dnsx enum4linux exiv2 exploitdb faradaysec fern-wifi-cracker ffuf fierce findomain fping gobuster guymager hashcat hashcat-utils hashdeep hashid hash-identifier hping hotpatch httpx hydra ike-scan inetsim iodine john kismet laudanum lbd legion lulzbuster macchanger magicrescue maltego maskprocessor massdns masscan metasploit msfdb mimikatz mitmproxy multimac nbtscan ncrack netdiscover netmask netsed netsniff-ng ngrep nikto nmap nuclei nuclei-templates onesixtyone openbsd-netcat ophcrack patator pdfid pdf-parser pipal pixiewps powersploit proxychains-ng proxytunnel proxify pth-toolkit ptunnel pwnat radare2 reaver rebind recon-ng redsocks responder rsmangler sakis3g samdump2 sbd scalpel scrounge-ntfs seclists set skipfish sleuthkit smbmap snmpcheck socat sploitctl spiderfoot spooftooph sqlmap ssldump sslscan sslsplit sslyze statsprocessor stunnel subfinder swaks tcpdump tcpick tcpreplay thc-ipv6 thc-pptp-bruter tor theharvester udptunnel unix-privesc-check voiphopper wafw00f wce webshells weevely wfuzz whatweb whois wifite windows-binaries winexe wireshark-qt wordlistctl wpscan zaproxy zdns zgrab2 zmap'
-
   packages+='arch-install-scripts pkgfile'
-
-  packages+='bluez bluez-hid2hci bluez-tools bluez-utils'
-
-  packages+='chromium elinks firefox'
 
   packages+='hexedit nano vim'
 
   packages+='cifs-utils dmraid dosfstools exfat-utils f2fs-tools
   gpart gptfdisk mtools nilfs-utils ntfs-3g partclone parted partimage'
-
-  packages+='ttf-dejavu ttf-indic-otf ttf-liberation xorg-fonts-misc'
-
-  packages+='amd-ucode intel-ucode'
-
-  packages+='linux-headers-lts'
 
   packages+='acpi alsa-utils b43-fwcutter bash-completion bc cmake ctags expac
   feh git gpm haveged hdparm htop inotify-tools ipython irssi
@@ -543,11 +427,6 @@ install_packages() {
   dnscrypt-proxy dnsmasq dnsutils fwbuilder gnu-netcat ipw2100-fw ipw2200-fw iw
   iwd lftp nfs-utils ntp openconnect openssh openvpn ppp pptpclient rfkill
   rp-pppoe socat vpnc wget wireless_tools wpa_supplicant wvdial xl2tpd'
-
-  packages+='rxvt-unicode xf86-video-amdgpu xf86-video-ati
-  xf86-video-dummy xf86-video-fbdev xf86-video-intel xf86-video-nouveau
-  xf86-video-openchrome xf86-video-sisusb xf86-video-vesa xf86-video-vmware
-  xf86-video-voodoo xorg-server xorg-xbacklight xorg-xinit xterm'
 },
 pacman -S --needed --noconfirm $packages
 sleep 3s
@@ -560,7 +439,6 @@ echo "Installing needed pkgs and tools by AUR"
   cd yay-bin
   makepkg -fsri
   cd ..
-
 # remove dir
 rm -rf yay-bin
 
@@ -591,7 +469,7 @@ yay -S --needed --noconfirm $aurpkgs
 sleep 3s
 clear
 
-#Setting boot partition "EFI"
+# Setting boot partition "EFI"
 lsblk
 echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
 read efipartition
@@ -603,21 +481,21 @@ mount "$efipartition" "$efidirectory"
 sleep 3s
 clear
 
-#Install grub
+# Install grub
 lsblk
-sleep 3s
+sleep 2s
 echo "Installing grub bootloader in /boot/efi parttiton"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 3s
 
-#os-prober
+# os-prober
 read -p "Are you duelbooting? (y/n): " use_os_prober
 if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
   os-prober
-  sleep 3s
+  sleep 2s
   grub-mkconfig -o /boot/grub/grub.cfg
 else
   echo "Os-prober not enabled. Generating fstab..."
@@ -625,44 +503,52 @@ fi
 sleep 3s
 clear
 
+# Gen fstab
+echo "Generating fstab file"
+genfstab -U /mnt >> /mnt/etc/fstab
+cat /etc/fstab
+sleep 5s
+clear
+
 #edit sudo
-echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
+#echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
 
 # Personal dotfiles
-echo "Setting up Personal dotfiles"
-git clone https://github.com/MikuX-Dev/dotfiles.git
-git clone https://gihtub.com/MiKuX-Dev/ArchFirey.git
-sleep 3s
+#echo "Setting up Personal dotfiles"
+#git clone https://github.com/MikuX-Dev/dotfiles.git
+#sleep 3s
 # bash
-echo "Installing shell"
-cp -r dotfiles/shell/bash/* /etc/skel/
-sleep 3s
-cp -r dotfiles/shell/zsh/* /etc/skel/
+#echo "Installing shell"
+#cp -r dotfiles/shell/bash/* /etc/skel/
+#sleep 2s
+#cp -r dotfiles/shell/zsh/* /etc/skel/
 # theme
-echo "Installing themes"
-cp -r dotfiles/themes/* /usr/share/themes/
-cp -r dotfiles/icons/* /usr/share/icons/
-sleep 3s
+#echo "Installing themes"
+#cp -r dotfiles/themes/* /usr/share/themes/
+#cp -r dotfiles/icons/* /usr/share/icons/
+#sleep 2s
 # config
-echo "Installing configs"
-cp -r dotfiles/config/* /etc/
-sleep 3s
+#echo "Installing configs"
+#cp -r dotfiles/config/* /etc/
+#sleep 2s
 #wallpaper
-echo "Installing wallpaper"
-cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
-sleep 3s
-#grub-theme
+#echo "Installing wallpaper"
+#cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
+#sleep 2s
+
+# grub-theme
 echo "Installing grub-theme"
-cp -r dotfiles/themes/grub/src/* /usr/share/grub/themes/
+git clone https://github.com/MikuX-Dev/ArchFiery.git
+cp -r ArchFiery/grub/src/* /usr/share/grub/themes/
 sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/nexsecuros/theme.txt"/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 3s
-# #remove folder
-rm -rf dotfiles
-sleep 3s
+#remove folder
+rm -rf ArchFiery/
+sleep 2s
 clear
 
-#Setting root user
+# Setting root user
 echo "Enter password for root user:"
 passwd
 sleep 3s
@@ -672,24 +558,23 @@ clear
 echo "Adding regular user!"
 echo "Enter username to add a regular user: "
 read username
-useradd -m -G wheel -s /bin/bash $username
+useradd -m -G wheel -s /bin/zsh $username
 echo "Enter password for "$username": "
 passwd $username
 sleep 3s
 clear
 
-#Adding sudo previliages to the user you created
+# Adding sudo previliages to the user you created
 echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."
-sleep 3s
+sleep 2s
 echo "Giving sudo access to "$username"!"
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
 clear
 sleep 3s
 
-#Enable services
+# Enable services
 echo "Enabling services.."
 enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'cups.service' 'org.cups.cupsd.service' 'lightdm.service' 'NetworkManager.service' 'bluetooth.service')
 systemctl enable ${enable_services[@]}
 sleep 3s
 clear
-
