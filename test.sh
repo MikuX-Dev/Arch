@@ -46,6 +46,8 @@ clear
 
 # Installing fastest mirrors
 echo "Installing fastest mirrorlists"
+echo "updateing first"
+pacman -Syyu pacman-contrib
 
   # Backup mirrorlist
   echo "Backingup mirrorlists"
