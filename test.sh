@@ -53,7 +53,7 @@ pacman -Syy
 echo "Multilib and Community repositories have been enabled in /etc/pacman.conf."
 
 # Installing fastest mirrors
-reap -p "Do you want fastest mirrors? [Y/n] " fm
+read -p "Do you want fastest mirrors? [Y/n] " fm
 if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
 echo "Installing fastest mirrorlists"
   # Backup mirrorlist
