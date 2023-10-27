@@ -17,7 +17,7 @@ sleep 5s
 echo "Installation guide starts now..."
 sleep 3s
 # Clean up the Pacman cache
-pacman -Scc --noconfirm --quiet && rm -rf /var/cache/pacman/pkg/*
+pacman -Scc --noconfirm --quiet
 sleep 2s
 # Update
 echo "updateing first"
@@ -25,31 +25,31 @@ pacman -Syy reflector rsync curl --noconfirm
 sleep 3s
 clear
 
-# Enabling multilib repo.
-echo "Enabling multilib repo"
-# Check if multilib repository exists in pacman.conf
-if grep -q "\[multilib\]" /etc/pacman.conf; then
-    # Multilib repository exists, remove comment if it is commented out
-  sed -i '/^\[multilib\]/,/Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
-else
-    # Multilib repository does not exist, add it to pacman.conf
-  echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
+# Enable the multilib and community repositories
+# Check if multilib and community entries are already in pacman.conf
+multilib_exist=$(grep -c "^\[multilib\]$" /etc/pacman.conf)
+community_exist=$(grep -c "^\[community\]$" /etc/pacman.conf)
+# Check if multilib and community sections are enabled
+multilib_enabled=$(grep -c "^[multilib]$" /etc/pacman.conf)
+community_enabled=$(grep -c "^[community]$" /etc/pacman.conf)
+# If [multilib] section is not present, add it
+if [ "$multilib_exist" -eq 0 ]; then
+  echo "[multilib]" | sudo tee -a /etc/pacman.conf
 fi
-sleep 3s
-clear
-
-# Enabling Community repo.
-echo "Enabling community repo"
-# Check if community repository exists in pacman.conf
-if grep -q "\[community\]" /etc/pacman.conf; then
-    # Community repository exists, remove comment if it is commented out
-  sed -i '/^\[community\]/,/Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
-else
-    # Community repository does not exist, add it to pacman.conf
-  echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
+# If [multilib] section is present but commented, remove the comment symbol
+if [ "$multilib_enabled" -eq 0 ]; then
+  sudo sed -i '/^\[multilib\]$/,/^\[/ s/^#//' /etc/pacman.conf
 fi
-sleep 3s
-clear
+# If [community] section is not present, add it
+if [ "$community_exist" -eq 0 ]; then
+  echo "[community]" | sudo tee -a /etc/pacman.conf
+fi
+# If [community] section is present but commented, remove the comment symbol
+if [ "$community_enabled" -eq 0 ]; then
+  sudo sed -i '/^\[community\]$/,/^\[/ s/^#//' /etc/pacman.conf
+fi
+# Optionally, print a message to inform the user
+echo "Multilib and Community repositories have been enabled in /etc/pacman.conf."
 
 # Installing fastest mirrors
 echo "Installing fastest mirrorlists"
@@ -62,7 +62,7 @@ echo "Installing fastest mirrorlists"
   echo "Archlinux-mirrorlist setup"
   pacman -Syy --noconfirm
   sleep 2s
-  reflector --verbose -l 50 -n 20 --sort rate --download-timeout 25 --save /etc/pacman.d/mirrorlist
+  reflector --verbose -l 50 -n 20 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
 sleep 3s
 clear
 
@@ -219,26 +219,26 @@ sync
 sleep 5s
 clear
 
-# Installing base system with lts-kernel, intel-ucode and duel boot system too
-echo "Installing Base system with lts kernel!!!"
+# Installing base system with linux kernel and intel-ucode...
+echo "Installing Base system with linux kernel!!!"
 sleep 3s
 pacstrap /mnt base base-devel linux linux-headers linux-firmware intel-ucode ntfs-3g nvme-cli
 
-#Gen fstab
+# Gen fstab
 echo "Generating fstab file"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
 sleep 3s
 clear
 
-#Setup for post-installation
+# Setup for post-installation
 sed '1,/^#part2$/d' ArchFiery.sh > /mnt/post_install.sh
 chmod +x /mnt/post_install.sh
 arch-chroot /mnt ./post_install.sh
 clear
 sleep 3s
 
-#Unmount drives
+# Unmount drives
 echo "unmounting all the drives"
 umount -R /mnt
 sleep 3s
@@ -266,31 +266,31 @@ echo -ne "
 sleep 5s
 clear
 
-#Enabling multilib repo.
-echo "Enabling multilib repo"
-# Check if multilib repository exists in pacman.conf
-if grep -q "\[multilib\]" /etc/pacman.conf; then
-    # Multilib repository exists, remove comment if it is commented out
-  sed -i '/^\[multilib\]/,/Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
-else
-    # Multilib repository does not exist, add it to pacman.conf
-  echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
-for
-sleep 3s
-clear
-
-#Enabling Community repo.
-echo "Enabling community repo"
-# Check if community repository exists in pacman.conf
-if grep -q "\[community\]" /etc/pacman.conf; then
-    # Community repository exists, remove comment if it is commented out
-  sed -i '/^\[community\]/,/Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
-else
-    # Community repository does not exist, add it to pacman.conf
-  echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
-for
-sleep 3s
-clear
+# Enable the multilib and community repositories
+# Check if multilib and community entries are already in pacman.conf
+multilib_exist=$(grep -c "^\[multilib\]$" /etc/pacman.conf)
+community_exist=$(grep -c "^\[community\]$" /etc/pacman.conf)
+# Check if multilib and community sections are enabled
+multilib_enabled=$(grep -c "^[multilib]$" /etc/pacman.conf)
+community_enabled=$(grep -c "^[community]$" /etc/pacman.conf)
+# If [multilib] section is not present, add it
+if [ "$multilib_exist" -eq 0 ]; then
+  echo "[multilib]" | sudo tee -a /etc/pacman.conf
+fi
+# If [multilib] section is present but commented, remove the comment symbol
+if [ "$multilib_enabled" -eq 0 ]; then
+  sudo sed -i '/^\[multilib\]$/,/^\[/ s/^#//' /etc/pacman.conf
+fi
+# If [community] section is not present, add it
+if [ "$community_exist" -eq 0 ]; then
+  echo "[community]" | sudo tee -a /etc/pacman.conf
+fi
+# If [community] section is present but commented, remove the comment symbol
+if [ "$community_enabled" -eq 0 ]; then
+  sudo sed -i '/^\[community\]$/,/^\[/ s/^#//' /etc/pacman.conf
+fi
+# Optionally, print a message to inform the user
+echo "Multilib and Community repositories have been enabled in /etc/pacman.conf."
 
 # Installing fastest mirrors
 echo "Installing fastest mirrorlists"
@@ -307,33 +307,33 @@ echo "Installing fastest mirrorlists"
 sleep 3s
 clear
 
-#Replace Asia/kolkata with your timezone
+# Replace Asia/kolkata with your timezone
 echo "Setting timezone"
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
 sleep 3s
 clear
 
-#Gen locale
+# Gen locale
 echo "Generating locale"
 sed -i "s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
 locale-gen
 sleep 3s
 clear
 
-#Setting lang
+# Setting lang
 echo "Setting LANG variable"
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 sleep 3s
 clear
 
-#Setting console keyboard
+# Setting console keyboard
 echo "Setting console keyboard layout"
 echo 'KEYMAP=us' > /etc/vconsole.conf
 sleep 3s
 clear
 
-#Setup hostname
+# Setup hostname
 echo "Set up your hostname!"
 echo "Enter your computer name: "
 read hostname
@@ -343,7 +343,7 @@ cat /etc/hostname
 sleep 3s
 clear
 
-#Setting up hosts
+# Setting up hosts
 echo "Setting up hosts file"
 echo "127.0.0.1       localhost" >> /etc/hosts
 echo "::1             localhost" >> /etc/hosts
@@ -428,7 +428,7 @@ rm -rf yay-bin
 # Install pkgs and tools by AUR..
 install_packages() {
   local aurpkgs=''
-  
+
   #other
   aurpkgs+='mkinitcpio-firmware mkinitcpio-openswap mkinitcpio-numlock'
 },
@@ -522,7 +522,7 @@ passwd
 sleep 3s
 clear
 
-#Setting regular user
+# Setting regular user
 echo "Adding regular user!"
 echo "Enter username to add a regular user: "
 read username
