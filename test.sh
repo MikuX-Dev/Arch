@@ -15,8 +15,13 @@ echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.8 (GPL-3.0)"
 sleep 5s
 
 echo "Installation guide starts now..."
+sleep 2s
+# Update
+echo "updateing first"
+pacman -Syy reflector rsync curl --noconfirm
 sleep 3s
 clear
+
 
 # Enabling multilib repo.
 echo "Enabling multilib repo"
@@ -46,8 +51,6 @@ clear
 
 # Installing fastest mirrors
 echo "Installing fastest mirrorlists"
-echo "updateing first"
-pacman -Syyu pacman-contrib
 
   # Backup mirrorlist
   echo "Backingup mirrorlists"
@@ -55,9 +58,7 @@ pacman -Syyu pacman-contrib
 
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
-  sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
-  rankmirrors -n 10 > /etc/pacman.d/mirrorlist
+  reflector --verbose -l 200 -n 20 --sort rate --save /etc/pacman.d/mirrorlist
 sleep 3s
 clear
 
@@ -284,17 +285,6 @@ else
     # Community repository does not exist, add it to pacman.conf
   echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 for
-pacman -Syy --noconfirm pacman-contrib
-sleep 3s
-clear
-
-# curl personal strap.sh
---TODO: HERE ALSO
-curl -O https://blackarch.org/strap.sh
-chmod +x strap.sh
-./strap.sh
-pacman -Syy --needed --noconfirm
-rm -rf strap.sh
 sleep 3s
 clear
 
@@ -306,10 +296,8 @@ echo "Installing fastest mirrorlists"
 
   #archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  curl -LsS https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
-  sed -i 's/#S/S/g' /etc/pacman.d/mirrorlist
-  rankmirrors -n 10 > /etc/pacman.d/mirrorlist
-pacman -Syy --noconfirm archlinux-keyring blackarch-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && pacman -Fyy --noconfirm && pacman-db-upgrade --noconfirm && sync --noconfirm && pacman -Syy --noconfirm 
+  reflector --verbose -l 200 -n 20 --sort rate --save /etc/pacman.d/mirrorlist
+  pacman -Syy --noconfirm && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && pacman -Fyy --noconfirm && pacman-db-upgrade --noconfirm && sync --noconfirm 
 sleep 3s
 clear
 
