@@ -49,27 +49,23 @@ if [ "$community_enabled" -eq 0 ]; then
   sudo sed -i '/^\[community\]$/,/^\[/ s/^#//' /etc/pacman.conf
 fi
 # Optionally, print a message to inform the user
+pacman -Syy
 echo "Multilib and Community repositories have been enabled in /etc/pacman.conf."
 
 # Installing fastest mirrors
+reap -p "Do you want fastest mirrors? [Y/n] " fm
+if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
 echo "Installing fastest mirrorlists"
-
   # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  pacman -Syy --noconfirm
-  sleep 2s
-  reflector --verbose -l 50 -n 20 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
-sleep 3s
-clear
-
-# Updating Keyrings
-echo "Internet Connection is a must to begin."
-echo "Updating Keyrings.."
-pacman -Syy --needed --noconfirm archlinux-keyring && pacman-key --init --noconfirm && pacman-key --populate --noconfirm && sync --noconfirm && pacman -Syy --noconfirm
+  reflector --verbose -l 20 -n 20 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
+  pacman -Syy
+elif
+  echo "Skipping the fastert mirrorlist"
+fi
 sleep 3s
 clear
 
@@ -92,8 +88,8 @@ echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
 echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting ready in 5 seconds"
-sleep 5s
+echo "Getting ready in 9 seconds"
+sleep 9s
 clear
 
 lsblk
@@ -293,17 +289,19 @@ fi
 echo "Multilib and Community repositories have been enabled in /etc/pacman.conf."
 
 # Installing fastest mirrors
+reap -p "Do you want fastest mirrors? [Y/n] " fm
+if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
 echo "Installing fastest mirrorlists"
-
   # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  pacman -Syy --noconfirm
-  sleep 2s
-  reflector --verbose -l 50 -n 20 --sort rate --download-timeout 25 --save /etc/pacman.d/mirrorlist
+  reflector --verbose -l 20 -n 20 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
+  pacman -Syy
+elif
+  echo "Skipping the fastert mirrorlist"
+fi
 sleep 3s
 clear
 
