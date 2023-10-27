@@ -17,7 +17,7 @@ sleep 5s
 echo "Installation guide starts now..."
 sleep 3s
 # Clean up the Pacman cache
-paccache -r
+pacman -Scc --noconfirm --quiet && rm -rf /var/cache/pacman/pkg/*
 sleep 2s
 # Update
 echo "updateing first"
@@ -60,8 +60,6 @@ echo "Installing fastest mirrorlists"
 
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  curl https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
-  sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
   pacman -Syy --noconfirm
   sleep 2s
   reflector --verbose -l 50 -n 20 --sort rate --download-timeout 25 --save /etc/pacman.d/mirrorlist
@@ -303,8 +301,6 @@ echo "Installing fastest mirrorlists"
 
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  curl https://archlinux.org/mirrorlist/all/https/ -o /etc/pacman.d/mirrorlist
-  sed -i 's/#S/S/g' > /etc/pacman.d/mirrorlist
   pacman -Syy --noconfirm
   sleep 2s
   reflector --verbose -l 50 -n 20 --sort rate --download-timeout 25 --save /etc/pacman.d/mirrorlist
