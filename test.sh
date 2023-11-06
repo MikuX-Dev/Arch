@@ -568,6 +568,7 @@ sleep 5s
 # Enable services
 echo "Enabling services.."
 echo -ne "\n"
+--TODO: add lightdm and other services
 enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service')
 systemctl enable ${enable_services[@]}
 sleep 5s
