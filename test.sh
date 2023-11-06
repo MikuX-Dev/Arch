@@ -156,8 +156,8 @@ sleep 5s
 clear
 
 echo "Getting ready for formatting drives."
-echo -ne "\n"
 sleep 5s
+echo -ne "\n"
 lsblk
 echo -ne "\n"
 echo "Enter the root partition (eg: /dev/sda1): "
@@ -166,7 +166,9 @@ mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
 
-lsblk\n
+echo -ne "\n"
+lsblk
+echo -ne "\n"
 read -p "Did you also create separate home partition? [Y/n]: " answerhome
 case "$answerhome" in
   y | Y | yes | Yes | YES)
@@ -202,14 +204,14 @@ clear
 echo -ne "\n"
 lsblk
 echo -ne "\n"
-read -p "Do you want to use a separate boot partition or use the EFI partition of windows? (boot/efi): " setbootpartition
+read -p "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
 if [[ $setbootpartition == "boot" ]]; then
   echo "Setting up a separate boot partition..."
   read -p "Enter the boot partition (e.g., /dev/sda4): " bootpartition
   mkfs.fat -F 32 "$bootpartition"
   mount "$bootpartition" /mnt/boot
 else
-  echo "Using the EFI partition for boot..."
+  echo "Using the EFI partition..."
 fi
 sleep 5s
 clear
@@ -223,6 +225,7 @@ clear
 
 # Installing base system with linux kernel and intel-ucode...
 echo "Installing Base system with linux kernel!!!"
+echo -ne "\n"
 sleep 5s
 pacstrap /mnt base base-devel linux linux-headers linux-firmware intel-ucode ntfs-3g nvme-cli
 
@@ -243,6 +246,7 @@ sleep 5s
 
 # Unmount drives
 echo "unmounting all the drives"
+echo -ne "\n"
 umount -R /mnt
 sleep 5s
 clear
@@ -254,6 +258,7 @@ echo -ne "
 │    rebooting in 9s      │
 ╰─────────────────────────╯
 "
+echo -ne "\n"
 echo "Installation Finished. REBOOTING IN 9 SECONDS!!!"
 sleep 9s
 reboot
