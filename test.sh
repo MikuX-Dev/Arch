@@ -11,7 +11,8 @@ echo -ne "
 │       and enjoy         │
 ╰─────────────────────────╯
 "
-echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.27.10 (GPL-3.0)"
+echo -ne "\n"
+echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.06 (GPL-3.0)"
 sleep 5s
 echo -ne "\n"
 echo "Installation guide starts now..."
@@ -26,6 +27,7 @@ clear
 
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
+echo -ne "\n"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
     # Repositories are already enabled, remove any commented-out lines
     sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
@@ -41,10 +43,12 @@ clear
 read -p "Do you want fastest mirrors? [Y/n] " fm
 if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
 echo "Installing fastest mirrorlists"
+echo -ne "\n"
   # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
   # Archlinux mirrorlists
+  echo -ne "\n"
   echo "Archlinux-mirrorlist setup"
   reflector --verbose -l 10 -f 10 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
   pacman -Syy
@@ -56,6 +60,7 @@ clear
 
 # Setting up system clock
 echo "Ensuring if the system clock is accurate."
+echo -ne "\n"
 timedatectl set-ntp true
 sleep 5s
 clear
@@ -494,17 +499,19 @@ sleep 5s
   echo -ne "\n"
   cp -r dotfiles/shell/bash/* /etc/skel/
   cp -r dotfiles/shell/zsh/* /etc/skel/
+  cp -r dotfiles/shell/p-script/* /etc/skel/
 sleep 5s
   # theme
   echo "Installing themes"
   echo -ne "\n"
-  cp -r dotfiles/themes/* /usr/share/themes/
-  cp -r dotfiles/icons/* /usr/share/icons/
+  cp -r dotfiles/themes/themes/* /usr/share/themes/
+  cp -r dotfiles/themes/icons/* /usr/share/icons/
   sleep 5s
   # config
   echo "Installing configs"
   echo -ne "\n"
-  cp -r dotfiles/config/* /etc/
+  mkdir -p /etc/skel/.config/
+  cp -r dotfiles/config/* /etc/skel/.config/
   sleep 5s
   # wallpaper
   echo "Installing wallpaper"
