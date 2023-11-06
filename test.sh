@@ -10,13 +10,15 @@ echo -ne "
 │         relax           │
 │       and enjoy         │
 ╰─────────────────────────╯
-"\n
-echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.27.10 (GPL-3.0)"\n
+"
+echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.27.10 (GPL-3.0)"
 sleep 5s
-echo "Installation guide starts now..."\n
+echo -ne "\n"
+echo "Installation guide starts now..."
 pacman -Syy
 sleep 5s
 # Update
+echo -ne "\n"
 echo "updateing first"
 pacman -Syy reflector rsync curl --noconfirm
 sleep 5s
@@ -44,7 +46,7 @@ echo "Installing fastest mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  reflector --verbose -l 20 -n 20 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
+  reflector --verbose -l 10 -f 10 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
   pacman -Syy
 else
   echo "Skipping the fastert mirrorlist"
@@ -59,9 +61,10 @@ sleep 5s
 clear
 
 # Setting up drive
-echo "Setting Up drive"\n
+echo "Setting Up drive"
+echo -ne "\n"
 lsblk
-\n
+echo -ne "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
 read drive
@@ -76,9 +79,9 @@ echo "Getting ready in 9 seconds"
 sleep 9s
 clear
 
-\n
+echo -ne "\n"
 lsblk
-\n
+echo -ne "\n"
 echo "Choose a familier disk utility tool to partition your drive!"
 echo " 1. fdisk"
 echo " 2. cfdisk"
@@ -113,14 +116,15 @@ sleep 5s
 "$partitionutility" "$drive"
 clear
 
-\n
+echo -ne "\n"
 lsblk
-\n
+echo -ne "\n"
 echo "choose your linux file system type for formatting drives"
 echo " 1. ext4"
 echo " 2. xfs"
 echo " 3. btrfs"
-echo " 4. f2fs"\n
+echo " 4. f2fs"
+echo -ne "\n"
 echo "Note: Boot partition will be formatted in fat31 file system type."
 read filesystemtype
 
@@ -146,10 +150,11 @@ echo ""$filesystemtype" is the selected file system type."
 sleep 5s
 clear
 
-echo "Getting ready for formatting drives."\n
+echo "Getting ready for formatting drives."
+echo -ne "\n"
 sleep 5s
 lsblk
-\n
+echo -ne "\n"
 echo "Enter the root partition (eg: /dev/sda1): "
 read rootpartition
 mkfs."$filesystemtype" "$rootpartition"
@@ -157,7 +162,7 @@ mount "$rootpartition" /mnt
 clear
 
 lsblk\n
-read -p "Did you also create separate home partition? [y/n]: " answerhome
+read -p "Did you also create separate home partition? [Y/n]: " answerhome
 case "$answerhome" in
   y | Y | yes | Yes | YES)
   echo "Enter home partition (eg: /dev/sda2): "
@@ -172,10 +177,10 @@ case "$answerhome" in
 esac
 clear
 
-\n
+echo -ne "\n"
 lsblk
-\n
-read -p "Did you also create swap partition? [y/n]: " answerswap
+echo -ne "\n"
+read -p "Did you also create swap partition? [Y/n]: " answerswap
 case "$answerswap" in
   y | Y | yes | Yes | YES)
   echo "Enter swap partition (eg: /dev/sda3): "
@@ -189,9 +194,9 @@ case "$answerswap" in
 esac
 clear
 
-\n
+echo -ne "\n"
 lsblk
-\n
+echo -ne "\n"
 read -p "Do you want to use a separate boot partition or use the EFI partition of windows? (boot/efi): " setbootpartition
 if [[ $setbootpartition == "boot" ]]; then
   echo "Setting up a separate boot partition..."
@@ -204,8 +209,9 @@ fi
 sleep 5s
 clear
 
-\n
+echo -ne "\n"
 lsblk
+echo -ne "\n"
 sync
 sleep 5s
 clear
@@ -216,7 +222,8 @@ sleep 5s
 pacstrap /mnt base base-devel linux linux-headers linux-firmware intel-ucode ntfs-3g nvme-cli
 
 # Gen fstab
-echo "Generating fstab file"\n
+echo "Generating fstab file"
+echo -ne "\n"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
 sleep 5s
@@ -241,7 +248,7 @@ echo -ne "
 │        completed        │
 │    rebooting in 9s      │
 ╰─────────────────────────╯
-"\n
+"
 echo "Installation Finished. REBOOTING IN 9 SECONDS!!!"
 sleep 9s
 reboot
@@ -258,7 +265,7 @@ sleep 9s
 clear
 
 # Check if multilib and community repositories are enabled
-echo "Enabling multilib and community repositories"\n
+echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
     # Repositories are already enabled, remove any commented-out lines
     sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
@@ -279,7 +286,7 @@ echo "Installing fastest mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  reflector --verbose -l 20 -n 20 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
+  reflector --verbose -l 10 -f 10 --sort rate --download-timeout 55 --save /etc/pacman.d/mirrorlist
   pacman -Syy
 elif
   echo "Skipping the fastert mirrorlist"
@@ -288,34 +295,39 @@ sleep 5s
 clear
 
 # Replace Asia/kolkata with your timezone
-echo "Setting timezone"\n
+echo "Setting timezone"
+echo -ne "\n"
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
 sleep 5s
 clear
 
 # Gen locale
-echo "Generating locale"\n
+echo "Generating locale"
+echo -ne "\n"
 sed -i "s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
 locale-gen
 sleep 5s
 clear
 
 # Setting lang
-echo "Setting LANG variable"\n
+echo "Setting LANG variable"
+echo -ne "\n"
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 sleep 5s
 clear
 
 # Setting console keyboard
-echo "Setting console keyboard layout"\n
+echo "Setting console keyboard layout"
+echo -ne "\n"
 echo 'KEYMAP=us' > /etc/vconsole.conf
 sleep 5s
 clear
 
 # Setup hostname
 echo "Set up your hostname!"
-echo "Enter your computer name: "\n
+echo "Enter your computer name: "
+echo -ne "\n"
 read hostname
 echo $hostname > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
@@ -324,7 +336,8 @@ sleep 5s
 clear
 
 # Setting up hosts
-echo "Setting up hosts file"\n
+echo "Setting up hosts file"
+echo -ne "\n"
 echo "127.0.0.1       localhost" >> /etc/hosts
 echo "::1             localhost" >> /etc/hosts
 echo "127.0.1.1       $hostname" >> /etc/hosts
@@ -333,7 +346,8 @@ sleep 5s
 clear
 
 # Install needed pkgs and tools by PACMAN..
-echo "Installing needed pkgs and tools by PACMAN.."\n
+echo "Installing needed pkgs and tools by PACMAN.."
+echo -ne "\n"
 install_packages() {
   local packages=''
 
@@ -389,14 +403,15 @@ install_packages() {
   iwd lftp nfs-utils ntp openconnect openssh openvpn ppp pptpclient rfkill
   rp-pppoe socat vpnc wget wireless_tools wpa_supplicant wvdial xl2tpd'
 
-  packages+='virtualbox-host-modules-arch virtualbox-guest-utils virtualbox-guest-utils-nox'
+  packages+='virtualbox-host-modules-arch virtualbox-guest-utils'
 },
 pacman -S --needed --noconfirm $packages
 sleep 5s
 clear
 
 # Install needed pkgs and tools by AUR..
-echo "Installing needed pkgs and tools by AUR"\n
+echo "Installing needed pkgs and tools by AUR"
+echo -ne "\n"
   # yay-bin: AUR helper
   git clone https://aur.archlinux.org/yay-bin.git
   cd yay-bin
@@ -406,21 +421,22 @@ echo "Installing needed pkgs and tools by AUR"\n
 rm -rf yay-bin
 
 # Install pkgs and tools by AUR..
-echo "Installing aur pkgs"\n
+echo "Installing aur pkgs"
+echo -ne "\n"
 install_packages() {
   local aurpkgs=''
 
-  #other
-  aurpkgs+='mkinitcpio-firmware mkinitcpio-openswap mkinitcpio-numlock'
+  # mkinitcpio
+  aurpkgs+='mkinitcpio-firmware mkinitcpio-numlock'
 }
 yay -S --needed --noconfirm $aurpkgs
 sleep 5s
 clear
 
 # Setting boot partition "EFI"
-\n
+echo -ne "\n"
 lsblk
-\n
+echo -ne "\n"
 echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
 read efipartition
 efidirectory="/boot/efi/"
@@ -432,17 +448,18 @@ sleep 5s
 clear
 
 # Install grub
-\n
+echo -ne "\n"
 lsblk
-\n
+echo -ne "\n"
 sleep 5s
-echo "Installing grub bootloader in /boot/efi parttiton"\n
+echo "Installing grub bootloader in /boot/efi parttiton"
+echo -ne "\n"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
 
 # os-prober
-read -p "Are you duelbooting? (y/n): " use_os_prober
+read -p "Are you duelbooting? (Y/n): " use_os_prober
 if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
@@ -456,47 +473,57 @@ sleep 5s
 clear
 
 # Gen fstab
-echo "Generating fstab file"\n
+echo "Generating fstab file"
+echo -ne "\n"
 genfstab -U /mnt >> /mnt/etc/fstab
 cat /etc/fstab
 sleep 5s
 clear
 
 #edit sudo
-#echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
+echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
+sleep 5s
+clear
 
 # Personal dotfiles
-#echo "Setting up Personal dotfiles"
-#git clone https://github.com/MikuX-Dev/dotfiles.git
-#sleep 5s
-# bash
-#echo "Installing shell"
-#cp -r dotfiles/shell/bash/* /etc/skel/
-#sleep 5s
-#cp -r dotfiles/shell/zsh/* /etc/skel/
-# theme
-#echo "Installing themes"
-#cp -r dotfiles/themes/* /usr/share/themes/
-#cp -r dotfiles/icons/* /usr/share/icons/
-#sleep 5s
-# config
-#echo "Installing configs"
-#cp -r dotfiles/config/* /etc/
-#sleep 5s
-#wallpaper
-#echo "Installing wallpaper"
-#cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
-#sleep 5s
-
-# grub-theme
-echo "Installing grub-theme"\n
-git clone https://github.com/MikuX-Dev/ArchFiery.git
-cp -r ArchFiery/grub/src/* /usr/share/grub/themes/
-sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/custom/theme.txt"/g' /etc/default/grub
-grub-mkconfig -o /boot/grub/grub.cfg
+echo "Setting up Personal dotfiles"
+git clone https://github.com/MikuX-Dev/dotfiles.git
 sleep 5s
-#remove folder
-rm -rf ArchFiery/
+  # shell
+  echo "Installing shell"
+  echo -ne "\n"
+  cp -r dotfiles/shell/bash/* /etc/skel/
+  cp -r dotfiles/shell/zsh/* /etc/skel/
+sleep 5s
+  # theme
+  echo "Installing themes"
+  echo -ne "\n"
+  cp -r dotfiles/themes/* /usr/share/themes/
+  cp -r dotfiles/icons/* /usr/share/icons/
+  sleep 5s
+  # config
+  echo "Installing configs"
+  echo -ne "\n"
+  cp -r dotfiles/config/* /etc/
+  sleep 5s
+  # wallpaper
+  echo "Installing wallpaper"
+  echo -ne "\n"
+  cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
+  sleep 5s
+  # grub-theme
+--TODO: Grub setup;
+
+  echo "Installing grub-theme"
+  echo -ne "\n"
+  cp -r dotfiles/themes/grub/themes/* /usr/share/grub/themes/
+  sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/archfiery/theme.txt"/g' /etc/default/grub
+  grub-mkconfig -o /boot/grub/grub.cfg
+  sleep 5s
+  #remove folder
+  echo "Removing dotfiles folder"
+  echo -ne "\n"
+  rm -rf dotfiles/
 sleep 5s
 clear
 
@@ -509,7 +536,8 @@ clear
 # Setting regular user
 echo "Adding regular user!"
 echo "Enter username to add a regular user: "
-read username\n
+read username
+echo -ne "\n"
 useradd -m -G wheel -s /bin/zsh $username
 echo "Enter password for "$username": "
 passwd $username
@@ -517,7 +545,8 @@ sleep 5s
 clear
 
 # Adding sudo previliages to the user you created
-echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."\n
+echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."
+echo -ne "\n"
 sleep 5s
 echo "Giving sudo access to "$username"!"
 sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
@@ -525,7 +554,8 @@ clear
 sleep 5s
 
 # Enable services
-echo "Enabling services.."\n
+echo "Enabling services.."
+echo -ne "\n"
 enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service')
 systemctl enable ${enable_services[@]}
 sleep 5s
