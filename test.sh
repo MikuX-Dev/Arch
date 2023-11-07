@@ -16,12 +16,12 @@ sleep 5s
 printf "\n"
 echo "Installation guide starts now..."
 pacman -Syy
-sleep 5s
+sleep 3s
 # Update
 printf "\n"
 echo "updateing first"
-pacman -Syy reflector rsync curl --noconfirm
-sleep 5s
+pacman -S reflector rsync curl --noconfirm
+sleep 3s
 clear
 
 # Check if multilib and community repositories are enabled
@@ -34,7 +34,7 @@ else
     # Repositories are not enabled, add them
     echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 fi
-sleep 5s
+sleep 3s
 clear
 
 # Installing fastest mirrors
@@ -53,14 +53,14 @@ printf "\n"
 else
   echo "Skipping the fastert mirrorlist"
 fi
-sleep 5s
+sleep 3s
 clear
 
 # Setting up system clock
 echo "Ensuring if the system clock is accurate."
 printf "\n"
 timedatectl set-ntp true
-sleep 5s
+sleep 3s
 clear
 
 # Setting up drive
@@ -71,7 +71,7 @@ printf "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
 read -p -r drive
-sleep 5s
+sleep 3s
 clear
 
 echo "Getting ready for creating partitions!"
@@ -399,7 +399,7 @@ install_pman_pkgs(){
   # Download the list of AUR packages from the specified URL
   wget -O pman-pkg.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/pman-pkg.txt
   # Read the package names from the file
-  while IFS= read -r line; do
+  while IFS= read -p -r line; do
     pmanpkgs+="$line"
   done < pman-pkg.txt
   # Install AUR packages using yay
@@ -431,7 +431,7 @@ install_aur_pkgs(){
   # Download the list of AUR packages from the specified URL
   wget -O aur.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/aur.txt
   # Read the package names from the file
-  while IFS= read -r line; do
+  while IFS= read -p -r line; do
     aurpkgs+="$line"
   done < aur.txt
   # Install AUR packages using yay
