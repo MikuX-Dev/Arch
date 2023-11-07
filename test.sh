@@ -70,7 +70,7 @@ lsblk
 printf "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
-read -pr drive
+read -p -r drive
 sleep 5s
 clear
 
@@ -90,7 +90,7 @@ echo " 1. fdisk"
 echo " 2. cfdisk"
 echo " 3. gdisk"
 echo " 4. parted"
-read -pr partitionutility
+read -p -r partitionutility
 
 case "$partitionutility" in
   1 | fdisk | Fdisk | FDISK)
@@ -129,7 +129,7 @@ echo " 3. btrfs"
 echo " 4. f2fs"
 printf "\n"
 echo "Note: Boot partition will be formatted in fat31 file system type."
-read -pr filesystemtype
+read -p -r filesystemtype
 
 case "$filesystemtype" in
   1 | ext4 | Ext4 | EXT4)
@@ -159,7 +159,7 @@ printf "\n"
 lsblk
 printf "\n"
 echo "Enter the root partition (eg: /dev/sda1): "
-read -pr rootpartition
+read -p -r rootpartition
 mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
@@ -167,11 +167,11 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -pr "Did you also create separate home partition? [Y/n]: " answerhome
+read -p -r "Did you also create separate home partition? [Y/n]: " answerhome
 case "$answerhome" in
   y | Y | yes | Yes | YES)
   echo "Enter home partition (eg: /dev/sda2): "
-  read -pr homepartition
+  read -p -r homepartition
   mkfs."$filesystemtype" "$homepartition"
   mkdir /mnt/home
   mount "$homepartition" /mnt/home
@@ -185,11 +185,11 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -pr "Did you also create swap partition? [Y/n]: " answerswap
+read -p -r "Did you also create swap partition? [Y/n]: " answerswap
 case "$answerswap" in
   y | Y | yes | Yes | YES)
   echo "Enter swap partition (eg: /dev/sda3): "
-  read -pr swappartition
+  read -p -r swappartition
   mkswap "$swappartition"
   swapon "$swappartition"
   ;;
@@ -202,10 +202,10 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -pr "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
+read -p -r "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
 if [[ $setbootpartition == "boot" ]]; then
   echo "Setting up a separate boot partition..."
-  read -pr "Enter the boot partition (e.g., /dev/sda4): " bootpartition
+  read -p -r "Enter the boot partition (e.g., /dev/sda4): " bootpartition
   mkfs.fat -F 32 "$bootpartition"
   mount "$bootpartition" /mnt/boot
 else
@@ -371,7 +371,7 @@ clear
 echo "Set up your hostname!"
 echo "Enter your computer name: "
 printf "\n"
-read -pr hostname
+read -p -r hostname
 echo "$hostname" > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
@@ -448,7 +448,7 @@ printf "\n"
 lsblk
 printf "\n"
 echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
-read -pr efipartition
+read -p -r efipartition
 efidirectory="/boot/efi/"
 if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
@@ -469,7 +469,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
 
 # os-prober
-read -pr "Are you duelbooting? (Y/n): " use_os_prober
+read -p -r "Are you duelbooting? (Y/n): " use_os_prober
 if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
@@ -559,7 +559,7 @@ clear
 echo "Adding regular user!"
 printf "\n"
 echo "Enter username to add a regular user: "
-read -pr username
+read -p -r username
 printf "\n"
 useradd -m -G wheel -s /bin/zsh "$username"
 echo "Enter password for '$username': "
