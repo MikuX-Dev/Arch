@@ -38,7 +38,7 @@ sleep 5s
 clear
 
 # Installing fastest mirrors
-read -r "Do you want fastest mirrors? [Y/n] " fm
+read -r -p "Do you want fastest mirrors? [Y/n] " fm
 if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
 echo "Installing fastest mirrorlists"
 printf "\n"
