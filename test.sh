@@ -401,14 +401,17 @@ install_pman_pkgs(){
   # Download the list of AUR packages from the specified URL
   wget -O pman-pkg.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/pman-pkg.txt
   # Read the package names from the file
-  while IFS= read -r pkg; do
-    pmanpkgs+="$pkg "
+  while IFS= read -r line; do
+    pmanpkgs+="$line"
   done < pman-pkg.txt
   # Install AUR packages using yay
-  yay -S --needed --noconfirm "$pmanpkgs"
+  pacman -S --needed --noconfirm "$pmanpkgs"
 }
 # Execute the function
 install_pman_pkgs
+rm -rf pman-pkg.txt
+sleep 5s
+clear
 
 # Install pkgs and tools by AUR..
 echo "Installing pkgs and tools by AUR"
@@ -430,14 +433,17 @@ install_aur_pkgs(){
   # Download the list of AUR packages from the specified URL
   wget -O aur.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/aur.txt
   # Read the package names from the file
-  while IFS= read -r pkg; do
-    aurpkgs+="$pkg "
+  while IFS= read -r line; do
+    aurpkgs+="$line"
   done < aur.txt
   # Install AUR packages using yay
   yay -S --needed --noconfirm "$aurpkgs"
 }
 # Execute the function
 install_aur_pkgs
+rm -rf aur.txt
+sleep 5s
+clear
 
 # Setting boot partition "EFI"
 printf "\n"
