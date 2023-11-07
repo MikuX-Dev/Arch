@@ -249,7 +249,7 @@ check_boot_mode()
   efivars=$(ls /sys/firmware/efi/efivars > /dev/null 2>&1; echo $?)
   if [ "$efivars" -eq "0" ]
   then
-     BOOT_MODE="uefi"
+    BOOT_MODE="uefi"
   fi
 
   return $SUCCESS
