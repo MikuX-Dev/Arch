@@ -383,9 +383,11 @@ clear
 # Setting up hosts
 echo "Setting up hosts file"
 printf "\n"
-echo "127.0.0.1       localhost" >> /etc/hosts
-echo "::1             localhost" >> /etc/hosts
-echo "127.0.1.1       $hostname" >> /etc/hosts
+{
+echo "127.0.0.1       localhost"
+echo "::1             localhost"
+echo "127.0.1.1       $hostname"
+} >> /etc/hosts
 cat /etc/hosts
 sleep 5s
 clear
@@ -393,7 +395,7 @@ clear
 # Install needed pkgs and tools by PACMAN..
 echo "Installing needed pkgs and tools by PACMAN.."
 printf "\n"
-install_packages() {
+install_pacpkgs(){
   local packages=''
 
   #networkmanager etc..
@@ -447,8 +449,6 @@ install_packages() {
   dnscrypt-proxy dnsmasq dnsutils fwbuilder gnu-netcat ipw2100-fw ipw2200-fw iw
   iwd lftp nfs-utils ntp openconnect openssh openvpn ppp pptpclient rfkill
   rp-pppoe socat vpnc wget wireless_tools wpa_supplicant wvdial xl2tpd'
-
-  packages+='virtualbox-host-modules-arch virtualbox-guest-utils'
 }
 pacman -S --needed --noconfirm "$packages"
 sleep 5s
@@ -459,16 +459,17 @@ echo "Installing needed pkgs and tools by AUR"
 printf "\n"
   # yay-bin: AUR helper
   git clone https://aur.archlinux.org/yay-bin.git
-  cd yay-bin || exit
-  makepkg -sic --noconfirm --noprogressbar
-  cd ..
+  (
+    cd yay-bin || exit
+    makepkg -sic --noconfirm
+  )
 # remove dir
 rm -rf yay-bin
 
 # Install pkgs and tools by AUR..
 echo "Installing aur pkgs"
 printf "\n"
-install_packages() {
+install_pacaurpkgs(){
   local aurpkgs=''
 
   # mkinitcpio
@@ -534,6 +535,7 @@ clear
 echo "Setting up Personal dotfiles"
 git clone https://github.com/MikuX-Dev/dotfiles.git
 sleep 5s
+
   # shell
   echo "Installing shell"
   printf "\n"
@@ -542,6 +544,7 @@ sleep 5s
   cp -r dotfiles/shell/p-script/* /etc/skel/
   printf "\n"
   sleep 5s
+
   # theme
   echo "Installing themes"
   printf "\n"
@@ -549,6 +552,7 @@ sleep 5s
   cp -r dotfiles/themes/icons/* /usr/share/icons/
   printf "\n"
   sleep 5s
+
   # config
   echo "Installing configs"
   printf "\n"
@@ -556,12 +560,14 @@ sleep 5s
   cp -r dotfiles/config/* /etc/skel/.config/
   printf "\n"
   sleep 5s
+
   # wallpaper
   echo "Installing wallpaper"
   printf "\n"
   cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
   printf "\n"
   sleep 5s
+
   # grub-theme
   #TODO: Grub setup;
   echo "Installing grub-theme"
@@ -571,6 +577,7 @@ sleep 5s
   grub-mkconfig -o /boot/grub/grub.cfg
   printf "\n"
   sleep 5s
+
   #remove folder
   echo "Removing dotfiles folder"
   printf "\n"

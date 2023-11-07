@@ -1,0 +1,4 @@
+visual-studio-code-bin
+brave-bin
+mkinitcpio-firmware
+mkinitcpio-numlock

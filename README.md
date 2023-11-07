@@ -1,6 +1,6 @@
 # ArchFiery
 ## Introduction:
-### Personal archlinux installer script :)
+### `NOTE`: Personal archlinux installer script :)
 
 ArchFiery is a simple bash script designed to facilitate the installation of Arch Linux after booting from the official Arch Linux installationmedia. With just two terminal commands, you can easily install Arch Linux. This script is specifically created to install packages such as the base system, bootloader, and optionally [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) and [Blackarch-tools](https://blackarch.org/tools) ("minimum-tools" or "full-tools").
 
@@ -10,17 +10,17 @@ To install ArchFiery, follow these steps:
 
 - Boot using the [last Arch Linux image](https://www.archlinux.org/download/) and a [bootable device](https://wiki.archlinux.org/index.php/USB_flash_installation_media).
 
-Ensure that you have an internet connection on the Arch ISO. If you have a wireless connection, you can use the [`iwctl`](https://wiki.archlinux.org/index.php/Iwd#iwctl) command. For detailed instructions, refer to the [Network configuration](https://wiki.archlinux.org/index.php/Network_configuration) guide in the Arch Linux documentation.  
+Ensure that you have an internet connection on the Arch ISO. If you have a wireless connection, you can use the [`iwctl`](https://wiki.archlinux.org/index.php/Iwd#iwctl) command. For detailed instructions, refer to the [Network configuration](https://wiki.archlinux.org/index.php/Network_configuration) guide in the Arch Linux documentation.
 
 - Clone the [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) repository using the following command:
     ```
     git clone https://github.com/MikuX-Dev/ArchFiery.git
     ```
-- Change to the [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) directory:    
+- Change to the [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) directory:
     ```
     cd ArchFiery
     ```
-- Make sure the script is executable by running the following command: 
+- Make sure the script is executable by running the following command:
     ```
     chmod +x ArchFiery
     ```
