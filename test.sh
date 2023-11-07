@@ -74,6 +74,38 @@ read -p -r drive
 sleep 3s
 clear
 
+# #do you want to set up partition automatically depending on your partition size
+# swap_size="4G"
+# efi_size="500M"
+
+# read -p -r "Do you want to set up partition automatically depending on your partition size? [Y/n] " pa
+# if [ "$pa" = "Y" ] || [ "$pa" = "y" ]; then
+#   echo "Setting up partition automatically depending on your partition size"
+#   printf "\n"
+#   lsblk
+#   printf "\n"
+#   echo "Enter the partition to setup archlinux on it. (/dev/...)"
+#   printf "\n"
+#   read -p -r prt
+#   sleep 3s
+#   echo "'$prt' partition is selected for archlinux installation"
+#   printf "\n"
+#   sleep 3s
+#   read -p -r "Do you want separate partition for home? [Y/n] " hm
+#   printf "\n"
+#   if [ "$hm" = "Y" ] || [ "$hm" = "y" ]; then
+#     echo "Setting up separate partition for home"
+#     printf "\n"
+#     read -p -r "How much size do you need for home partition?" hp
+#     read -p -r "{$hp}"
+#     printf "\n"
+#     echo
+#   fi
+#   clear
+# else
+#   echo "Skipping the partition setup"
+# fi
+
 echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
@@ -215,9 +247,9 @@ sleep 5s
 clear
 
 printf "\n"
-lsblk
-printf "\n"
 sync
+printf "\n"
+lsblk
 sleep 5s
 clear
 
@@ -250,10 +282,10 @@ elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
     packages+=" xf86-video-amdgpu"
 elif grep -E "Integrated Graphics Controller" <<< "${gpu_type}"; then
     echo "Installing integrated Graphics Controller"
-    packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa"
+    packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver"
 elif grep -E "Intel Corporation UHD" <<< "${gpu_type}"; then
     echo "Installing Intel UHD Graphics"
-    packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa"
+    packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver"
 else
     echo "Installing generic drivers..."
     packages+="virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager"
