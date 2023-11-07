@@ -11,7 +11,6 @@ echo -ne "
 │       and enjoy         │
 ╰─────────────────────────╯
 "
-printf "\n"
 echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.06 (GPL-3.0)"
 sleep 5s
 printf "\n"
@@ -27,7 +26,6 @@ clear
 
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
-printf "\n"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
     # Repositories are already enabled, remove any commented-out lines
     sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
@@ -40,7 +38,7 @@ sleep 5s
 clear
 
 # Installing fastest mirrors
-read -pr "Do you want fastest mirrors? [Y/n] " fm
+read -r "Do you want fastest mirrors? [Y/n] " fm
 if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
 echo "Installing fastest mirrorlists"
 printf "\n"
