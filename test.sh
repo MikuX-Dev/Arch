@@ -392,70 +392,26 @@ cat /etc/hosts
 sleep 5s
 clear
 
-# Install needed pkgs and tools by PACMAN..
-echo "Installing needed pkgs and tools by PACMAN.."
+# Install pkgs and tools by PACMAN..
+echo "Installing pkgs and tools by PACMAN.."
 printf "\n"
-install_pacpkgs(){
-  local packages=''
-
-  #networkmanager etc..
-  packages+='network-manager-applet networkmanager network-manager-applet networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc modemmanager dhclient dhcpcd'
-
-  #video drive etc..
-  packages+='xf86-video-intel xf86-video-fbdev vulkan-intel vulkan-icd-loader xf86-video-openchrome xf86-video-vesa xf86-input-void xf86-input-libinput libinput xf86-input-evdev xf86-input-elographics'
-
-  #text editor
-  packages+='vim neovim nano'
-
-  #git
-  packages+='git git-lfs'
-
-  #archive tools
-  packages+='ack xarchiver p7zip zip unzip gzip tar bzip3 unrar xz zstd'
-
-  #dev tools
-  packages+='archiso f2fs-tools automake gawk gammu gnome-keyring mtools dosfstools devtools multilib-devel npm qemu-tools qemu-emulators-full qemu-system-x86-firmware cargo make go lua perl ruby rust rustup cmake gcc gcc-libs gdb ppp rp-pppoe pptpclient reiserfsprogs  clang llvm ccache curl wget sed'
-
-  #shell
-  packages+='zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting zsh-completions bash-completion'
-
-  #xdg
-  packages+='xdg-user-dirs-gtk xdg-desktop-portal-gtk'
-
-  #other
-  packages+='arch-wiki-docs linux-firmware pkgfile intel-ucode ntfs-3g base smartmontools base-devel gvfs-mtp gvfs apache udisks2 cronie grub-customizer irqbalance plocate arch-install-scripts bind brltty broadcom-wl clonezilla darkhttpd diffutils dmraid dnsmasq edk2-shell profile-sync-daemon pacman-contrib grub efibootmgr os-prober'
-
-  #ssh and gnupg
-  packages+='openssh gnupg'
-
-  #System
-  packages+='ncdu mkinitcpio-archiso mkinitcpio-nfs-utils nfs-utils nilfs-utils nvme-cli nbd ndisc6 obsidian feh menumaker openconnect partclone gparted '
-
-  #privacy
-  packages+='tor'
-
-  packages+='arch-install-scripts pkgfile'
-
-  packages+='cifs-utils dmraid dosfstools exfat-utils f2fs-tools
-  gpart gptfdisk mtools nilfs-utils ntfs-3g partclone parted partimage'
-
-  packages+='acpi alsa-utils b43-fwcutter bash-completion bc cmake ctags expac
-  feh git gpm haveged hdparm htop inotify-tools ipython irssi
-  lsof mercurial mesa mlocate moreutils mpv p7zip rsync
-  rtorrent screen scrot smartmontools strace tmux udisks2 unace unrar
-  unzip upower usb_modeswitch usbutils zip zsh'
-
-  packages+='atftp bind-tools bridge-utils curl darkhttpd dhclient dhcpcd dialog
-  dnscrypt-proxy dnsmasq dnsutils fwbuilder gnu-netcat ipw2100-fw ipw2200-fw iw
-  iwd lftp nfs-utils ntp openconnect openssh openvpn ppp pptpclient rfkill
-  rp-pppoe socat vpnc wget wireless_tools wpa_supplicant wvdial xl2tpd'
+# Define the function to install AUR packages
+install_pman_pkgs(){
+  local pmanpkgs=''
+  # Download the list of AUR packages from the specified URL
+  wget -O pman-pkg.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/pman-pkg.txt
+  # Read the package names from the file
+  while IFS= read -r pkg; do
+    pmanpkgs+="$pkg "
+  done < pman-pkg.txt
+  # Install AUR packages using yay
+  yay -S --needed --noconfirm "$pmanpkgs"
 }
-pacman -S --needed --noconfirm "$packages"
-sleep 5s
-clear
+# Execute the function
+install_pman_pkgs
 
-# Install needed pkgs and tools by AUR..
-echo "Installing needed pkgs and tools by AUR"
+# Install pkgs and tools by AUR..
+echo "Installing pkgs and tools by AUR"
 printf "\n"
   # yay-bin: AUR helper
   git clone https://aur.archlinux.org/yay-bin.git
@@ -466,18 +422,22 @@ printf "\n"
 # remove dir
 rm -rf yay-bin
 
-# Install pkgs and tools by AUR..
-echo "Installing aur pkgs"
+# Install pkgs from yay-bin
+echo "Installing pkgs from yay-bin"
 printf "\n"
-install_pacaurpkgs(){
+install_aur_pkgs(){
   local aurpkgs=''
-
-  # mkinitcpio
-  aurpkgs+='mkinitcpio-firmware mkinitcpio-numlock'
+  # Download the list of AUR packages from the specified URL
+  wget -O aur.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/aur.txt
+  # Read the package names from the file
+  while IFS= read -r pkg; do
+    aurpkgs+="$pkg "
+  done < aur.txt
+  # Install AUR packages using yay
+  yay -S --needed --noconfirm "$aurpkgs"
 }
-yay -S --needed --noconfirm "$aurpkgs"
-sleep 5s
-clear
+# Execute the function
+install_aur_pkgs
 
 # Setting boot partition "EFI"
 printf "\n"
