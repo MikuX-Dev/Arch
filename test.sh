@@ -2,6 +2,15 @@
 
 clear
 
+# RED=$(tput setaf 1)         # Red
+# GREEN=$(tput setaf 2)       # Green
+# YELLOW=$(tput setaf 3)      # Yellow
+# BLUE=$(tput setaf 4)        # Blue
+# MAGENTA=$(tput setaf 5)     # Magenta
+# CYAN=$(tput setaf 6)        # Cyan
+# WHITE=$(tput setaf 7)       # White
+# RESET=$(tput sgr0)          # Text reset
+
 # Start
 echo -ne "
 ╭─────── ArchFiery ───────╮
@@ -532,12 +541,17 @@ echo "Setting up Personal dotfiles"
 git clone https://github.com/MikuX-Dev/dotfiles.git
 sleep 5s
 
+  # Creating folder first
+  mkdir -p /etc/skel/.config/
+  mkdir -p /etc/skel/bin/
+  mkdir -p /usr/share/lightdm-webkit/themes/glorious
+
   # shell
   echo "Installing shell"
   printf "\n"
   cp -r dotfiles/shell/bash/* /etc/skel/
   cp -r dotfiles/shell/zsh/* /etc/skel/
-  cp -r dotfiles/shell/p-script/* /etc/skel/
+  cp -r dotfiles/shell/p-script/* /etc/skel/bin/
   printf "\n"
   sleep 5s
 
@@ -546,13 +560,13 @@ sleep 5s
   printf "\n"
   cp -r dotfiles/themes/themes/* /usr/share/themes/
   cp -r dotfiles/themes/icons/* /usr/share/icons/
+  cp -r dotfiles/themes/plymouth/* /etc/plymouth/
   printf "\n"
   sleep 5s
 
   # config
   echo "Installing configs"
   printf "\n"
-  mkdir -p /etc/skel/.config/
   cp -r dotfiles/config/* /etc/skel/.config/
   printf "\n"
   sleep 5s
@@ -563,6 +577,38 @@ sleep 5s
   cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
   printf "\n"
   sleep 5s
+
+  # lightdm
+  echo "Setting up Desktop environment"
+  printf "\n"
+
+  echo "Setting up lightdm"
+  latest_release_url=$(curl -s https://api.github.com/repos/eromatiya/lightdm-webkit2-theme-glorious/releases/latest | grep "browser_download_url" | cut -d '"' -f 4)
+  curl -L -o glorious-latest.tar.gz "$latest_release_url"
+  tar -zxvf glorious-latest.tar.gz -C /usr/share/lightdm-webkit/themes/glorious --strip-components=1
+  sed -i 's/^\(#?greeter\)-session\s*=\s*\(.*\)/greeter-session = lightdm-webkit2-greeter #\1/ #\2g' /etc/lightdm/lightdm.conf
+  sed -i 's/^webkit_theme\s*=\s*\(.*\)/webkit_theme = glorious #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
+  sed -i 's/^debug_mode\s*=\s*\(.*\)/debug_mode = true #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
+  printf "\n"
+  sleep 3s
+
+  echo "Setting up EWW"
+  git clone https://github.com/elkowar/eww
+  (
+    cd eww || exit
+    cargo build --release --no-default-features --features x11
+    cd target/release || exit
+    chmod +x ./eww
+    cp -r ./eww /usr/bin/
+  )
+  printf "\n"
+  sleep 3s
+
+  echo "Setting up vala-pannel-appmenu"
+  xfconf-query -c xsettings -p /Gtk/ShellShowsMenubar -n -t bool -s true
+  xfconf-query -c xsettings -p /Gtk/ShellShowsAppmenu -n -t bool -s true
+  printf "\n"
+  sleep 3s
 
   # grub-theme
   #TODO: Grub setup;

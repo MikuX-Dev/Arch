@@ -1,4 +1,10 @@
-visual-studio-code-bin
+appmenu-gtk-module-git
+appmenu-qt4
 brave-bin
+libdbusmenu-glib
+libdbusmenu-gtk2
+libdbusmenu-gtk3
 mkinitcpio-firmware
 mkinitcpio-numlock
+mugshot
+visual-studio-code-bin

@@ -24,6 +24,7 @@ cifs-utils
 clang
 clonezilla
 cmake
+conky
 cronie
 ctags
 curl
@@ -78,7 +79,15 @@ irqbalance
 irssi
 iw
 iwd
+kvantum
 lftp
+libx11
+libxext
+lightdm
+lightdm-gtk-greeter
+lightdm-gtk-greeter-settings
+lightdm-webkit2-greeter
+lightdm-webkit2-theme-glorious
 llvm
 lsof
 lua
@@ -122,19 +131,22 @@ partimage
 perl
 pkgfile
 plocate
+plymouth
 ppp
 pptpclient
 profile-sync-daemon
 qemu-emulators-full
 qemu-system-x86-firmware
 qemu-tools
+qt5-tools
+qt5ct
 reiserfsprogs
 rfkill
+rofi
 rp-pppoe
 rsync
 rtorrent
 ruby
-rust
 rustup
 screen
 scrot
@@ -161,6 +173,7 @@ wvdial
 xarchiver
 xdg-desktop-portal-gtk
 xdg-user-dirs-gtk
+xfce4 xfce4-goodies pavucontrol gvfs xarchiver
 xl2tpd
 xz
 zip
@@ -170,5 +183,3 @@ zsh-completions
 zsh-history-substring-search
 zsh-syntax-highlighting
 zstd
-
-intel-media-driver libva-intel-driver libva-mesa-driver mesa nvidia nvidia-open vulkan-intel vulkan-radeon xf86-video-amdgpu xf86-video-ati xf86-video-nouveau xf86-video-vmware
