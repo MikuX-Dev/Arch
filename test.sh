@@ -47,7 +47,7 @@ sleep 3s
 clear
 
 # Installing fastest mirrors
-read -r -p "Do you want fastest mirrors? [Y/n] " fm
+read -p "Do you want fastest mirrors? [Y/n] " fm
 if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
 echo "Installing fastest mirrorlists"
 printf "\n"
@@ -79,7 +79,7 @@ lsblk
 printf "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
-read -p -r drive
+read -p drive
 sleep 3s
 clear
 
@@ -87,7 +87,7 @@ clear
 # swap_size="4G"
 # efi_size="500M"
 
-# read -p -r "Do you want to set up partition automatically depending on your partition size? [Y/n] " pa
+# read -p "Do you want to set up partition automatically depending on your partition size? [Y/n] " pa
 # if [ "$pa" = "Y" ] || [ "$pa" = "y" ]; then
 #   echo "Setting up partition automatically depending on your partition size"
 #   printf "\n"
@@ -95,18 +95,18 @@ clear
 #   printf "\n"
 #   echo "Enter the partition to setup archlinux on it. (/dev/...)"
 #   printf "\n"
-#   read -p -r prt
+#   read -p prt
 #   sleep 3s
 #   echo "'$prt' partition is selected for archlinux installation"
 #   printf "\n"
 #   sleep 3s
-#   read -p -r "Do you want separate partition for home? [Y/n] " hm
+#   read -p "Do you want separate partition for home? [Y/n] " hm
 #   printf "\n"
 #   if [ "$hm" = "Y" ] || [ "$hm" = "y" ]; then
 #     echo "Setting up separate partition for home"
 #     printf "\n"
-#     read -p -r "How much size do you need for home partition?" hp
-#     read -p -r "{$hp}"
+#     read -p "How much size do you need for home partition?" hp
+#     read -p "{$hp}"
 #     printf "\n"
 #     echo
 #   fi
@@ -131,7 +131,7 @@ echo " 1. fdisk"
 echo " 2. cfdisk"
 echo " 3. gdisk"
 echo " 4. parted"
-read -p -r partitionutility
+read -p partitionutility
 
 case "$partitionutility" in
   1 | fdisk | Fdisk | FDISK)
@@ -163,14 +163,14 @@ clear
 printf "\n"
 lsblk
 printf "\n"
+echo "Note: Boot partition will be formatted in fat31 file system type."
 echo "choose your linux file system type for formatting drives"
 echo " 1. ext4"
 echo " 2. xfs"
 echo " 3. btrfs"
 echo " 4. f2fs"
 printf "\n"
-echo "Note: Boot partition will be formatted in fat31 file system type."
-read -p -r filesystemtype
+read -p filesystemtype
 
 case "$filesystemtype" in
   1 | ext4 | Ext4 | EXT4)
@@ -200,7 +200,7 @@ printf "\n"
 lsblk
 printf "\n"
 echo "Enter the root partition (eg: /dev/sda1): "
-read -p -r rootpartition
+read -p rootpartition
 mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
@@ -208,11 +208,11 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -p -r "Did you also create separate home partition? [Y/n]: " answerhome
+read -p "Did you also create separate home partition? [Y/n]: " answerhome
 case "$answerhome" in
   y | Y | yes | Yes | YES)
   echo "Enter home partition (eg: /dev/sda2): "
-  read -p -r homepartition
+  read -p homepartition
   mkfs."$filesystemtype" "$homepartition"
   mkdir /mnt/home
   mount "$homepartition" /mnt/home
@@ -226,11 +226,11 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -p -r "Did you also create swap partition? [Y/n]: " answerswap
+read -p "Did you also create swap partition? [Y/n]: " answerswap
 case "$answerswap" in
   y | Y | yes | Yes | YES)
   echo "Enter swap partition (eg: /dev/sda3): "
-  read -p -r swappartition
+  read -p swappartition
   mkswap "$swappartition"
   swapon "$swappartition"
   ;;
@@ -243,10 +243,10 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -p -r "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
+read -p "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
 if [[ $setbootpartition == "boot" ]]; then
   echo "Setting up a separate boot partition..."
-  read -p -r "Enter the boot partition (e.g., /dev/sda4): " bootpartition
+  read -p "Enter the boot partition (e.g., /dev/sda4): " bootpartition
   mkfs.fat -F 32 "$bootpartition"
   mount "$bootpartition" /mnt/boot
 else
@@ -412,7 +412,7 @@ clear
 echo "Set up your hostname!"
 echo "Enter your computer name: "
 printf "\n"
-read -p -r hostname
+read -p hostname
 echo "$hostname" > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
@@ -440,7 +440,7 @@ install_pman_pkgs(){
   # Download the list of AUR packages from the specified URL
   wget -O pman-pkg.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/pman-pkg.txt
   # Read the package names from the file
-  while IFS= read -p -r line; do
+  while IFS= read -p line; do
     pmanpkgs+="$line"
   done < pman-pkg.txt
   # Install AUR packages using yay
@@ -472,7 +472,7 @@ install_aur_pkgs(){
   # Download the list of AUR packages from the specified URL
   wget -O aur.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/aur.txt
   # Read the package names from the file
-  while IFS= read -p -r line; do
+  while IFS= read -p line; do
     aurpkgs+="$line"
   done < aur.txt
   # Install AUR packages using yay
@@ -489,7 +489,7 @@ printf "\n"
 lsblk
 printf "\n"
 echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
-read -p -r efipartition
+read -p efipartition
 efidirectory="/boot/efi/"
 if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
@@ -510,7 +510,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
 
 # os-prober
-read -p -r "Are you duelbooting? (Y/n): " use_os_prober
+read -p "Are you duelbooting? [Y/n]: " use_os_prober
 if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
@@ -637,7 +637,7 @@ clear
 echo "Adding regular user!"
 printf "\n"
 echo "Enter username to add a regular user: "
-read -p -r username
+read -p username
 printf "\n"
 useradd -m -G wheel -s /bin/zsh "$username"
 echo "Enter password for '$username': "
