@@ -1,5 +1,6 @@
 ack
 acpi
+alacritty
 alsa-utils
 apache
 arch-install-scripts
@@ -63,6 +64,7 @@ gpm
 gptfdisk
 grub
 grub-customizer
+gvfs
 gvfs
 gvfs-mtp
 gzip
@@ -128,6 +130,7 @@ pacman-contrib
 partclone
 parted
 partimage
+pavucontrol
 perl
 pkgfile
 plocate
@@ -171,9 +174,11 @@ wireless_tools
 wpa_supplicant
 wvdial
 xarchiver
+xarchiver
 xdg-desktop-portal-gtk
 xdg-user-dirs-gtk
-xfce4 xfce4-goodies pavucontrol gvfs xarchiver
+xfce4
+xfce4-goodies
 xl2tpd
 xz
 zip
