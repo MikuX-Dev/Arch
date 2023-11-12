@@ -48,7 +48,7 @@ clear
 
 # Installing fastest mirrors
 read "Do you want fastest mirrors? [Y/n] " fm
-if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
+if [[ $fm =~ ^[Yy]$ ]]; then
 echo "Installing fastest mirrorlists"
 printf "\n"
   # Backup mirrorlist
@@ -363,7 +363,7 @@ clear
 
 # Installing fastest mirrors
 reap -p "Do you want fastest mirrors? [Y/n] " fm
-if [ "$fm" = "Y" ] || [ "$fm" = "y" ]; then
+if [[ $fm =~ ^[Yy]$ ]]; then
 echo "Installing fastest mirrorlists"
   # Backup mirrorlist
   echo "Backingup mirrorlists"
@@ -611,7 +611,7 @@ sleep 5s
   sleep 3s
 
   # grub-theme
-  #TODO: Grub setup;
+  #TODO:
   echo "Installing grub-theme"
   printf "\n"
   cp -r dotfiles/themes/grub/themes/* /usr/share/grub/themes/
@@ -657,7 +657,7 @@ sleep 5s
 # Enable services
 echo "Enabling services.."
 printf "\n"
-#TODO: add lightdm and other services
+#TODO:
 enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service')
 systemctl enable "${enable_services[@]}"
 sleep 5s
