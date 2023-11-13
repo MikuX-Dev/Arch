@@ -20,34 +20,43 @@ echo -ne "
 │       and enjoy         │
 ╰─────────────────────────╯
 "
+
+# echo -ne "
+# ${BOLD}${RED}╭─────── ${GREEN}ArchFiery ${RED}───────╮${RESET}
+# ${BOLD}${RED}│  ${GREEN}Installation starting  ${RED}│${RESET}
+# ${BOLD}${RED}│       ${GREEN}so sit back       ${RED}│${RESET}
+# ${BOLD}${RED}│         ${GREEN}relax           ${RED}│${RESET}
+# ${BOLD}${RED}│       ${GREEN}and enjoy         ${RED}│${RESET}
+# ${BOLD}${RED}╰─────────────────────────╯${RESET}
+# "
 echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.06 (GPL-3.0)"
 sleep 5s
 printf "\n"
 echo "Installation guide starts now..."
 pacman -Syy
-sleep 3s
+sleep 5s
 # Update
 printf "\n"
 echo "updateing first"
 pacman -S reflector rsync curl --noconfirm
-sleep 3s
+sleep 5s
 clear
 
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-    # Repositories are already enabled, remove any commented-out lines
+    # Repositories are alread -ry enabled, remove any commented-out lines
     sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
     sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
     # Repositories are not enabled, add them
     echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
 fi
-sleep 3s
+sleep 5s
 clear
 
 # Installing fastest mirrors
-read "Do you want fastest mirrors? [Y/n] " fm
+read -r "Do you want fastest mirrors? [Y/n] " fm
 if [[ $fm =~ ^[Yy]$ ]]; then
 echo "Installing fastest mirrorlists"
 printf "\n"
@@ -62,14 +71,14 @@ printf "\n"
 else
   echo "Skipping the fastert mirrorlist"
 fi
-sleep 3s
+sleep 5s
 clear
 
 # Setting up system clock
 echo "Ensuring if the system clock is accurate."
 printf "\n"
 timedatectl set-ntp true
-sleep 3s
+sleep 5s
 clear
 
 # Setting up drive
@@ -79,15 +88,15 @@ lsblk
 printf "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
-read drive
-sleep 3s
+read -r drive
+sleep 5s
 clear
 
 # #do you want to set up partition automatically depending on your partition size
 # swap_size="4G"
 # efi_size="500M"
 
-# read "Do you want to set up partition automatically depending on your partition size? [Y/n] " pa
+# read -r "Do you want to set up partition automatically depending on your partition size? [Y/n] " pa
 # if [ "$pa" = "Y" ] || [ "$pa" = "y" ]; then
 #   echo "Setting up partition automatically depending on your partition size"
 #   printf "\n"
@@ -95,18 +104,18 @@ clear
 #   printf "\n"
 #   echo "Enter the partition to setup archlinux on it. (/dev/...)"
 #   printf "\n"
-#   read prt
+#   read -r prt
 #   sleep 3s
 #   echo "'$prt' partition is selected for archlinux installation"
 #   printf "\n"
 #   sleep 3s
-#   read "Do you want separate partition for home? [Y/n] " hm
+#   read -r "Do you want separate partition for home? [Y/n] " hm
 #   printf "\n"
 #   if [ "$hm" = "Y" ] || [ "$hm" = "y" ]; then
 #     echo "Setting up separate partition for home"
 #     printf "\n"
-#     read "How much size do you need for home partition?" hp
-#     read "{$hp}"
+#     read -r "How much size do you need for home partition?" hp
+#     read -r "{$hp}"
 #     printf "\n"
 #     echo
 #   fi
@@ -115,11 +124,11 @@ clear
 #   echo "Skipping the partition setup"
 # fi
 
-echo "Getting ready for creating partitions!"
+echo "Getting read -ry for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
 echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting ready in 9 seconds"
+echo "Getting read -ry in 9 seconds"
 sleep 9s
 clear
 
@@ -131,7 +140,7 @@ echo " 1. fdisk"
 echo " 2. cfdisk"
 echo " 3. gdisk"
 echo " 4. parted"
-read partitionutility
+read -r partitionutility
 
 case "$partitionutility" in
   1 | fdisk | Fdisk | FDISK)
@@ -155,7 +164,7 @@ echo "'$partitionutility' is the selected disk utility tool for partition."
 sleep 5s
 clear
 
-echo "Getting ready for formatting partitions!"
+echo "Getting read -ry for formatting partitions!"
 sleep 5s
 "$partitionutility" "$drive"
 clear
@@ -163,14 +172,14 @@ clear
 printf "\n"
 lsblk
 printf "\n"
+echo "Note: Boot partition will be formatted in fat31 file system type."
 echo "choose your linux file system type for formatting drives"
 echo " 1. ext4"
 echo " 2. xfs"
 echo " 3. btrfs"
 echo " 4. f2fs"
 printf "\n"
-echo "Note: Boot partition will be formatted in fat31 file system type."
-read filesystemtype
+read -r filesystemtype
 
 case "$filesystemtype" in
   1 | ext4 | Ext4 | EXT4)
@@ -194,13 +203,13 @@ echo "'$filesystemtype' is the selected file system type."
 sleep 5s
 clear
 
-echo "Getting ready for formatting drives."
+echo "Getting read -ry for formatting drives."
 sleep 5s
 printf "\n"
 lsblk
 printf "\n"
 echo "Enter the root partition (eg: /dev/sda1): "
-read rootpartition
+read -r rootpartition
 mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
@@ -208,11 +217,11 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read "Did you also create separate home partition? [Y/n]: " answerhome
+read -r "Did you also create separate home partition? [Y/n]: " answerhome
 case "$answerhome" in
   y | Y | yes | Yes | YES)
   echo "Enter home partition (eg: /dev/sda2): "
-  read homepartition
+  read -r homepartition
   mkfs."$filesystemtype" "$homepartition"
   mkdir /mnt/home
   mount "$homepartition" /mnt/home
@@ -226,11 +235,11 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read "Did you also create swap partition? [Y/n]: " answerswap
+read -r "Did you also create swap partition? [Y/n]: " answerswap
 case "$answerswap" in
   y | Y | yes | Yes | YES)
   echo "Enter swap partition (eg: /dev/sda3): "
-  read swappartition
+  read -r swappartition
   mkswap "$swappartition"
   swapon "$swappartition"
   ;;
@@ -243,10 +252,10 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
+read -r "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
 if [[ $setbootpartition == "boot" ]]; then
   echo "Setting up a separate boot partition..."
-  read "Enter the boot partition (e.g., /dev/sda4): " bootpartition
+  read -r "Enter the boot partition (e.g., /dev/sda4): " bootpartition
   mkfs.fat -F 32 "$bootpartition"
   mount "$bootpartition" /mnt/boot
 else
@@ -351,7 +360,7 @@ clear
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-    # Repositories are already enabled, remove any commented-out lines
+    # Repositories are alread -ry enabled, remove any commented-out lines
     sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
     sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
@@ -412,7 +421,7 @@ clear
 echo "Set up your hostname!"
 echo "Enter your computer name: "
 printf "\n"
-read hostname
+read -r hostname
 echo "$hostname" > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
@@ -439,8 +448,8 @@ install_pman_pkgs(){
   local pmanpkgs=''
   # Download the list of AUR packages from the specified URL
   wget -O pman-pkg.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/pman-pkg.txt
-  # Read the package names from the file
-  while IFS= read line; do
+  # read -r the package names from the file
+  while IFS= read -r line; do
     pmanpkgs+="$line"
   done < pman-pkg.txt
   # Install AUR packages using yay
@@ -471,8 +480,8 @@ install_aur_pkgs(){
   local aurpkgs=''
   # Download the list of AUR packages from the specified URL
   wget -O aur.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/aur.txt
-  # Read the package names from the file
-  while IFS= read line; do
+  # read -r the package names from the file
+  while IFS= read -r line; do
     aurpkgs+="$line"
   done < aur.txt
   # Install AUR packages using yay
@@ -489,7 +498,7 @@ printf "\n"
 lsblk
 printf "\n"
 echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
-read efipartition
+read -r efipartition
 efidirectory="/boot/efi/"
 if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
@@ -510,7 +519,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
 
 # os-prober
-read "Are you duelbooting? [Y/n]: " use_os_prober
+read -r "Are you duelbooting? [Y/n]: " use_os_prober
 if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
@@ -590,7 +599,7 @@ sleep 5s
   sed -i 's/^webkit_theme\s*=\s*\(.*\)/webkit_theme = glorious #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
   sed -i 's/^debug_mode\s*=\s*\(.*\)/debug_mode = true #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
   printf "\n"
-  sleep 3s
+  sleep 5s
 
   echo "Setting up EWW"
   git clone https://github.com/elkowar/eww
@@ -602,13 +611,13 @@ sleep 5s
     cp -r ./eww /usr/bin/
   )
   printf "\n"
-  sleep 3s
+  sleep 5s
 
   echo "Setting up vala-pannel-appmenu"
   xfconf-query -c xsettings -p /Gtk/ShellShowsMenubar -n -t bool -s true
   xfconf-query -c xsettings -p /Gtk/ShellShowsAppmenu -n -t bool -s true
   printf "\n"
-  sleep 3s
+  sleep 5s
 
   # grub-theme
   #TODO:
@@ -637,7 +646,7 @@ clear
 echo "Adding regular user!"
 printf "\n"
 echo "Enter username to add a regular user: "
-read username
+read -r username
 printf "\n"
 useradd -m -G wheel -s /bin/zsh "$username"
 echo "Enter password for '$username': "

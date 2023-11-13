@@ -21,7 +21,6 @@ broadcom-wl
 bzip3
 cargo
 ccache
-chromium
 cifs-utils
 clang
 clonezilla
