@@ -371,7 +371,7 @@ sleep 5s
 clear
 
 # Installing fastest mirrors
-reap -p "Do you want fastest mirrors? [Y/n] " fm
+read -r "Do you want fastest mirrors? [Y/n] " fm
 if [[ $fm =~ ^[Yy]$ ]]; then
 echo "Installing fastest mirrorlists"
   # Backup mirrorlist
