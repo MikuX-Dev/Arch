@@ -45,7 +45,7 @@ clear
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-    # Repositories are alread -ry enabled, remove any commented-out lines
+    # Repositories are already enabled, remove any commented-out lines
     sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
     sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
@@ -56,7 +56,7 @@ sleep 5s
 clear
 
 # Installing fastest mirrors
-read -r "Do you want fastest mirrors? [Y/n] " fm
+read "Do you want fastest mirrors? [Y/n] " fm
 if [[ $fm =~ ^[Yy]$ ]]; then
 echo "Installing fastest mirrorlists"
 printf "\n"
@@ -88,7 +88,7 @@ lsblk
 printf "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
-read -r drive
+read drive
 sleep 5s
 clear
 
@@ -96,7 +96,7 @@ clear
 # swap_size="4G"
 # efi_size="500M"
 
-# read -r "Do you want to set up partition automatically depending on your partition size? [Y/n] " pa
+# read "Do you want to set up partition automatically depending on your partition size? [Y/n] " pa
 # if [ "$pa" = "Y" ] || [ "$pa" = "y" ]; then
 #   echo "Setting up partition automatically depending on your partition size"
 #   printf "\n"
@@ -104,18 +104,18 @@ clear
 #   printf "\n"
 #   echo "Enter the partition to setup archlinux on it. (/dev/...)"
 #   printf "\n"
-#   read -r prt
+#   read prt
 #   sleep 3s
 #   echo "'$prt' partition is selected for archlinux installation"
 #   printf "\n"
 #   sleep 3s
-#   read -r "Do you want separate partition for home? [Y/n] " hm
+#   read "Do you want separate partition for home? [Y/n] " hm
 #   printf "\n"
 #   if [ "$hm" = "Y" ] || [ "$hm" = "y" ]; then
 #     echo "Setting up separate partition for home"
 #     printf "\n"
-#     read -r "How much size do you need for home partition?" hp
-#     read -r "{$hp}"
+#     read "How much size do you need for home partition?" hp
+#     read "{$hp}"
 #     printf "\n"
 #     echo
 #   fi
@@ -124,11 +124,11 @@ clear
 #   echo "Skipping the partition setup"
 # fi
 
-echo "Getting read -ry for creating partitions!"
+echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
 echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting read -ry in 9 seconds"
+echo "Getting ready in 9 seconds"
 sleep 9s
 clear
 
@@ -140,7 +140,7 @@ echo " 1. fdisk"
 echo " 2. cfdisk"
 echo " 3. gdisk"
 echo " 4. parted"
-read -r partitionutility
+read partitionutility
 
 case "$partitionutility" in
   1 | fdisk | Fdisk | FDISK)
@@ -164,7 +164,7 @@ echo "'$partitionutility' is the selected disk utility tool for partition."
 sleep 5s
 clear
 
-echo "Getting read -ry for formatting partitions!"
+echo "Getting ready for formatting partitions!"
 sleep 5s
 "$partitionutility" "$drive"
 clear
@@ -179,7 +179,7 @@ echo " 2. xfs"
 echo " 3. btrfs"
 echo " 4. f2fs"
 printf "\n"
-read -r filesystemtype
+read filesystemtype
 
 case "$filesystemtype" in
   1 | ext4 | Ext4 | EXT4)
@@ -203,13 +203,13 @@ echo "'$filesystemtype' is the selected file system type."
 sleep 5s
 clear
 
-echo "Getting read -ry for formatting drives."
+echo "Getting ready for formatting drives."
 sleep 5s
 printf "\n"
 lsblk
 printf "\n"
 echo "Enter the root partition (eg: /dev/sda1): "
-read -r rootpartition
+read rootpartition
 mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
@@ -217,11 +217,11 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -r "Did you also create separate home partition? [Y/n]: " answerhome
+read "Did you also create separate home partition? [Y/n]: " answerhome
 case "$answerhome" in
   y | Y | yes | Yes | YES)
   echo "Enter home partition (eg: /dev/sda2): "
-  read -r homepartition
+  read homepartition
   mkfs."$filesystemtype" "$homepartition"
   mkdir /mnt/home
   mount "$homepartition" /mnt/home
@@ -235,11 +235,11 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -r "Did you also create swap partition? [Y/n]: " answerswap
+read "Did you also create swap partition? [Y/n]: " answerswap
 case "$answerswap" in
   y | Y | yes | Yes | YES)
   echo "Enter swap partition (eg: /dev/sda3): "
-  read -r swappartition
+  read swappartition
   mkswap "$swappartition"
   swapon "$swappartition"
   ;;
@@ -252,10 +252,10 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-read -r "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
+read "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
 if [[ $setbootpartition == "boot" ]]; then
   echo "Setting up a separate boot partition..."
-  read -r "Enter the boot partition (e.g., /dev/sda4): " bootpartition
+  read "Enter the boot partition (e.g., /dev/sda4): " bootpartition
   mkfs.fat -F 32 "$bootpartition"
   mount "$bootpartition" /mnt/boot
 else
@@ -360,7 +360,7 @@ clear
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-    # Repositories are alread -ry enabled, remove any commented-out lines
+    # Repositories are already enabled, remove any commented-out lines
     sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
     sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
@@ -371,7 +371,7 @@ sleep 5s
 clear
 
 # Installing fastest mirrors
-read -r "Do you want fastest mirrors? [Y/n] " fm
+read "Do you want fastest mirrors? [Y/n] " fm
 if [[ $fm =~ ^[Yy]$ ]]; then
 echo "Installing fastest mirrorlists"
   # Backup mirrorlist
@@ -421,7 +421,7 @@ clear
 echo "Set up your hostname!"
 echo "Enter your computer name: "
 printf "\n"
-read -r hostname
+read hostname
 echo "$hostname" > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
@@ -448,8 +448,8 @@ install_pman_pkgs(){
   local pmanpkgs=''
   # Download the list of AUR packages from the specified URL
   wget -O pman-pkg.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/pman-pkg.txt
-  # read -r the package names from the file
-  while IFS= read -r line; do
+  # read the package names from the file
+  while IFS= read line; do
     pmanpkgs+="$line"
   done < pman-pkg.txt
   # Install AUR packages using yay
@@ -480,8 +480,8 @@ install_aur_pkgs(){
   local aurpkgs=''
   # Download the list of AUR packages from the specified URL
   wget -O aur.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/aur.txt
-  # read -r the package names from the file
-  while IFS= read -r line; do
+  # read the package names from the file
+  while IFS= read line; do
     aurpkgs+="$line"
   done < aur.txt
   # Install AUR packages using yay
@@ -498,7 +498,7 @@ printf "\n"
 lsblk
 printf "\n"
 echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
-read -r efipartition
+read efipartition
 efidirectory="/boot/efi/"
 if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
@@ -519,7 +519,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
 
 # os-prober
-read -r "Are you duelbooting? [Y/n]: " use_os_prober
+read "Are you duelbooting? [Y/n]: " use_os_prober
 if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   echo "Enabling os-prober..."
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
@@ -646,7 +646,7 @@ clear
 echo "Adding regular user!"
 printf "\n"
 echo "Enter username to add a regular user: "
-read -r username
+read username
 printf "\n"
 useradd -m -G wheel -s /bin/zsh "$username"
 echo "Enter password for '$username': "
