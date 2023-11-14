@@ -477,6 +477,7 @@ mkdir -p /usr/share/lightdm-webkit/themes/glorious
 # shell
 echo "Installing shell"
 printf "\n"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 cp -r dotfiles/shell/bash/* /etc/skel/
 cp -r dotfiles/shell/zsh/* /etc/skel/
 cp -r dotfiles/shell/p-script/* /etc/skel/bin/
