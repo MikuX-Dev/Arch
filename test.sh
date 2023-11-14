@@ -26,9 +26,10 @@ printf "\n"
 echo "Installation guide starts now..."
 pacman -Syy
 sleep 5s
-# Update
-printf "\n"
-echo "updateing first"
+clear
+
+# install package
+echo "Installing needed packages..."
 pacman -S reflector rsync curl --noconfirm
 sleep 5s
 clear
@@ -246,8 +247,6 @@ fi
 # Determine graphics card type and build package list
 gpu_type=$(lspci)
 printf "\n"
-packages="base base-devel linux linux-headers linux-firmware ntfs-3g nvme-cli ${proc_ucode}"
-
 if grep -E "NVIDIA|GeForce" <<<"${gpu_type}"; then
   echo "Installing NVIDIA drivers..."
   packages+=" nvidia nvidia-utils"
@@ -264,6 +263,8 @@ else
   echo "Installing generic drivers..."
   packages+="virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager"
 fi
+
+packages="base base-devel linux linux-headers linux-firmware ntfs-3g nvme-cli ${proc_ucode} ${gpu_type}"
 
 # Install the determined packages
 pacstrap /mnt "${packages}"
@@ -416,7 +417,7 @@ rm -rf yay-bin
 # Install pkgs from yay-bin
 echo "Installing pkgs from yay-bin"
 printf "\n"
-yay -S --noconfirm --needed appmenu-gtk-module-git appmenu-qt4 brave-bin libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot visual-studio-code-bin
+yay -S --noconfirm --needed appmenu-gtk-module-git appmenu-qt4 brave-bin libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot visual-studio-code-bin zsh-theme-powerlevel10k-git
 sleep 5s
 clear
 
@@ -483,11 +484,12 @@ printf "\n"
 sleep 5s
 
 # theme
-echo "Installing themes"
+echo "Installing themes and fonts"
 printf "\n"
 cp -r dotfiles/themes/themes/* /usr/share/themes/
 cp -r dotfiles/themes/icons/* /usr/share/icons/
 cp -r dotfiles/themes/plymouth/* /etc/plymouth/
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf /usr/share/fonts/
 printf "\n"
 sleep 5s
 
@@ -498,12 +500,24 @@ cp -r dotfiles/config/* /etc/skel/.config/
 printf "\n"
 sleep 5s
 
+# plymouth config
+echo "Configuring plymouth"
+printf "\n"
+sed -i 's/^HOOKS=.*/HOOKS=(base udev plymouth autodetect modconf kms keyboard keymap consolefont block filesystems fsck)/' /etc/mkinitcpio.conf
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet splash udev.log_level=3 vt.global_cursor_default=0"/g' /etc/default/grub
+mkinitcpio -p linux
+grub-mkconfig -o /boot/grub/grub.cfg
+plymouth-set-default-theme -R archfiery
+sleep 5s
+clear
+
 # wallpaper
 echo "Installing wallpaper"
 printf "\n"
 cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
 printf "\n"
 sleep 5s
+clear
 
 # lightdm
 echo "Setting up Desktop environment"
@@ -518,6 +532,7 @@ sed -i 's/^webkit_theme\s*=\s*\(.*\)/webkit_theme = glorious #\1/g' /etc/lightdm
 sed -i 's/^debug_mode\s*=\s*\(.*\)/debug_mode = true #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
 printf "\n"
 sleep 5s
+clear
 
 echo "Setting up EWW"
 git clone https://github.com/elkowar/eww
@@ -530,22 +545,23 @@ git clone https://github.com/elkowar/eww
 )
 printf "\n"
 sleep 5s
+clear
 
 echo "Setting up vala-pannel-appmenu"
 xfconf-query -c xsettings -p /Gtk/ShellShowsMenubar -n -t bool -s true
 xfconf-query -c xsettings -p /Gtk/ShellShowsAppmenu -n -t bool -s true
 printf "\n"
 sleep 5s
+clear
 
 # grub-theme
-#TODO:
 echo "Installing grub-theme"
 printf "\n"
 cp -r dotfiles/themes/grub/themes/* /usr/share/grub/themes/
 sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/archfiery/theme.txt"/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
-printf "\n"
 sleep 5s
+clear
 
 #remove folder
 echo "Removing dotfiles folder"
@@ -583,8 +599,7 @@ sleep 5s
 # Enable services
 echo "Enabling services.."
 printf "\n"
-#TODO:
-enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service')
+enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'lightdm-plymouth.service' 'NetworkManager.service')
 systemctl enable "${enable_services[@]}"
 sleep 5s
 clear
