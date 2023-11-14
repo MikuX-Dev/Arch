@@ -119,7 +119,7 @@ case "$partitionutility" in
   partitionutility="cfdisk"
   ;;
 esac
-echo "'$partitionutility' is the selected disk utility tool for partition."
+echo ""$partitionutility" is the selected disk utility tool for partition."
 sleep 5s
 clear
 
@@ -159,7 +159,7 @@ case "$filesystemtype" in
   filesystemtype="ext4"
   ;;
 esac
-echo "'$filesystemtype' is the selected file system type."
+echo ""$filesystemtype" is the selected file system type."
 sleep 5s
 clear
 
