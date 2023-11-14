@@ -20,15 +20,6 @@ echo -ne "
 │       and enjoy         │
 ╰─────────────────────────╯
 "
-
-# echo -ne "
-# ${BOLD}${RED}╭─────── ${GREEN}ArchFiery ${RED}───────╮${RESET}
-# ${BOLD}${RED}│  ${GREEN}Installation starting  ${RED}│${RESET}
-# ${BOLD}${RED}│       ${GREEN}so sit back       ${RED}│${RESET}
-# ${BOLD}${RED}│         ${GREEN}relax           ${RED}│${RESET}
-# ${BOLD}${RED}│       ${GREEN}and enjoy         ${RED}│${RESET}
-# ${BOLD}${RED}╰─────────────────────────╯${RESET}
-# "
 echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.06 (GPL-3.0)"
 sleep 5s
 printf "\n"
@@ -45,12 +36,12 @@ clear
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-    # Repositories are alread -py enabled, remove any commented-out lines
-    sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
-    sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
+  # Repositories are alread -py enabled, remove any commented-out lines
+  sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
+  sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
-    # Repositories are not enabled, add them
-    echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+  # Repositories are not enabled, add them
+  echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
 fi
 sleep 5s
 clear
@@ -58,8 +49,8 @@ clear
 # Installing fastest mirrors
 read -p "Do you want fastest mirrors? [Y/n] " fm
 if [[ $fm =~ ^[Yy]$ ]]; then
-echo "Installing fastest mirrorlists"
-printf "\n"
+  echo "Installing fastest mirrorlists"
+  printf "\n"
   # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
@@ -110,19 +101,19 @@ echo " 4. parted"
 read -p partitionutility
 
 case "$partitionutility" in
-  1 | fdisk | Fdisk | FDISK)
+1 | fdisk | Fdisk | FDISK)
   partitionutility="fdisk"
   ;;
-  2 | cfdisk | Cfdisk | CFDISK)
+2 | cfdisk | Cfdisk | CFDISK)
   partitionutility="cfdisk"
   ;;
-  3 | gdisk | Gdisk | GDISK)
+3 | gdisk | Gdisk | GDISK)
   partitionutility="gdisk"
   ;;
-  4 | parted | Parted | PARTED)
+4 | parted | Parted | PARTED)
   partitionutility="parted"
   ;;
-  *)
+*)
   echo "Unknown or unsupported disk utility! Default = cfdisk."
   partitionutility="cfdisk"
   ;;
@@ -150,19 +141,19 @@ printf "\n"
 read -p filesystemtype
 
 case "$filesystemtype" in
-  1 | ext4 | Ext4 | EXT4)
+1 | ext4 | Ext4 | EXT4)
   filesystemtype="ext4"
   ;;
-  2 | xfs | Xfs | XFS)
+2 | xfs | Xfs | XFS)
   filesystemtype="xfs"
   ;;
-  3 | btrfs | Btrfs | BTRFS)
+3 | btrfs | Btrfs | BTRFS)
   filesystemtype="btrfs"
   ;;
-  4 | f2fs | F2fs | F2FS)
+4 | f2fs | F2fs | F2FS)
   filesystemtype="f2fs"
   ;;
-  *)
+*)
   echo "Unknown or unsupported Filesystem. Default = ext4."
   filesystemtype="ext4"
   ;;
@@ -186,13 +177,13 @@ lsblk
 printf "\n"
 read -p "Did you also create separate home partition? [Y/n]: " answerhome
 case "$answerhome" in
-  y | Y | yes | Yes | YES)
+y | Y | yes | Yes | YES)
   read -p "Enter home partition (eg: /dev/sda2): " homepartition
   mkfs."$filesystemtype" "$homepartition"
   mkdir /mnt/home
   mount "$homepartition" /mnt/home
   ;;
-  *)
+*)
   echo "Skipping home partition!"
   ;;
 esac
@@ -203,12 +194,12 @@ lsblk
 printf "\n"
 read -p "Did you also create swap partition? [Y/n]: " answerswap
 case "$answerswap" in
-  y | Y | yes | Yes | YES)
+y | Y | yes | Yes | YES)
   read -p "Enter swap partition (eg: /dev/sda3): " swappartition
   mkswap "$swappartition"
   swapon "$swappartition"
   ;;
-  *)
+*)
   echo "Skipping Swap partition!"
   ;;
 esac
@@ -244,12 +235,12 @@ sleep 5s
 # Determine processor type and install microcode
 proc_type=$(lscpu)
 printf "\n"
-if grep -E "GenuineIntel" <<< "${proc_type}"; then
-    echo "Installing Intel microcode"
-    proc_ucode=intel-ucode
-elif grep -E "AuthenticAMD" <<< "${proc_type}"; then
-    echo "Installing AMD microcode"
-    proc_ucode=amd-ucode
+if grep -E "GenuineIntel" <<<"${proc_type}"; then
+  echo "Installing Intel microcode"
+  proc_ucode=intel-ucode
+elif grep -E "AuthenticAMD" <<<"${proc_type}"; then
+  echo "Installing AMD microcode"
+  proc_ucode=amd-ucode
 fi
 
 # Determine graphics card type and build package list
@@ -257,21 +248,21 @@ gpu_type=$(lspci)
 printf "\n"
 packages="base base-devel linux linux-headers linux-firmware ntfs-3g nvme-cli ${proc_ucode}"
 
-if grep -E "NVIDIA|GeForce" <<< "${gpu_type}"; then
-    echo "Installing NVIDIA drivers..."
-    packages+=" nvidia nvidia-utils"
+if grep -E "NVIDIA|GeForce" <<<"${gpu_type}"; then
+  echo "Installing NVIDIA drivers..."
+  packages+=" nvidia nvidia-utils"
 elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
-    echo "Installing AMD drivers..."
-    packages+=" xf86-video-amdgpu"
-elif grep -E "Integrated Graphics Controller" <<< "${gpu_type}"; then
-    echo "Installing integrated Graphics Controller"
-    packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver"
-elif grep -E "Intel Corporation UHD" <<< "${gpu_type}"; then
-    echo "Installing Intel UHD Graphics"
-    packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver"
+  echo "Installing AMD drivers..."
+  packages+=" xf86-video-amdgpu"
+elif grep -E "Integrated Graphics Controller" <<<"${gpu_type}"; then
+  echo "Installing integrated Graphics Controller"
+  packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver"
+elif grep -E "Intel Corporation UHD" <<<"${gpu_type}"; then
+  echo "Installing Intel UHD Graphics"
+  packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver"
 else
-    echo "Installing generic drivers..."
-    packages+="virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager"
+  echo "Installing generic drivers..."
+  packages+="virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager"
 fi
 
 # Install the determined packages
@@ -280,13 +271,13 @@ pacstrap /mnt "${packages}"
 # Gen fstab
 echo "Generating fstab file"
 printf "\n"
-genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -U /mnt >>/mnt/etc/fstab
 cat /etc/fstab
 sleep 5s
 clear
 
 # Setup for post-installation
-sed '1,/^#part2$/d' ArchFiery.sh > /mnt/post_install.sh
+sed '1,/^#part2$/d' ArchFiery.sh >/mnt/post_install.sh
 chmod +x /mnt/post_install.sh
 arch-chroot /mnt ./post_install.sh
 clear
@@ -325,12 +316,12 @@ clear
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-    # Repositories are alread -py enabled, remove any commented-out lines
-    sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
-    sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
+  # Repositories are alread -py enabled, remove any commented-out lines
+  sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
+  sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
-    # Repositories are not enabled, add them
-    echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+  # Repositories are not enabled, add them
+  echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
 fi
 sleep 5s
 clear
@@ -338,7 +329,7 @@ clear
 # Installing fastest mirrors
 read -p "Do you want fastest mirrors? [Y/n] " fm
 if [[ $fm =~ ^[Yy]$ ]]; then
-echo "Installing fastest mirrorlists"
+  echo "Installing fastest mirrorlists"
   # Backup mirrorlist
   echo "Backingup mirrorlists"
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
@@ -371,21 +362,21 @@ clear
 # Setting lang
 echo "Setting LANG variable"
 printf "\n"
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
+echo "LANG=en_US.UTF-8" >/etc/locale.conf
 sleep 5s
 clear
 
 # Setting console keyboard
 echo "Setting console keyboard layout"
 printf "\n"
-echo 'KEYMAP=us' > /etc/vconsole.conf
+echo 'KEYMAP=us' >/etc/vconsole.conf
 sleep 5s
 clear
 
 # Setup hostname
 echo "Set up your hostname!"
 read -p "Enter your computer name: " hostname
-echo "$hostname" > /etc/hostname
+echo "$hostname" >/etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
 sleep 5s
@@ -395,10 +386,10 @@ clear
 echo "Setting up hosts file"
 printf "\n"
 {
-echo "127.0.0.1       localhost"
-echo "::1             localhost"
-echo "127.0.1.1       $hostname"
-} >> /etc/hosts
+  echo "127.0.0.1       localhost"
+  echo "::1             localhost"
+  echo "127.0.1.1       $hostname"
+} >>/etc/hosts
 cat /etc/hosts
 sleep 5s
 clear
@@ -413,12 +404,12 @@ clear
 # Install pkgs and tools by AUR..
 echo "Installing pkgs and tools by AUR"
 printf "\n"
-  # yay-bin: AUR helper
-  git clone https://aur.archlinux.org/yay-bin.git
-  (
-    cd yay-bin || exit
-    makepkg -sic --noconfirm
-  )
+# yay-bin: AUR helper
+git clone https://aur.archlinux.org/yay-bin.git
+(
+  cd yay-bin || exit
+  makepkg -sic --noconfirm
+)
 # remove dir
 rm -rf yay-bin
 
@@ -477,89 +468,89 @@ echo "Setting up Personal dotfiles"
 git clone https://github.com/MikuX-Dev/dotfiles.git
 sleep 5s
 
-  # Creating folder first
-  mkdir -p /etc/skel/.config/
-  mkdir -p /etc/skel/bin/
-  mkdir -p /usr/share/lightdm-webkit/themes/glorious
+# Creating folder first
+mkdir -p /etc/skel/.config/
+mkdir -p /etc/skel/bin/
+mkdir -p /usr/share/lightdm-webkit/themes/glorious
 
-  # shell
-  echo "Installing shell"
-  printf "\n"
-  cp -r dotfiles/shell/bash/* /etc/skel/
-  cp -r dotfiles/shell/zsh/* /etc/skel/
-  cp -r dotfiles/shell/p-script/* /etc/skel/bin/
-  printf "\n"
-  sleep 5s
+# shell
+echo "Installing shell"
+printf "\n"
+cp -r dotfiles/shell/bash/* /etc/skel/
+cp -r dotfiles/shell/zsh/* /etc/skel/
+cp -r dotfiles/shell/p-script/* /etc/skel/bin/
+printf "\n"
+sleep 5s
 
-  # theme
-  echo "Installing themes"
-  printf "\n"
-  cp -r dotfiles/themes/themes/* /usr/share/themes/
-  cp -r dotfiles/themes/icons/* /usr/share/icons/
-  cp -r dotfiles/themes/plymouth/* /etc/plymouth/
-  printf "\n"
-  sleep 5s
+# theme
+echo "Installing themes"
+printf "\n"
+cp -r dotfiles/themes/themes/* /usr/share/themes/
+cp -r dotfiles/themes/icons/* /usr/share/icons/
+cp -r dotfiles/themes/plymouth/* /etc/plymouth/
+printf "\n"
+sleep 5s
 
-  # config
-  echo "Installing configs"
-  printf "\n"
-  cp -r dotfiles/config/* /etc/skel/.config/
-  printf "\n"
-  sleep 5s
+# config
+echo "Installing configs"
+printf "\n"
+cp -r dotfiles/config/* /etc/skel/.config/
+printf "\n"
+sleep 5s
 
-  # wallpaper
-  echo "Installing wallpaper"
-  printf "\n"
-  cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
-  printf "\n"
-  sleep 5s
+# wallpaper
+echo "Installing wallpaper"
+printf "\n"
+cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
+printf "\n"
+sleep 5s
 
-  # lightdm
-  echo "Setting up Desktop environment"
-  printf "\n"
+# lightdm
+echo "Setting up Desktop environment"
+printf "\n"
 
-  echo "Setting up lightdm"
-  latest_release_url=$(curl -s https://api.github.com/repos/eromatiya/lightdm-webkit2-theme-glorious/releases/latest | grep "browser_download_url" | cut -d '"' -f 4)
-  curl -L -o glorious-latest.tar.gz "$latest_release_url"
-  tar -zxvf glorious-latest.tar.gz -C /usr/share/lightdm-webkit/themes/glorious --strip-components=1
-  sed -i 's/^\(#?greeter\)-session\s*=\s*\(.*\)/greeter-session = lightdm-webkit2-greeter #\1/ #\2g' /etc/lightdm/lightdm.conf
-  sed -i 's/^webkit_theme\s*=\s*\(.*\)/webkit_theme = glorious #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
-  sed -i 's/^debug_mode\s*=\s*\(.*\)/debug_mode = true #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
-  printf "\n"
-  sleep 5s
+echo "Setting up lightdm"
+latest_release_url=$(curl -s https://api.github.com/repos/eromatiya/lightdm-webkit2-theme-glorious/releases/latest | grep "browser_download_url" | cut -d '"' -f 4)
+curl -L -o glorious-latest.tar.gz "$latest_release_url"
+tar -zxvf glorious-latest.tar.gz -C /usr/share/lightdm-webkit/themes/glorious --strip-components=1
+sed -i 's/^\(#?greeter\)-session\s*=\s*\(.*\)/greeter-session = lightdm-webkit2-greeter #\1/ #\2g' /etc/lightdm/lightdm.conf
+sed -i 's/^webkit_theme\s*=\s*\(.*\)/webkit_theme = glorious #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
+sed -i 's/^debug_mode\s*=\s*\(.*\)/debug_mode = true #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
+printf "\n"
+sleep 5s
 
-  echo "Setting up EWW"
-  git clone https://github.com/elkowar/eww
-  (
-    cd eww || exit
-    cargo build --release --no-default-features --features x11
-    cd target/release || exit
-    chmod +x ./eww
-    cp -r ./eww /usr/bin/
-  )
-  printf "\n"
-  sleep 5s
+echo "Setting up EWW"
+git clone https://github.com/elkowar/eww
+(
+  cd eww || exit
+  cargo build --release --no-default-features --features x11
+  cd target/release || exit
+  chmod +x ./eww
+  cp -r ./eww /usr/bin/
+)
+printf "\n"
+sleep 5s
 
-  echo "Setting up vala-pannel-appmenu"
-  xfconf-query -c xsettings -p /Gtk/ShellShowsMenubar -n -t bool -s true
-  xfconf-query -c xsettings -p /Gtk/ShellShowsAppmenu -n -t bool -s true
-  printf "\n"
-  sleep 5s
+echo "Setting up vala-pannel-appmenu"
+xfconf-query -c xsettings -p /Gtk/ShellShowsMenubar -n -t bool -s true
+xfconf-query -c xsettings -p /Gtk/ShellShowsAppmenu -n -t bool -s true
+printf "\n"
+sleep 5s
 
-  # grub-theme
-  #TODO:
-  echo "Installing grub-theme"
-  printf "\n"
-  cp -r dotfiles/themes/grub/themes/* /usr/share/grub/themes/
-  sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/archfiery/theme.txt"/g' /etc/default/grub
-  grub-mkconfig -o /boot/grub/grub.cfg
-  printf "\n"
-  sleep 5s
+# grub-theme
+#TODO:
+echo "Installing grub-theme"
+printf "\n"
+cp -r dotfiles/themes/grub/themes/* /usr/share/grub/themes/
+sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/archfiery/theme.txt"/g' /etc/default/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+printf "\n"
+sleep 5s
 
-  #remove folder
-  echo "Removing dotfiles folder"
-  printf "\n"
-  rm -rf dotfiles/
+#remove folder
+echo "Removing dotfiles folder"
+printf "\n"
+rm -rf dotfiles/
 sleep 5s
 clear
 
