@@ -87,42 +87,9 @@ printf "\n"
 lsblk
 printf "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
-echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
-read -p drive
+read -p "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar): " drive
 sleep 5s
 clear
-
-# #do you want to set up partition automatically depending on your partition size
-# swap_size="4G"
-# efi_size="500M"
-
-# read -p "Do you want to set up partition automatically depending on your partition size? [Y/n] " pa
-# if [ "$pa" = "Y" ] || [ "$pa" = "y" ]; then
-#   echo "Setting up partition automatically depending on your partition size"
-#   printf "\n"
-#   lsblk
-#   printf "\n"
-#   echo "Enter the partition to setup archlinux on it. (/dev/...)"
-#   printf "\n"
-#   read -p prt
-#   sleep 3s
-#   echo "'$prt' partition is selected for archlinux installation"
-#   printf "\n"
-#   sleep 3s
-#   read -p "Do you want separate partition for home? [Y/n] " hm
-#   printf "\n"
-#   if [ "$hm" = "Y" ] || [ "$hm" = "y" ]; then
-#     echo "Setting up separate partition for home"
-#     printf "\n"
-#     read -p "How much size do you need for home partition?" hp
-#     read -p "{$hp}"
-#     printf "\n"
-#     echo
-#   fi
-#   clear
-# else
-#   echo "Skipping the partition setup"
-# fi
 
 echo "Getting read -py for creating partitions!"
 echo "root and boot partitions are mandatory."
@@ -165,8 +132,9 @@ sleep 5s
 clear
 
 echo "Getting read -py for formatting partitions!"
-sleep 5s
+printf "\n"
 "$partitionutility" "$drive"
+sleep 5s
 clear
 
 printf "\n"
@@ -208,8 +176,7 @@ sleep 5s
 printf "\n"
 lsblk
 printf "\n"
-echo "Enter the root partition (eg: /dev/sda1): "
-read -p rootpartition
+read -p "Enter the root partition (eg: /dev/sda1): " rootpartition
 mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
@@ -220,8 +187,7 @@ printf "\n"
 read -p "Did you also create separate home partition? [Y/n]: " answerhome
 case "$answerhome" in
   y | Y | yes | Yes | YES)
-  echo "Enter home partition (eg: /dev/sda2): "
-  read -p homepartition
+  read -p "Enter home partition (eg: /dev/sda2): " homepartition
   mkfs."$filesystemtype" "$homepartition"
   mkdir /mnt/home
   mount "$homepartition" /mnt/home
@@ -238,8 +204,7 @@ printf "\n"
 read -p "Did you also create swap partition? [Y/n]: " answerswap
 case "$answerswap" in
   y | Y | yes | Yes | YES)
-  echo "Enter swap partition (eg: /dev/sda3): "
-  read -p swappartition
+  read -p "Enter swap partition (eg: /dev/sda3): " swappartition
   mkswap "$swappartition"
   swapon "$swappartition"
   ;;
@@ -419,9 +384,7 @@ clear
 
 # Setup hostname
 echo "Set up your hostname!"
-echo "Enter your computer name: "
-printf "\n"
-read -p hostname
+read -p "Enter your computer name: " hostname
 echo "$hostname" > /etc/hostname
 echo "Checking hostname (/etc/hostname)"
 cat /etc/hostname
@@ -443,21 +406,13 @@ clear
 # Install pkgs and tools by PACMAN..
 echo "Installing pkgs and tools by PACMAN.."
 printf "\n"
-# Define the function to install AUR packages
-install_pman_pkgs(){
-  local pmanpkgs=''
-  # Download the list of AUR packages from the specified URL
-  wget -O pman-pkg.txt https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/pman-pkg.txt
-  # read -p the package names from the file
-  while IFS= read -p line; do
-    pmanpkgs+="$line"
-  done < pman-pkg.txt
-  # Install AUR packages using yay
-  pacman -S --needed --noconfirm "$pmanpkgs"
-}
-# Execute the function
-install_pman_pkgs
-rm -rf pman-pkg.txt
+curl -O https://raw.githubusercontent.com/MikuX-Dev/ArchFiery/master/packages/pman-pkg.txt
+while read -r line; do
+    if [[ -n $line ]]; then
+        sudo pacman -S --noconfirm --needed "$line"
+    fi
+done < pman-pkg.txt
+rm pman-pkg.txt
 sleep 5s
 clear
 
@@ -497,8 +452,7 @@ clear
 printf "\n"
 lsblk
 printf "\n"
-echo "Enter the EFI partition to install bootloader. (eg: /dev/sda4): "
-read -p efipartition
+read -p "Enter the EFI partition to install bootloader. (eg: /dev/sda4): " efipartition
 efidirectory="/boot/efi/"
 if [ ! -d "$efidirectory" ]; then
   mkdir -p "$efidirectory"
@@ -529,14 +483,6 @@ if [[ $use_os_prober =~ ^[Yy]$ ]]; then
 else
   echo "Os-prober not enabled. Generating fstab..."
 fi
-sleep 5s
-clear
-
-# Gen fstab
-echo "Generating fstab file"
-printf "\n"
-genfstab -U /mnt >> /mnt/etc/fstab
-cat /etc/fstab
 sleep 5s
 clear
 
@@ -645,8 +591,7 @@ clear
 # Setting regular user
 echo "Adding regular user!"
 printf "\n"
-echo "Enter username to add a regular user: "
-read -p username
+read -p "Enter username to add a regular user: " username
 printf "\n"
 useradd -m -G wheel -s /bin/zsh "$username"
 echo "Enter password for '$username': "
