@@ -37,7 +37,7 @@ clear
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-  # Repositories are alread -py enabled, remove any commented-out lines
+  # Repositories are already enabled, remove any commented-out lines
   sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
   sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
@@ -83,11 +83,11 @@ read -p "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something simi
 sleep 5s
 clear
 
-echo "Getting read -py for creating partitions!"
+echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
 echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting read -py in 9 seconds"
+echo "Getting ready in 9 seconds"
 sleep 9s
 clear
 
@@ -123,7 +123,7 @@ echo "'$partitionutility' is the selected disk utility tool for partition."
 sleep 5s
 clear
 
-echo "Getting read -py for formatting partitions!"
+echo "Getting ready for formatting partitions!"
 printf "\n"
 "$partitionutility" "$drive"
 sleep 5s
@@ -163,7 +163,7 @@ echo "'$filesystemtype' is the selected file system type."
 sleep 5s
 clear
 
-echo "Getting read -py for formatting drives."
+echo "Getting ready for formatting drives."
 sleep 5s
 printf "\n"
 lsblk
@@ -317,7 +317,7 @@ clear
 # Check if multilib and community repositories are enabled
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-  # Repositories are alread -py enabled, remove any commented-out lines
+  # Repositories are already enabled, remove any commented-out lines
   sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
   sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
