@@ -4,7 +4,7 @@
 > ArchFiery is still in development. It is not recommended to use this script for now.
 
 ## Introduction:
-ArchFiery is a simple bash script designed to facilitate the installation of Arch Linux after booting from the official Arch Linux installationmedia. With just two terminal commands, you can easily install Arch Linux. This script is specifically created to install packages such as the base system, bootloader, and optionally [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) and [Blackarch-tools](https://blackarch.org/tools) ("minimum-tools" or "full-tools").
+ArchFiery is a simple bash script designed to facilitate the installation of Arch Linux after booting from the official Arch Linux installation media. With just two terminal commands, you can easily install Arch Linux. This script is specifically created to install packages such as the base system, bootloader, and optionally [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) and [Blackarch-tools](https://blackarch.org/tools) ("minimum-tools" or "full-tools").
 
 > [!NOTE]
 > ArchFiery is a personal archlinux installer script. It is not a part of the official Arch Linux project.
