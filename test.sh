@@ -58,7 +58,7 @@ if [[ $fm =~ ^[Yy]$ ]]; then
   # Archlinux mirrorlists
   printf "\n"
   echo "Archlinux-mirrorlist setup"
-  reflector --verbose -l 22 -f 22 -p https --download-timeout 55 --sort rate --save /etc/pacman.d/mirrorlist
+  reflector --verbose -a 22 -f 22 -p https --download-timeout 55 --sort rate --save /etc/pacman.d/mirrorlist
   pacman -Syy
 else
   printf "\n"
@@ -267,7 +267,7 @@ sleep 9s
 "$partitionutility" "$drive"
 clear
 
-echo " Boot partition will be formatted in fat32 file system type."
+echo "Boot partition will be formatted in fat32 file system type."
 echo "choose your linux file system type for formatting drives"
 echo " 1. ext4"
 echo " 2. xfs"
@@ -345,7 +345,6 @@ lsblk
 printf "\n"
 read -p "Enter the boot partition. (eg. /dev/sda4): " answerefi
 mkfs.fat -F 32 "$answerefi"
-sleep 3s
 clear
 
 sync
@@ -407,7 +406,7 @@ pacstrap /mnt "${package[@]}"
 echo "Generating fstab file"
 printf "\n"
 genfstab -U /mnt >>/mnt/etc/fstab
-cat /etc/fstab
+cat /mnt/etc/fstab
 sleep 5s
 clear
 
@@ -429,12 +428,12 @@ echo -ne "
 ╭─────── ArchFiery ───────╮
 │      Installation       │
 │        completed        │
-│    rebooting in 9s      │
+│    rebooting in 15s     │
 ╰─────────────────────────╯
 "
 printf "\n"
 echo "Installation Finished. REBOOTING IN 9 SECONDS!!!"
-sleep 9s
+sleep 15s
 reboot
 
 #part2
@@ -442,10 +441,10 @@ reboot
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │      post_install       │
-│     starting in 9s      │
+│     starting in 10s     │
 ╰─────────────────────────╯
 "
-sleep 9s
+sleep 10s
 clear
 
 # Check if multilib and community repositories are enabled
@@ -476,7 +475,7 @@ if [[ $fm =~ ^[Yy]$ ]]; then
   cp -r /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
   # Archlinux mirrorlists
   echo "Archlinux-mirrorlist setup"
-  reflector --verbose -l 22 -f 22 -p https --download-timeout 55 --sort rate --save /etc/pacman.d/mirrorlist
+  reflector --verbose -a 22 -f 22 -p https --download-timeout 55 --sort rate --save /etc/pacman.d/mirrorlist
   pacman -Syy
 else
   echo "Skipping the fastert mirrorlist"
@@ -573,7 +572,6 @@ clear
 # Install grub
 lsblk
 printf "\n"
-sleep 5s
 echo "Installing grub bootloader in /boot/efi parttiton"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -589,7 +587,7 @@ if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   grub-mkconfig -o /boot/grub/grub.cfg
 else
   printf "\n"
-  echo "Os-prober not enabled. Generating fstab..."
+  echo "Os-prober not enabled."
 fi
 sleep 5s
 clear
@@ -644,6 +642,7 @@ sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAU
 mkinitcpio -p linux
 grub-mkconfig -o /boot/grub/grub.cfg
 plymouth-set-default-theme -R archfiery
+grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
 clear
 
