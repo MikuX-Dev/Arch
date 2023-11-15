@@ -223,13 +223,13 @@ clear
 # clear
 
 lsblk
+printf "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
 echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
 read drive
 sleep 2s
 clear
 
-lsblk
 echo "Choose a familier disk utility tool to partition your drive!"
 echo " 1. fdisk"
 echo " 2. cfdisk"
@@ -258,6 +258,7 @@ esac
 echo ""$partitionutility" is the selected disk utility tool for partition."
 sleep 3s
 clear
+
 echo "Getting ready for creating partitions!"
 echo "root and boot partitions are mandatory."
 echo "home and swap partitions are optional but recommended!"
@@ -266,12 +267,13 @@ echo "Getting ready in 9 seconds"
 sleep 9s
 "$partitionutility" "$drive"
 clear
+
+echo " Boot partition will be formatted in fat32 file system type."
 echo "choose your linux file system type for formatting drives"
 echo " 1. ext4"
 echo " 2. xfs"
 echo " 3. btrfs"
 echo " 4. f2fs"
-echo " Boot partition will be formatted in fat32 file system type."
 read filesystemtype
 
 case "$filesystemtype" in
@@ -295,15 +297,20 @@ esac
 echo ""$filesystemtype" is the selected file system type."
 sleep 3s
 clear
+
 echo "Getting ready for formatting drives."
 sleep 3s
+printf "\n"
 lsblk
+printf "\n"
 echo "Enter the root partition (eg: /dev/sda1): "
 read rootpartition
 mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
+
 lsblk
+printf "\n"
 read -p "Did you also create separate home partition? [y/n]: " answerhome
 case "$answerhome" in
 y | Y | yes | Yes | YES)
@@ -318,7 +325,9 @@ y | Y | yes | Yes | YES)
   ;;
 esac
 clear
+
 lsblk
+printf "\n"
 read -p "Did you also create swap partition? [y/n]: " answerswap
 case "$answerswap" in
 y | Y | yes | Yes | YES)
@@ -334,6 +343,7 @@ esac
 
 clear
 lsblk
+printf "\n"
 read -p "Enter the boot partition. (eg. /dev/sda4): " answerefi
 mkfs.fat -F 32 "$answerefi"
 sleep 3s
