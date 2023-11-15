@@ -44,6 +44,7 @@ else
   # Repositories are not enabled, add them
   echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
 fi
+pacman -Syy
 sleep 5s
 clear
 
@@ -265,7 +266,6 @@ echo "Getting ready in 9 seconds"
 sleep 9s
 "$partitionutility" "$drive"
 clear
-lsblk
 echo "choose your linux file system type for formatting drives"
 echo " 1. ext4"
 echo " 2. xfs"
@@ -336,13 +336,9 @@ clear
 lsblk
 read -p "Enter the boot partition. (eg. /dev/sda4): " answerefi
 mkfs.fat -F 32 "$answerefi"
-clear
-lsblk
 sleep 3s
 clear
-clear
 
-printf "\n"
 sync
 printf "\n"
 lsblk
@@ -383,7 +379,7 @@ else
   pacstrap /mnt virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager
 fi
 
-packages="base base-devel linux linux-headers linux-firmware ntfs-3g nvme-cli ${proc_type} ${gpu_type}"
+packages="base base-devel linux linux-headers linux-firmware ntfs-3g nvme-cli"
 
 # Install the determined packages
 pacstrap /mnt "${packages}"
