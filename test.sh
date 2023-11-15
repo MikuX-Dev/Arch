@@ -61,6 +61,7 @@ if [[ $fm =~ ^[Yy]$ ]]; then
   reflector --verbose -l 22 -f 22 -p https --download-timeout 55 --sort rate --save /etc/pacman.d/mirrorlist
   pacman -Syy
 else
+  printf "\n"
   echo "Skipping the fastert mirrorlist"
 fi
 sleep 5s
@@ -68,7 +69,6 @@ clear
 
 # Setting up system clock
 echo "Ensuring if the system clock is accurate."
-printf "\n"
 timedatectl set-ntp true
 sleep 5s
 clear
@@ -486,7 +486,6 @@ clear
 
 # Replace Asia/kolkata with your timezone
 echo "Setting timezone"
-printf "\n"
 ln -sf /usr/share/zoneinfo/Asia/Kolkata /etc/localtime
 hwclock --systohc
 sleep 5s
@@ -494,7 +493,6 @@ clear
 
 # Gen locale
 echo "Generating locale"
-printf "\n"
 sed -i "s/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
 locale-gen
 sleep 5s
@@ -502,14 +500,12 @@ clear
 
 # Setting lang
 echo "Setting LANG variable"
-printf "\n"
 echo "LANG=en_US.UTF-8" >/etc/locale.conf
 sleep 5s
 clear
 
 # Setting console keyboard
 echo "Setting console keyboard layout"
-printf "\n"
 echo 'KEYMAP=us' >/etc/vconsole.conf
 sleep 5s
 clear
@@ -518,7 +514,9 @@ clear
 echo "Set up your hostname!"
 read -p "Enter your computer name: " hostname
 echo "$hostname" >/etc/hostname
+printf "\n"
 echo "Checking hostname (/etc/hostname)"
+printf "\n"
 cat /etc/hostname
 sleep 5s
 clear
@@ -556,13 +554,11 @@ rm -rf yay-bin
 
 # Install pkgs from yay-bin
 echo "Installing pkgs from yay-bin"
-printf "\n"
 yay -S --noconfirm --needed appmenu-gtk-module-git appmenu-qt4 brave-bin downgrade gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 librewolf-bin mkinitcpio-firmware mkinitcpio-numlock mugshot visual-studio-code-bin zsh-theme-powerlevel10k-git obsidian-bin
 sleep 5s
 clear
 
 # Setting boot partition "EFI"
-printf "\n"
 lsblk
 printf "\n"
 read -p "Enter the EFI partition to install bootloader. (eg: /dev/sda4): " efipartition
@@ -575,12 +571,10 @@ sleep 5s
 clear
 
 # Install grub
-printf "\n"
 lsblk
 printf "\n"
 sleep 5s
 echo "Installing grub bootloader in /boot/efi parttiton"
-printf "\n"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
@@ -594,6 +588,7 @@ if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   sleep 5s
   grub-mkconfig -o /boot/grub/grub.cfg
 else
+  printf "\n"
   echo "Os-prober not enabled. Generating fstab..."
 fi
 sleep 5s
@@ -691,7 +686,6 @@ clear
 echo "Setting up vala-pannel-appmenu"
 xfconf-query -c xsettings -p /Gtk/ShellShowsMenubar -n -t bool -s true
 xfconf-query -c xsettings -p /Gtk/ShellShowsAppmenu -n -t bool -s true
-printf "\n"
 sleep 5s
 clear
 
@@ -706,7 +700,6 @@ clear
 
 #remove folder
 echo "Removing dotfiles folder"
-printf "\n"
 rm -rf dotfiles/
 sleep 5s
 clear
@@ -721,7 +714,6 @@ clear
 echo "Adding regular user!"
 printf "\n"
 read -p "Enter username to add a regular user: " username
-printf "\n"
 useradd -m -G wheel -s /bin/zsh "$username"
 echo "Enter password for '$username': "
 passwd "$username"
