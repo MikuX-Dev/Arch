@@ -24,7 +24,6 @@ echo "Arch Linux Fast Install (ArchFiery) - Version: 2023.11.06 (GPL-3.0)"
 sleep 5s
 printf "\n"
 echo "Installation guide starts now..."
-pacman -Syy
 sleep 5s
 clear
 
@@ -360,8 +359,6 @@ echo "Installing Base system..."
 printf "\n"
 sleep 5s
 
-#!/usr/bin/env bash
-
 # Determine processor type and install microcode
 determine_processor_type() {
   local proc_type=$(lscpu)
@@ -415,7 +412,7 @@ sleep 5s
 clear
 
 # Setup for post-installation
-sed '1,/^#part2$/d' ArchFiery.sh >/mnt/post_install.sh
+sed '1,/^#part2$/d' test.sh >/mnt/post_install.sh
 chmod +x /mnt/post_install.sh
 arch-chroot /mnt ./post_install.sh
 clear
