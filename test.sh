@@ -356,36 +356,34 @@ sleep 5s
 
 # Determine processor type and install microcode
 proc_type=$(lscpu)
-printf "\n"
 if grep -E "GenuineIntel" <<<"${proc_type}"; then
   echo "Installing Intel microcode"
-  proc_ucode=intel-ucode
+  pacstrap /mnt intel-ucode
 elif grep -E "AuthenticAMD" <<<"${proc_type}"; then
   echo "Installing AMD microcode"
-  proc_ucode=amd-ucode
+  pacstrap /mnt amd-ucode
 fi
 
 # Determine graphics card type and build package list
 gpu_type=$(lspci)
-printf "\n"
 if grep -E "NVIDIA|GeForce" <<<"${gpu_type}"; then
   echo "Installing NVIDIA drivers..."
-  packages+=" nvidia nvidia-utils"
+  pacstrap /mnt nvidia nvidia-utils
 elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
   echo "Installing AMD drivers..."
-  packages+=" xf86-video-amdgpu"
+  pacstrap /mnt xf86-video-amdgpu
 elif grep -E "Integrated Graphics Controller" <<<"${gpu_type}"; then
   echo "Installing integrated Graphics Controller"
-  packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver"
+  pacstrap /mnt libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver
 elif grep -E "Intel Corporation UHD" <<<"${gpu_type}"; then
   echo "Installing Intel UHD Graphics"
-  packages+=" libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver"
+  pacstrap /mnt libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver
 else
   echo "Installing generic drivers..."
-  packages+="virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager"
+  pacstrap /mnt virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager
 fi
 
-packages="base base-devel linux linux-headers linux-firmware ntfs-3g nvme-cli ${proc_ucode} ${gpu_type}"
+packages="base base-devel linux linux-headers linux-firmware ntfs-3g nvme-cli ${proc_type} ${gpu_type}"
 
 # Install the determined packages
 pacstrap /mnt "${packages}"
