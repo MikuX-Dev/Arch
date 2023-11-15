@@ -281,7 +281,7 @@ if grep -q "\[multilib\]" /etc/pacman.conf; then
 else
     # Multilib repository does not exist, add it to pacman.conf
   echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
-for
+fi
 sleep 3s
 clear
 
@@ -294,7 +294,7 @@ if grep -q "\[community\]" /etc/pacman.conf; then
 else
     # Community repository does not exist, add it to pacman.conf
   echo -e "[community]\nInclude = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
-for
+fi
 pacman -Syy --noconfirm pacman-contrib
 sleep 3s
 clear

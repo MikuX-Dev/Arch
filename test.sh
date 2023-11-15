@@ -361,38 +361,48 @@ printf "\n"
 sleep 5s
 
 # Determine processor type and install microcode
-proc_type=$(lscpu)
-if grep -E "GenuineIntel" <<<"${proc_type}"; then
-  echo "Installing Intel microcode"
-  package+='intel-ucode'
-elif grep -E "AuthenticAMD" <<<"${proc_type}"; then
-  echo "Installing AMD microcode"
-  package+='amd-ucode'
-fi
+determine_processor_type() {
+  local proc_type=$(lscpu)
+  if grep -E "GenuineIntel" <<<"${proc_type}"; then
+    echo "Installing Intel microcode"
+    package+=(intel-ucode)
+  elif grep -E "AuthenticAMD" <<<"${proc_type}"; then
+    echo "Installing AMD microcode"
+    package+=(amd-ucode)
+  fi
+}
 
 # Determine graphics card type and build package list
-gpu_type=$(lspci)
-if grep -E "NVIDIA|GeForce" <<<"${gpu_type}"; then
-  echo "Installing NVIDIA drivers..."
-  package+='nvidia nvidia-utils'
-elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
-  echo "Installing AMD drivers..."
-  package+='xf86-video-amdgpu'
-elif grep -E "Integrated Graphics Controller" <<<"${gpu_type}"; then
-  echo "Installing integrated Graphics Controller"
-  package+='libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver'
-elif grep -E "Intel Corporation UHD" <<<"${gpu_type}"; then
-  echo "Installing Intel UHD Graphics"
-  package+='libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver'
-else
-  echo "Installing generic drivers..."
-  pacstrap /mnt virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager
-fi
+determine_graphics_card_type() {
+  local gpu_type=$(lspci)
+  if grep -E "NVIDIA|GeForce" <<<"${gpu_type}"; then
+    echo "Installing NVIDIA drivers..."
+    package+=(nvidia nvidia-utils)
+  elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
+    echo "Installing AMD drivers..."
+    package+=(xf86-video-amdgpu)
+  elif grep -E "Integrated Graphics Controller" <<<"${gpu_type}"; then
+    echo "Installing integrated Graphics Controller"
+    package+=(libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver)
+  elif grep -E "Intel Corporation UHD" <<<"${gpu_type}"; then
+    echo "Installing Intel UHD Graphics"
+    package+=(libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver)
+  else
+    echo "Installing generic drivers..."
+    package+=(virtualbox-host-modules-arch xf86-input-vmmouse open-vm-tools xf86-video-vmware virtualbox-guest-utils qemu qemu-arch-extra libvirt virt-manager)
+  fi
+}
 
-package+="base base-devel linux linux-headers linux-firmware ntfs-3g nvme-cli ${package}"
+# Main script
+package=("base" "base-devel" "linux" "linux-headers" "linux-firmware" "ntfs-3g" "nvme-cli")
+
+determine_processor_type
+determine_graphics_card_type
+
+package+=("${package[@]}")
 
 # Install the determined packages
-pacstrap /mnt "${package}"
+pacstrap /mnt "${package[@]}"
 
 # Gen fstab
 echo "Generating fstab file"
