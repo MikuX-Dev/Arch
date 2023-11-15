@@ -73,33 +73,168 @@ timedatectl set-ntp true
 sleep 5s
 clear
 
-# Setting up drive
-echo "Setting Up drive"
-printf "\n"
+# # Setting up drive
+# echo "Setting Up drive"
+# printf "\n"
+# lsblk
+# printf "\n"
+# echo "Enter the drive to install arch linux on it. (/dev/...)"
+# read -p "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar): " drive
+# sleep 5s
+# clear
+
+# echo "Getting ready for creating partitions!"
+# echo "root and boot partitions are mandatory."
+# echo "home and swap partitions are optional but recommended!"
+# echo "Also, you can create a separate partition for timeshift backup (optional)!"
+# echo "Getting ready in 9 seconds"
+# sleep 9s
+# clear
+
+# printf "\n"
+# lsblk
+# printf "\n"
+# echo "Choose a familier disk utility tool to partition your drive!"
+# echo " 1. fdisk"
+# echo " 2. cfdisk"
+# echo " 3. gdisk"
+# echo " 4. parted"
+# read -p partitionutility
+
+# case "$partitionutility" in
+# 1 | fdisk | Fdisk | FDISK)
+#   partitionutility="fdisk"
+#   ;;
+# 2 | cfdisk | Cfdisk | CFDISK)
+#   partitionutility="cfdisk"
+#   ;;
+# 3 | gdisk | Gdisk | GDISK)
+#   partitionutility="gdisk"
+#   ;;
+# 4 | parted | Parted | PARTED)
+#   partitionutility="parted"
+#   ;;
+# *)
+#   echo "Unknown or unsupported disk utility! Default = cfdisk."
+#   partitionutility="cfdisk"
+#   ;;
+# esac
+# echo ""$partitionutility" is the selected disk utility tool for partition."
+# sleep 5s
+# clear
+
+# echo "Getting ready for formatting partitions!"
+# printf "\n"
+# "$partitionutility" "$drive"
+# sleep 5s
+# clear
+
+# printf "\n"
+# lsblk
+# printf "\n"
+# echo "Note: Boot partition will be formatted in fat31 file system type."
+# echo "choose your linux file system type for formatting drives"
+# echo " 1. ext4"
+# echo " 2. xfs"
+# echo " 3. btrfs"
+# echo " 4. f2fs"
+# printf "\n"
+# read -p filesystemtype
+
+# case "$filesystemtype" in
+# 1 | ext4 | Ext4 | EXT4)
+#   filesystemtype="ext4"
+#   ;;
+# 2 | xfs | Xfs | XFS)
+#   filesystemtype="xfs"
+#   ;;
+# 3 | btrfs | Btrfs | BTRFS)
+#   filesystemtype="btrfs"
+#   ;;
+# 4 | f2fs | F2fs | F2FS)
+#   filesystemtype="f2fs"
+#   ;;
+# *)
+#   echo "Unknown or unsupported Filesystem. Default = ext4."
+#   filesystemtype="ext4"
+#   ;;
+# esac
+# echo ""$filesystemtype" is the selected file system type."
+# sleep 5s
+# clear
+
+# echo "Getting ready for formatting drives."
+# sleep 5s
+# printf "\n"
+# lsblk
+# printf "\n"
+# read -p "Enter the root partition (eg: /dev/sda1): " rootpartition
+# mkfs."$filesystemtype" "$rootpartition"
+# mount "$rootpartition" /mnt
+# clear
+
+# printf "\n"
+# lsblk
+# printf "\n"
+# read -p "Did you also create separate home partition? [Y/n]: " answerhome
+# case "$answerhome" in
+# y | Y | yes | Yes | YES)
+#   read -p "Enter home partition (eg: /dev/sda2): " homepartition
+#   mkfs."$filesystemtype" "$homepartition"
+#   mkdir /mnt/home
+#   mount "$homepartition" /mnt/home
+#   ;;
+# *)
+#   echo "Skipping home partition!"
+#   ;;
+# esac
+# clear
+
+# printf "\n"
+# lsblk
+# printf "\n"
+# read -p "Did you also create swap partition? [Y/n]: " answerswap
+# case "$answerswap" in
+# y | Y | yes | Yes | YES)
+#   read -p "Enter swap partition (eg: /dev/sda3): " swappartition
+#   mkswap "$swappartition"
+#   swapon "$swappartition"
+#   ;;
+# *)
+#   echo "Skipping Swap partition!"
+#   ;;
+# esac
+# clear
+
+# printf "\n"
+# lsblk
+# printf "\n"
+# read -p "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
+# if [[ $setbootpartition == "boot" ]]; then
+#   echo "Setting up a separate boot partition..."
+#   read -p "Enter the boot partition (e.g., /dev/sda4): " bootpartition
+#   mkfs.fat -F 32 "$bootpartition"
+#   mount "$bootpartition" /mnt/boot
+# else
+#   echo "Using the EFI partition..."
+# fi
+# sleep 5s
+# clear
+
 lsblk
-printf "\n"
 echo "Enter the drive to install arch linux on it. (/dev/...)"
-read -p "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar): " drive
-sleep 5s
+echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
+read drive
+sleep 2s
 clear
 
-echo "Getting ready for creating partitions!"
-echo "root and boot partitions are mandatory."
-echo "home and swap partitions are optional but recommended!"
-echo "Also, you can create a separate partition for timeshift backup (optional)!"
-echo "Getting ready in 9 seconds"
-sleep 9s
-clear
-
-printf "\n"
 lsblk
-printf "\n"
 echo "Choose a familier disk utility tool to partition your drive!"
 echo " 1. fdisk"
 echo " 2. cfdisk"
 echo " 3. gdisk"
 echo " 4. parted"
-read -p partitionutility
+read partitionutility
 
 case "$partitionutility" in
 1 | fdisk | Fdisk | FDISK)
@@ -120,26 +255,24 @@ case "$partitionutility" in
   ;;
 esac
 echo ""$partitionutility" is the selected disk utility tool for partition."
-sleep 5s
+sleep 3s
 clear
-
-echo "Getting ready for formatting partitions!"
-printf "\n"
+echo "Getting ready for creating partitions!"
+echo "root and boot partitions are mandatory."
+echo "home and swap partitions are optional but recommended!"
+echo "Also, you can create a separate partition for timeshift backup (optional)!"
+echo "Getting ready in 9 seconds"
+sleep 9s
 "$partitionutility" "$drive"
-sleep 5s
 clear
-
-printf "\n"
 lsblk
-printf "\n"
-echo "Note: Boot partition will be formatted in fat31 file system type."
 echo "choose your linux file system type for formatting drives"
 echo " 1. ext4"
 echo " 2. xfs"
 echo " 3. btrfs"
 echo " 4. f2fs"
-printf "\n"
-read -p filesystemtype
+echo " Boot partition will be formatted in fat32 file system type."
+read filesystemtype
 
 case "$filesystemtype" in
 1 | ext4 | Ext4 | EXT4)
@@ -160,26 +293,22 @@ case "$filesystemtype" in
   ;;
 esac
 echo ""$filesystemtype" is the selected file system type."
-sleep 5s
+sleep 3s
 clear
-
 echo "Getting ready for formatting drives."
-sleep 5s
-printf "\n"
+sleep 3s
 lsblk
-printf "\n"
-read -p "Enter the root partition (eg: /dev/sda1): " rootpartition
+echo "Enter the root partition (eg: /dev/sda1): "
+read rootpartition
 mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
-
-printf "\n"
 lsblk
-printf "\n"
-read -p "Did you also create separate home partition? [Y/n]: " answerhome
+read -p "Did you also create separate home partition? [y/n]: " answerhome
 case "$answerhome" in
 y | Y | yes | Yes | YES)
-  read -p "Enter home partition (eg: /dev/sda2): " homepartition
+  echo "Enter home partition (eg: /dev/sda2): "
+  read homepartition
   mkfs."$filesystemtype" "$homepartition"
   mkdir /mnt/home
   mount "$homepartition" /mnt/home
@@ -189,14 +318,12 @@ y | Y | yes | Yes | YES)
   ;;
 esac
 clear
-
-printf "\n"
 lsblk
-printf "\n"
-read -p "Did you also create swap partition? [Y/n]: " answerswap
+read -p "Did you also create swap partition? [y/n]: " answerswap
 case "$answerswap" in
 y | Y | yes | Yes | YES)
-  read -p "Enter swap partition (eg: /dev/sda3): " swappartition
+  echo "Enter swap partition (eg: /dev/sda3): "
+  read swappartition
   mkswap "$swappartition"
   swapon "$swappartition"
   ;;
@@ -204,21 +331,15 @@ y | Y | yes | Yes | YES)
   echo "Skipping Swap partition!"
   ;;
 esac
-clear
 
-printf "\n"
+clear
 lsblk
-printf "\n"
-read -p "Do you want to use a separate boot partition or use the EFI partition ? (boot/efi): " setbootpartition
-if [[ $setbootpartition == "boot" ]]; then
-  echo "Setting up a separate boot partition..."
-  read -p "Enter the boot partition (e.g., /dev/sda4): " bootpartition
-  mkfs.fat -F 32 "$bootpartition"
-  mount "$bootpartition" /mnt/boot
-else
-  echo "Using the EFI partition..."
-fi
-sleep 5s
+read -p "Enter the boot partition. (eg. /dev/sda4): " answerefi
+mkfs.fat -F 32 "$answerefi"
+clear
+lsblk
+sleep 3s
+clear
 clear
 
 printf "\n"
@@ -327,6 +448,12 @@ fi
 sleep 5s
 clear
 
+# Setting up pacman
+echo "Setting up pacman"
+sed -i 's/#Color/Color/g' /etc/pacman.conf
+sleep 5s
+clear
+
 # Installing fastest mirrors
 read -p "Do you want fastest mirrors? [Y/n] " fm
 if [[ $fm =~ ^[Yy]$ ]]; then
@@ -398,7 +525,7 @@ clear
 # Install pkgs and tools by PACMAN..
 echo "Installing pkgs and tools by PACMAN.."
 printf "\n"
-pacman -S --noconfirm --needed ack acpi alacritty alsa-utils apache arch-install-scripts arch-wiki-docs archiso atftp automake b43-fwcutter base base-devel bash-completion bc bind bind-tools bridge-utils brltty broadcom-wl bzip3 cargo ccache cifs-utils clang clonezilla cmake conky cronie ctags curl darkhttpd devtools dhclient dhcpcd dialog diffutils dmraid dnscrypt-proxy dnsmasq dnsutils dosfstools edk2-shell efibootmgr exfat-utils expac f2fs-tools feh fwbuilder gammu gawk gcc gcc-libs gdb git git-lfs gnome-keyring gnu-netcat gnupg go gpart gparted gpm gptfdisk grub grub-customizer gvfs gvfs gvfs-mtp gzip haveged hdparm helix htop inotify-tools intel-ucode ipw2100-fw ipw2200-fw ipython irqbalance irssi iw iwd kvantum lftp libx11 libxext lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings lightdm-webkit2-greeter lightdm-webkit2-theme-glorious llvm lsof lua make menumaker mercurial mesa mlocate modemmanager moreutils mpv mtools multilib-devel nano nbd ncdu ndisc6 neovim network-manager-applet networkmanager networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc nfs-utils nilfs-utils npm ntfs-3g ntp nvme-cli obsidian openconnect openssh openvpn os-prober p7zip pacman-contrib partclone parted partimage pavucontrol perl pkgfile plocate plymouth ppp pptpclient profile-sync-daemon qemu-emulators-full qemu-system-x86-firmware qemu-tools qt5-tools qt5ct reiserfsprogs rfkill rofi rp-pppoe rsync rtorrent ruby rustup screen scrot sed smartmontools socat strace tar tmux tor udisks2 unace unrar unzip upower usb_modeswitch usbutils vim vpnc wget wireless_tools wpa_supplicant wvdial xarchiver xarchiver xdg-desktop-portal-gtk xdg-user-dirs-gtk xfce4 xfce4-goodies xl2tpd xz zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting zstd
+pacman -S --noconfirm --needed ack acpi alacritty alsa-utils apache arch-install-scripts arch-wiki-docs archiso atftp autoconf automake b43-fwcutter base base-devel bash-completion bc bind bind-tools bison blueman bluez bluez-utils bridge-utils brltty broadcom-wl bzip2 bzip3 cargo ccache cifs-utils clang clonezilla cmake conky cronie ctags cups cups-filters cups-pdf curl darkhttpd devtools dhclient dhcpcd dialog diffutils dmraid dnscrypt-proxy dnsmasq dnsutils dosfstools edk2-shell efibootmgr exfat-utils expac f2fs-tools fakeroot feh ffmpeg ffmpegthumbnailer flex foomatic-db foomatic-db-engine fwbuilder gammu gawk gcc gcc-libs gdb ghostscript git git-lfs gnome-keyring gnu-netcat gnupg go gpart gparted gpm gptfdisk grub grub-customizer gsfonts gst-libav gst-plugin-pipewire gst-plugins-bad gst-plugins-good gst-plugins-ugly gstreamer gutenprint gvfs gvfs-afc gvfs-google gvfs-gphoto2 gvfs-mtp gvfs-smb gzip haveged hdparm helix highlight htop inotify-tools intel-ucode ipw2100-fw ipw2200-fw ipython irqbalance irssi iw iwd jasper kvantum lftp libavif libde265 libdv libheif libmpeg2 libtheora libvpx libwebp libx11 libxext lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings lightdm-webkit2-greeter lightdm-webkit2-theme-glorious llvm lrzip lsb-release lsof lua lz4 lzip lzop make menumaker mercurial mesa mlocate modemmanager moreutils mpv mtools multilib-devel nano nbd ncdu ndisc6 neovim nethogs network-manager-applet network-manager-sstp networkmanager networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-strongswan networkmanager-vpnc nfs-utils nilfs-utils nm-connection-editor npm ntfs-3g ntp nvme-cli openconnect openssh openvpn os-prober p7zip pacman-contrib partclone parted partimage patch pavucontrol perl pipewire pipewire-alsa pipewire-jack pipewire-pulse pkgconf pkgfile plocate plymouth portmaster-stub-bin powertop ppp pptpclient profile-sync-daemon pulsemixer qemu-emulators-full qemu-system-x86-firmware qemu-tools qt5-tools qt5ct ranger reiserfsprogs rfkill rofi rp-pppoe rsync rtorrent ruby rustup schroedinger screen scrot sed smartmontools socat strace tar timeshift tmux tor trash-cli tumbler udisks2 ueberzug unace unarchiver unrar unzip upower usb_modeswitch usbutils vim vpnc webkit2gtk wget wireless_tools wireplumber wpa_supplicant wvdial x264 x265 xarchiver xclip xcompmgr xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xfce4 xfce4-goodies xl2tpd xorg xorg-server xvidcore xz zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting zstd ufw dolphin kdeconnect xfce4-power-manager xfce4-docklike-plugin
 sleep 5s
 clear
 
@@ -417,7 +544,7 @@ rm -rf yay-bin
 # Install pkgs from yay-bin
 echo "Installing pkgs from yay-bin"
 printf "\n"
-yay -S --noconfirm --needed appmenu-gtk-module-git appmenu-qt4 brave-bin libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot visual-studio-code-bin zsh-theme-powerlevel10k-git
+yay -S --noconfirm --needed appmenu-gtk-module-git appmenu-qt4 brave-bin downgrade gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 librewolf-bin mkinitcpio-firmware mkinitcpio-numlock mugshot visual-studio-code-bin zsh-theme-powerlevel10k-git obsidian-bin
 sleep 5s
 clear
 
@@ -600,7 +727,7 @@ sleep 5s
 # Enable services
 echo "Enabling services.."
 printf "\n"
-enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'lightdm-plymouth.service' 'NetworkManager.service')
+enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'lightdm-plymouth.service' 'NetworkManager.service' 'cups.service' 'bluetooth' 'ntpd.service' 'dhcpcd.service' '')
 systemctl enable "${enable_services[@]}"
 sleep 5s
 clear
