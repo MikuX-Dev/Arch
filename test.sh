@@ -732,7 +732,7 @@ sleep 5s
 # Enable services
 echo "Enabling services.."
 printf "\n"
-enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'lightdm-plymouth.service' 'NetworkManager.service' 'cups.service' 'bluetooth' 'ntpd.service' 'dhcpcd.service' '')
+enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'lightdm-plymouth.service' 'NetworkManager.service' 'cups.service' 'bluetooth' 'ntpd.service' 'dhcpcd.service')
 systemctl enable "${enable_services[@]}"
 sleep 5s
 clear
