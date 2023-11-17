@@ -29,7 +29,7 @@ clear
 
 # install package
 echo "Installing needed packages..."
-pacman -S reflector rsync curl --noconfirm
+pacman -Syy reflector rsync curl --noconfirm
 sleep 5s
 clear
 
