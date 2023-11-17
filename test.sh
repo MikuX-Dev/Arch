@@ -410,8 +410,7 @@ clear
 # Setup for post-installation
 sed '1,/^#part2$/d' test.sh >/mnt/post_install.sh
 chmod +x /mnt/post_install.sh
-arch-chroot /mnt
-./post_install.sh
+arch-chroot /mnt ./post_install.sh
 clear
 sleep 5s
 
