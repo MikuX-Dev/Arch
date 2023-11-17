@@ -33,20 +33,6 @@ pacman -Syy reflector rsync curl --noconfirm
 sleep 5s
 clear
 
-# Check if multilib and community repositories are enabled
-echo "Enabling multilib and community repositories"
-if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
-  # Repositories are already enabled, remove any commented-out lines
-  sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
-  sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
-else
-  # Repositories are not enabled, add them
-  echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
-fi
-pacman -Syy
-sleep 5s
-clear
-
 # Installing fastest mirrors
 read -p "Do you want fastest mirrors? [Y/n] " fm
 if [[ $fm =~ ^[Yy]$ ]]; then
@@ -424,7 +410,8 @@ clear
 # Setup for post-installation
 sed '1,/^#part2$/d' test.sh >/mnt/post_install.sh
 chmod +x /mnt/post_install.sh
-arch-chroot /mnt ./post_install.sh
+arch-chroot /mnt
+./post_install.sh
 clear
 sleep 5s
 
@@ -448,6 +435,7 @@ sleep 15s
 reboot
 
 #part2
+
 #starting post_install
 echo -ne "
 ╭─────── ArchFiery ───────╮
