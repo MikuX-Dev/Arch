@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 clear
 
@@ -221,32 +221,38 @@ clear
 # sleep 5s
 # clear
 
+# Function to prompt user for input with default value
+function prompt {
+  read -p "$1 [$2]: " input
+  echo "${input:-$2}"
+}
+
+# Display available drives
 lsblk
 printf "\n"
-echo "Enter the drive to install arch linux on it. (/dev/...)"
-echo "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar)"
-read drive
+drive=$(prompt "Enter the drive to install Arch Linux on it. (/dev/...)" "/dev/sda")
 sleep 2s
 clear
 
-echo "Choose a familier disk utility tool to partition your drive!"
-echo " 1. fdisk"
-echo " 2. cfdisk"
-echo " 3. gdisk"
-echo " 4. parted"
-read partitionutility
+# Choose disk utility tool
+echo "Choose a familiar disk utility tool to partition your drive:"
+echo "  1. fdisk"
+echo "  2. cfdisk"
+echo "  3. gdisk"
+echo "  4. parted"
+read -r partitionutility
 
-case "$partitionutility" in
-1 | fdisk | Fdisk | FDISK)
+case "${partitionutility,,}" in
+1 | fdisk)
   partitionutility="fdisk"
   ;;
-2 | cfdisk | Cfdisk | CFDISK)
+2 | cfdisk)
   partitionutility="cfdisk"
   ;;
-3 | gdisk | Gdisk | GDISK)
+3 | gdisk)
   partitionutility="gdisk"
   ;;
-4 | parted | Parted | PARTED)
+4 | parted)
   partitionutility="parted"
   ;;
 *)
@@ -254,67 +260,69 @@ case "$partitionutility" in
   partitionutility="cfdisk"
   ;;
 esac
-echo ""$partitionutility" is the selected disk utility tool for partition."
+echo "$partitionutility is the selected disk utility tool for partition."
 sleep 3s
 clear
 
+# Creating partitions
 echo "Getting ready for creating partitions!"
-echo "root and boot partitions are mandatory."
-echo "home and swap partitions are optional but recommended!"
-echo "Also, you can create a separate partition for timeshift backup (optional)!"
+echo "Root and boot partitions are mandatory."
+echo "Home and swap partitions are optional but recommended!"
+echo "You can also create a separate partition for timeshift backup (optional)!"
 echo "Getting ready in 9 seconds"
 sleep 9s
 "$partitionutility" "$drive"
 clear
 
+# Choose filesystem type
 echo "Boot partition will be formatted in fat32 file system type."
-echo "choose your linux file system type for formatting drives"
-echo " 1. ext4"
-echo " 2. xfs"
-echo " 3. btrfs"
-echo " 4. f2fs"
-read filesystemtype
+echo "Choose your Linux file system type for formatting drives:"
+echo "  1. ext4"
+echo "  2. xfs"
+echo "  3. btrfs"
+echo "  4. f2fs"
+read -r filesystemtype
 
-case "$filesystemtype" in
-1 | ext4 | Ext4 | EXT4)
+case "${filesystemtype,,}" in
+1 | ext4)
   filesystemtype="ext4"
   ;;
-2 | xfs | Xfs | XFS)
+2 | xfs)
   filesystemtype="xfs"
   ;;
-3 | btrfs | Btrfs | BTRFS)
+3 | btrfs)
   filesystemtype="btrfs"
   ;;
-4 | f2fs | F2fs | F2FS)
+4 | f2fs)
   filesystemtype="f2fs"
   ;;
 *)
-  echo "Unknown or unsupported Filesystem. Default = ext4."
+  echo "Unknown or unsupported filesystem. Default = ext4."
   filesystemtype="ext4"
   ;;
 esac
-echo ""$filesystemtype" is the selected file system type."
+echo "$filesystemtype is the selected file system type."
 sleep 3s
 clear
 
+# Formatting drives
 echo "Getting ready for formatting drives."
 sleep 3s
 printf "\n"
 lsblk
 printf "\n"
-echo "Enter the root partition (eg: /dev/sda1): "
-read rootpartition
+rootpartition=$(prompt "Enter the root partition (e.g., /dev/sda1): ")
 mkfs."$filesystemtype" "$rootpartition"
 mount "$rootpartition" /mnt
 clear
 
+# Create separate home partition
 lsblk
 printf "\n"
-read -p "Did you also create separate home partition? [y/n]: " answerhome
-case "$answerhome" in
-y | Y | yes | Yes | YES)
-  echo "Enter home partition (eg: /dev/sda2): "
-  read homepartition
+read -rp "Did you also create a separate home partition? [y/n]: " answerhome
+case "${answerhome,,}" in
+y | yes)
+  homepartition=$(prompt "Enter home partition (e.g., /dev/sda2): ")
   mkfs."$filesystemtype" "$homepartition"
   mkdir /mnt/home
   mount "$homepartition" /mnt/home
@@ -325,25 +333,26 @@ y | Y | yes | Yes | YES)
 esac
 clear
 
+# Create swap partition
 lsblk
 printf "\n"
-read -p "Did you also create swap partition? [y/n]: " answerswap
-case "$answerswap" in
-y | Y | yes | Yes | YES)
-  echo "Enter swap partition (eg: /dev/sda3): "
-  read swappartition
+read -rp "Did you also create a swap partition? [y/n]: " answerswap
+case "${answerswap,,}" in
+y | yes)
+  swappartition=$(prompt "Enter swap partition (e.g., /dev/sda3): ")
   mkswap "$swappartition"
   swapon "$swappartition"
   ;;
 *)
-  echo "Skipping Swap partition!"
+  echo "Skipping swap partition!"
   ;;
 esac
-
 clear
+
+# Format boot partition
 lsblk
 printf "\n"
-read -p "Enter the boot partition. (eg. /dev/sda4): " answerefi
+answerefi=$(prompt "Enter the boot partition. (e.g., /dev/sda4): ")
 mkfs.fat -F 32 "$answerefi"
 clear
 
@@ -360,7 +369,8 @@ sleep 5s
 
 # Determine processor type and install microcode
 determine_processor_type() {
-  local proc_type=$(lscpu)
+  local proc_type
+  proc_type=$(lscpu)
   if grep -qE "GenuineIntel" <<<"${proc_type}"; then
     echo "Installing Intel microcode"
     package+=(intel-ucode)
@@ -372,7 +382,8 @@ determine_processor_type() {
 
 # Determine graphics card type and build package list
 determine_graphics_card_type() {
-  local gpu_type=$(lspci)
+  local gpu_type
+  gpu_type=$(lspci)
   if grep -qE "NVIDIA|GeForce" <<<"${gpu_type}"; then
     echo "Installing NVIDIA drivers..."
     package+=(nvidia nvidia-utils)
@@ -426,7 +437,7 @@ clear
 
 echo -ne "
 ╭─────── ArchFiery ───────╮
-│      Installation       │
+│       Installation      │
 │        completed        │
 │    rebooting in 15s     │
 ╰─────────────────────────╯
@@ -535,7 +546,7 @@ clear
 # Install pkgs and tools by PACMAN..
 echo "Installing pkgs and tools by PACMAN.."
 printf "\n"
-pacman -S --noconfirm --needed ack acpi adobe-source-sans-pro-fonts alacritty alsa-utils amd-ucode apache arch-install-scripts arch-wiki-docs archinstall archiso atftp autoconf automake autorandr avahi awesome-terminal-fonts b43-fwcutter base base-devel bash bash-completion bc bind bind-tools bison blueman bluez bluez-libs bluez-plugins bluez-tools bluez-utils bolt boost boost-libs bridge-utils brightnessctl brltty broadcom-wl btrfs-progs bzip2 bzip3 cargo ccache cifs-utils clang clonezilla cloud-init cmake conky crda cronie cryptsetup ctags cups cups-filters cups-pdf curl darkhttpd ddrescue devtools dex dhclient dhcpcd dialog diffutils dmidecode dmraid dnscrypt-proxy dnsmasq dnsutils dolphin dolphin-plugins dosfstools e2fsprogs edk2-shell efibootmgr espeakup ethtool exa exfatprogs expac eza f2fs-tools fakeroot fatresize fd feh ffmpeg ffmpegthumbnailer flex foomatic-db foomatic-db-engine foot-terminfo fsarchiver fwbuilder gammu gawk gcc gcc-libs gdb ghostscript git git-lfs gnome-keyring gnu-netcat gnupg go gpart gparted gpm gptfdisk grub grub-customizer gsfonts gst-libav gst-plugin-pipewire gst-plugins-bad gst-plugins-good gst-plugins-ugly gstreamer gtk-update-icon-cache gutenprint gvfs gvfs-afc gvfs-google gvfs-gphoto2 gvfs-mtp gvfs-smb gzip haveged hdparm helix highlight htop hyperv inotify-tools intel-ucode ipython irqbalance irssi iw iwd jasper jfsutils kdeconnect kitty-terminfo kvantum less lftp libavif libde265 libdv libfido2 libheif libmpeg2 libtheora libusb-compat libvpx libwebp libx11 libxext libxinerama lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings lightdm-webkit2-greeter linux linux-atm linux-firmware linux-firmware-marvell linux-headers llvm logrotate lrzip lsb-release lsof lsscsi lua lvm2 lynx lz4 lzip lzop make man-db man-pages mc mdadm memtest86+ memtest86+-efi menumaker mercurial mesa multilib-devel mkinitcpio mkinitcpio-archiso mkinitcpio-nfs-utils mobile-broadband-provider-info modemmanager moreutils most mousepad mpv mtools nano nbd ncdu ndisc6 neovim net-tools nethogs network-manager-applet network-manager-sstp networkmanager networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-strongswan networkmanager-vpnc nfs-utils nilfs-utils nm-cloud-setup nm-connection-editor nmap npm nss-mdns ntfs-3g ntp numlockx nvme-cli open-iscsi openconnect openldap openpgp-card-tools openssh openvpn os-prober otf-libertinus p7zip pacman-contrib parole partclone parted partimage patch pavucontrol pcsclite perl picom pipewire pipewire-alsa pipewire-jack pipewire-pulse pkgconf pkgfile plocate plymouth power-profiles-daemon powertop ppp pptpclient profile-sync-daemon pulsemixer pv qemu-emulators-full qemu-system-x86-firmware qemu-tools qt5-tools qt5ct ranger reflector reiserfsprogs rfkill ristretto rofi rofi-emoji rp-pppoe rsync rtorrent ruby rustup rxvt-unicode-terminfo schroedinger screen scrot sdparm sed sequoia-sq sg3_utils smartmontools smbclient socat sof-firmware squashfs-tools strace sudo syslinux systemd-resolvconf tar tcpdump terminus-font testdisk tex-gyre-fonts thunar-archive-plugin thunar-media-tags-plugin thunar-volman timeshift tldr tmux tor tpm2-tools tpm2-tss traceroute trash-cli tree ttf-fira-code ttf-hack-nerd ttf-jetbrains-mono-nerd ttf-ubuntu-font-family tumbler udftools udisks2 ueberzug gufw ufw unace unarchiver unrar unzip upower usb_modeswitch usbmuxd usbutils vim vpnc webkit2gtk wezterm-terminfo wget wireguard-tools wireless_tools wireless-regdb wireplumber wpa_supplicant wvdial x264 x265 xarchiver xclip xcompmgr xdg-desktop-portal-gtk xdg-desktop-portal-xapp xdg-user-dirs xdg-user-dirs-gtk xdotool xfburn xfce4 xfce4-battery-plugin xfce4-clipman-plugin xfce4-cpufreq-plugin xfce4-cpugraph-plugin xfce4-dict xfce4-diskperf-plugin xfce4-eyes-plugin xfce4-fsguard-plugin xfce4-genmon-plugin xfce4-goodies xfce4-mount-plugin xfce4-mpc-plugin xfce4-netload-plugin xfce4-notes-plugin xfce4-notifyd xfce4-power-manager xfce4-pulseaudio-plugin xfce4-screensaver xfce4-screenshooter xfce4-sensors-plugin xfce4-smartbookmark-plugin xfce4-systemload-plugin xfce4-taskmanager xfce4-time-out-plugin xfce4-timer-plugin xfce4-verve-plugin xfce4-wavelan-plugin xfce4-weather-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin xfsprogs xl2tpd xmlto xorg xorg-apps xorg-server xorg-xinit xsensors xvidcore xz yaml-cpp zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting zstd thunderbird libreoffice-fresh vlc android-tools android-file-transfer flameshot cpupower thermald docker docker-buildx docker-compose docker-machine python-docker mousetweaks
+pacman -S --noconfirm --needed ack acpi adobe-source-sans-pro-fonts alacritty alsa-utils amd-ucode android-file-transfer android-tools apache arch-install-scripts arch-wiki-docs archinstall archiso atftp autoconf automake autorandr avahi awesome-terminal-fonts b43-fwcutter base base-devel bash bash-completion bc bind bind-tools bison blueman bluez bluez-libs bluez-plugins bluez-tools bluez-utils bolt boost boost-libs bridge-utils brightnessctl brltty broadcom-wl btrfs-progs bzip2 bzip3 cargo ccache cifs-utils clang clonezilla cloud-init cmake conky cpupower crda cronie cryptsetup ctags cups cups-filters cups-pdf curl darkhttpd ddrescue devtools dex dhclient dhcpcd dialog diffutils dmidecode dmraid dnscrypt-proxy dnsmasq dnsutils docker docker-buildx docker-compose docker-machine dolphin dolphin-plugins dosfstools e2fsprogs edk2-shell efibootmgr espeakup ethtool exa exfatprogs expac eza f2fs-tools fakeroot fatresize fd feh ffmpeg ffmpegthumbnailer flameshot flex foomatic-db foomatic-db-engine foot-terminfo fsarchiver fwbuilder gammu gawk gcc gcc-libs gdb ghostscript git git-lfs gnome-keyring gnu-netcat gnupg go gpart gparted gpm gptfdisk grub grub-customizer gsfonts gst-libav gst-plugin-pipewire gst-plugins-bad gst-plugins-good gst-plugins-ugly gstreamer gtk-update-icon-cache gufw gutenprint gvfs gvfs-afc gvfs-google gvfs-gphoto2 gvfs-mtp gvfs-smb gzip haveged hdparm helix highlight htop hyperv inotify-tools intel-ucode ipython irqbalance irssi iw iwd jasper jfsutils kdeconnect kitty-terminfo kvantum less lftp libavif libde265 libdv libfido2 libheif libmpeg2 libreoffice-fresh libtheora libusb-compat libvpx libwebp libx11 libxext libxinerama lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings lightdm-webkit2-greeter linux linux-atm linux-firmware linux-firmware-marvell linux-headers llvm logrotate lrzip lsb-release lsof lsscsi lua lvm2 lynx lz4 lzip lzop make man-db man-pages mc mdadm memtest86+ memtest86+-efi menumaker mercurial mesa mkinitcpio mkinitcpio-archiso mkinitcpio-nfs-utils mobile-broadband-provider-info modemmanager moreutils most mousepad mousetweaks mpv mtools multilib-devel nano nbd ncdu ndisc6 neovim net-tools nethogs network-manager-applet network-manager-sstp networkmanager networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-strongswan networkmanager-vpnc nfs-utils nilfs-utils nm-cloud-setup nm-connection-editor nmap npm nss-mdns ntfs-3g ntp numlockx nvme-cli open-iscsi openconnect openldap openpgp-card-tools openssh openvpn os-prober otf-libertinus p7zip pacman-contrib parole partclone parted partimage patch pavucontrol pcsclite perl picom pipewire pipewire-alsa pipewire-jack pipewire-pulse pkgconf pkgfile plocate plymouth power-profiles-daemon powertop ppp pptpclient profile-sync-daemon pulsemixer pv python-docker qemu-emulators-full qemu-system-x86-firmware qemu-tools qt5-tools qt5ct ranger reflector reiserfsprogs rfkill ristretto rofi rofi-emoji rp-pppoe rsync rtorrent ruby rustup rxvt-unicode-terminfo schroedinger screen scrot sdparm sed sequoia-sq sg3_utils smartmontools smbclient socat sof-firmware squashfs-tools strace sudo syslinux systemd-resolvconf tar tcpdump terminus-font testdisk tex-gyre-fonts thermald thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunderbird timeshift tldr tmux tor tpm2-tools tpm2-tss traceroute trash-cli tree ttf-fira-code ttf-hack-nerd ttf-jetbrains-mono-nerd ttf-ubuntu-font-family tumbler udftools udisks2 ueberzug ufw unace unarchiver unrar unzip upower usb_modeswitch usbmuxd usbutils vim vlc vpnc webkit2gtk wezterm-terminfo wget wireguard-tools wireless_tools wireless-regdb wireplumber wpa_supplicant wvdial x264 x265 xarchiver xclip xcompmgr xdg-desktop-portal-gtk xdg-desktop-portal-xapp xdg-user-dirs xdg-user-dirs-gtk xdotool xfburn xfce4 xfce4-battery-plugin xfce4-clipman-plugin xfce4-cpufreq-plugin xfce4-cpugraph-plugin xfce4-dict xfce4-diskperf-plugin xfce4-eyes-plugin xfce4-fsguard-plugin xfce4-genmon-plugin xfce4-goodies xfce4-mount-plugin xfce4-mpc-plugin xfce4-netload-plugin xfce4-notes-plugin xfce4-notifyd xfce4-power-manager xfce4-pulseaudio-plugin xfce4-screensaver xfce4-screenshooter xfce4-sensors-plugin xfce4-smartbookmark-plugin xfce4-systemload-plugin xfce4-taskmanager xfce4-time-out-plugin xfce4-timer-plugin xfce4-verve-plugin xfce4-wavelan-plugin xfce4-weather-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin xfsprogs xl2tpd xmlto xorg xorg-apps xorg-server xorg-xinit xsensors xvidcore xz yaml-cpp zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting zstd
 sleep 5s
 clear
 
@@ -543,8 +554,8 @@ clear
 echo "Installing pkgs and tools by AUR"
 printf "\n"
 # yay-bin: AUR helper
-mkdir -p /etc/skel/pkg/yay-bin
-git clone https://aur.archlinux.org/yay-bin.git /etc/skel/pkg/yay-bin
+mkdir -p /etc/skel/aur-pkg/yay-bin
+git clone https://aur.archlinux.org/yay-bin.git /etc/skel/aur-pkg/yay-bin
 (
   cd yay-bin || exit
   makepkg -sic --noconfirm
@@ -554,7 +565,7 @@ rm -rf yay-bin
 
 # Install pkgs from yay-bin
 echo "Installing pkgs from yay-bin"
-yay -S --noconfirm --needed appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin dolphin-megasync-bin downgrade firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 librewolf-bin mkinitcpio-firmware mkinitcpio-numlock mugshot obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-gitS caffeine-ng airdroid-nativefier android-sdk-platform-tools universal-android-debloater-bin fancontrol-gui nbfc
+yay -S --noconfirm --needed airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 librewolf-bin mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-gitS
 sleep 5s
 clear
 
@@ -632,6 +643,7 @@ sleep 5s
 echo "Installing configs"
 printf "\n"
 cp -r dotfiles/config/* /etc/skel/.config/
+cp -r user/local/share/* ~/.local/share/
 printf "\n"
 sleep 5s
 
