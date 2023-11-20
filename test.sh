@@ -449,11 +449,11 @@ clear
 echo "Enabling multilib and community repositories"
 if grep -E '^\[multilib\]|^\[community\]' /etc/pacman.conf; then
   # Repositories are already enabled, remove any commented-out lines
-  sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
   sed -i '/^\[community\]/,/^\[/ s/^#//' /etc/pacman.conf
+  sed -i '/^\[multilib\]/,/^\[/ s/^#//' /etc/pacman.conf
 else
   # Repositories are not enabled, add them
-  echo -e "\n[multilib]\nInclude = /etc/pacman.d/mirrorlist\n\n[community]\nInclude = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
+  echo -e "\n[community]\nInclude = /etc/pacman.d/mirrorlist\n\n[multilib]\nInclude = /etc/pacman.d/mirrorlist" >>/etc/pacman.conf
 fi
 sleep 5s
 clear
@@ -533,7 +533,7 @@ clear
 # Install pkgs and tools by PACMAN..
 echo "Installing pkgs and tools by PACMAN.."
 sleep 5s
-pacman -S --noconfirm --needed ack acpi adobe-source-sans-pro-fonts alacritty alsa-utils amd-ucode android-file-transfer android-tools apache arch-install-scripts arch-wiki-docs archinstall archiso atftp autoconf automake autorandr avahi awesome-terminal-fonts b43-fwcutter base base-devel bash bash-completion bc bind bind-tools bison blueman bluez bluez-libs bluez-plugins bluez-tools bluez-utils bolt boost boost-libs bridge-utils brightnessctl brltty broadcom-wl btrfs-progs bzip2 bzip3 cargo ccache cifs-utils clang clonezilla cloud-init cmake conky cpupower crda cronie cryptsetup ctags cups cups-filters cups-pdf curl darkhttpd ddrescue devtools dex dhclient dhcpcd dialog diffutils dmidecode dmraid dnscrypt-proxy dnsmasq dnsutils docker docker-buildx docker-compose docker-machine dolphin dolphin-plugins dosfstools e2fsprogs edk2-shell efibootmgr espeakup ethtool exa exfatprogs expac eza f2fs-tools fakeroot fatresize fd feh ffmpeg ffmpegthumbnailer flameshot flex foomatic-db foomatic-db-engine foot-terminfo fsarchiver fwbuilder gammu gawk gcc gcc-libs gdb ghostscript git git-lfs gnome-keyring gnu-netcat gnupg go gpart gparted gpm gptfdisk grub grub-customizer gsfonts gst-libav gst-plugin-pipewire gst-plugins-bad gst-plugins-good gst-plugins-ugly gstreamer gtk-update-icon-cache gufw gutenprint gvfs gvfs-afc gvfs-google gvfs-gphoto2 gvfs-mtp gvfs-smb gzip haveged hdparm helix highlight htop hyperv inotify-tools intel-ucode ipython irqbalance irssi iw iwd jasper jfsutils kdeconnect kitty-terminfo kvantum less lftp libavif libde265 libdv libfido2 libheif libmpeg2 libreoffice-fresh libtheora libusb-compat libvpx libwebp libx11 libxext libxinerama lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings lightdm-webkit2-greeter linux linux-atm linux-firmware linux-firmware-marvell linux-headers llvm logrotate lrzip lsb-release lsof lsscsi lua lvm2 lynx lz4 lzip lzop make man-db man-pages mc mdadm memtest86+ memtest86+-efi menumaker mercurial mesa mkinitcpio mkinitcpio-archiso mkinitcpio-nfs-utils mobile-broadband-provider-info modemmanager moreutils most mousepad mousetweaks mpv mtools nano nbd ncdu ndisc6 neovim net-tools nethogs network-manager-applet network-manager-sstp networkmanager networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-strongswan networkmanager-vpnc nfs-utils nilfs-utils nm-cloud-setup nm-connection-editor nmap npm nss-mdns ntfs-3g ntp numlockx nvme-cli open-iscsi openconnect openldap openpgp-card-tools openssh openvpn os-prober otf-libertinus p7zip pacman-contrib parole partclone parted partimage patch pavucontrol pcsclite perl picom pipewire pipewire-alsa pipewire-jack pipewire-pulse pkgconf pkgfile plocate plymouth power-profiles-daemon powertop ppp pptpclient profile-sync-daemon pulsemixer pv python-docker qt5-tools qt5ct ranger reflector reiserfsprogs rfkill ristretto rofi rofi-emoji rp-pppoe rsync rtorrent ruby rustup rxvt-unicode-terminfo schroedinger screen scrot sdparm sed sequoia-sq sg3_utils smartmontools smbclient socat sof-firmware squashfs-tools strace sudo syslinux systemd-resolvconf tar tcpdump terminus-font testdisk tex-gyre-fonts thermald thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunderbird timeshift tldr tmux tor tpm2-tools tpm2-tss traceroute trash-cli tree ttf-fira-code ttf-hack-nerd ttf-jetbrains-mono-nerd ttf-ubuntu-font-family tumbler udftools udisks2 ueberzug ufw unace unarchiver unrar unzip upower usb_modeswitch usbmuxd usbutils virtualbox virtualbox-guest-utils virtualbox-host-modules-arch virtualbox-guest-iso vim vlc vpnc webkit2gtk wezterm-terminfo wget wireguard-tools wireless_tools wireless-regdb wireplumber wpa_supplicant wvdial x264 x265 xarchiver xclip xcompmgr xdg-desktop-portal-gtk xdg-desktop-portal-xapp xdg-user-dirs xdg-user-dirs-gtk xdotool xfburn xfce4 xfce4-battery-plugin xfce4-clipman-plugin xfce4-cpufreq-plugin xfce4-cpugraph-plugin xfce4-dict xfce4-diskperf-plugin xfce4-eyes-plugin xfce4-fsguard-plugin xfce4-genmon-plugin xfce4-goodies xfce4-mount-plugin xfce4-mpc-plugin xfce4-netload-plugin xfce4-notes-plugin xfce4-notifyd xfce4-power-manager xfce4-pulseaudio-plugin xfce4-screensaver xfce4-screenshooter xfce4-sensors-plugin xfce4-smartbookmark-plugin xfce4-systemload-plugin xfce4-taskmanager xfce4-time-out-plugin xfce4-timer-plugin xfce4-verve-plugin xfce4-wavelan-plugin xfce4-weather-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin xfsprogs xl2tpd xmlto xorg xorg-apps xorg-server xorg-xinit xsensors xvidcore xz yaml-cpp zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting zstd
+pacman -S --noconfirm --needed ack acpi adobe-source-sans-pro-fonts alacritty alsa-utils amd-ucode android-file-transfer android-tools apache arch-install-scripts arch-wiki-docs archinstall archiso atftp autoconf automake autorandr avahi awesome-terminal-fonts b43-fwcutter base base-devel bash bash-completion bc bind bind-tools bison blueman bluez bluez-libs bluez-plugins bluez-tools bluez-utils bolt boost boost-libs bridge-utils brightnessctl brltty broadcom-wl btrfs-progs bzip2 bzip3 cargo ccache cifs-utils clang clonezilla cloud-init cmake conky cpupower crda cronie cryptsetup ctags cups cups-filters cups-pdf curl darkhttpd ddrescue devtools dex dhclient dhcpcd dialog diffutils dmidecode dmraid dnscrypt-proxy dnsmasq dnsutils docker docker-buildx docker-compose docker-machine dolphin dolphin-plugins dosfstools e2fsprogs edk2-shell efibootmgr espeakup ethtool exa exfatprogs expac eza f2fs-tools fakeroot fatresize fd feh ffmpeg ffmpegthumbnailer flameshot flex foomatic-db foomatic-db-engine foot-terminfo fsarchiver fwbuilder gammu gawk gcc gcc-libs gdb ghostscript git git-lfs gnome-keyring gnu-netcat gnupg go gpart gparted gpm gptfdisk grub grub-customizer gsfonts gst-libav gst-plugin-pipewire gst-plugins-bad gst-plugins-good gst-plugins-ugly gstreamer gtk-update-icon-cache gufw gutenprint gvfs gvfs-afc gvfs-google gvfs-gphoto2 gvfs-mtp gvfs-smb gzip haveged hdparm helix highlight htop hyperv inotify-tools intel-ucode ipython irqbalance irssi iw iwd jasper jfsutils kdeconnect kitty-terminfo kvantum less lftp libavif libde265 libdv libfido2 libheif libmpeg2 libreoffice-fresh libtheora libusb-compat libvpx libwebp libx11 libxext libxinerama lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings lightdm-webkit2-greeter linux linux-atm linux-firmware linux-firmware-marvell linux-headers llvm logrotate lrzip lsb-release lsof lsscsi lua lvm2 lynx lz4 lzip lzop make man-db man-pages mc mdadm memtest86+ memtest86+-efi mercurial menumaker mercurial mesa mkinitcpio mkinitcpio-archiso mkinitcpio-nfs-utils mobile-broadband-provider-info modemmanager moreutils most mousepad mousetweaks mpv mtools nano nbd ncdu ndisc6 neovim net-tools nethogs network-manager-applet network-manager-sstp networkmanager networkmanager-l2tp networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-strongswan networkmanager-vpnc nfs-utils nilfs-utils nm-cloud-setup nm-connection-editor nmap npm nss-mdns ntfs-3g ntp numlockx nvme-cli open-iscsi openconnect openldap openpgp-card-tools openssh openvpn os-prober otf-libertinus p7zip pacman-contrib parole partclone parted partimage patch pavucontrol pcsclite perl picom pipewire pipewire-alsa pipewire-jack pipewire-pulse pkgconf pkgfile plocate plymouth power-profiles-daemon powertop ppp pptpclient profile-sync-daemon pulsemixer pv python-docker qt5-tools qt5ct ranger reflector reiserfsprogs rfkill ristretto rofi rofi-emoji rp-pppoe rsync rtorrent ruby rustup rxvt-unicode-terminfo schroedinger screen scrot sdparm sed sequoia-sq sg3_utils smartmontools smbclient syncthing socat sof-firmware squashfs-tools strace sudo syslinux systemd-resolvconf tar tcpdump terminus-font testdisk tex-gyre-fonts thermald thunar-archive-plugin thunar-media-tags-plugin thunar-volman thunderbird timeshift tldr tmux tor tpm2-tools tpm2-tss traceroute trash-cli tree ttf-fira-code ttf-hack-nerd ttf-jetbrains-mono-nerd ttf-ubuntu-font-family tumbler udftools udisks2 ueberzug ufw unace unarchiver unrar unzip upower usb_modeswitch usbmuxd usbutils virtualbox virtualbox-guest-utils virtualbox-host-modules-arch virtualbox-ext-vnc virtualbox-guest-iso vim vlc vpnc webkit2gtk wezterm-terminfo wget wireguard-tools wireless_tools wireless-regdb wireplumber wpa_supplicant wvdial x264 x265 xarchiver xclip xcompmgr xdg-desktop-portal-gtk xdg-desktop-portal-xapp xdg-user-dirs xdg-user-dirs-gtk xdotool xfburn xfce4 xfce4-battery-plugin xfce4-clipman-plugin xfce4-cpufreq-plugin xfce4-cpugraph-plugin xfce4-dict xfce4-diskperf-plugin xfce4-eyes-plugin xfce4-fsguard-plugin xfce4-genmon-plugin xfce4-goodies xfce4-mount-plugin xfce4-mpc-plugin xfce4-netload-plugin xfce4-notes-plugin xfce4-notifyd xfce4-power-manager xfce4-pulseaudio-plugin xfce4-screensaver xfce4-screenshooter xfce4-sensors-plugin xfce4-smartbookmark-plugin xfce4-systemload-plugin xfce4-taskmanager xfce4-time-out-plugin xfce4-timer-plugin xfce4-verve-plugin xfce4-wavelan-plugin xfce4-weather-plugin xfce4-whiskermenu-plugin xfce4-xkb-plugin xfsprogs xl2tpd xmlto xorg xorg-apps xorg-server xorg-xinit xsensors xvidcore xz yaml-cpp zip zsh zsh-autosuggestions zsh-completions zsh-history-substring-search zsh-syntax-highlighting zstd
 sleep 5s
 clear
 
@@ -586,7 +586,7 @@ if [[ $use_os_prober =~ ^[Yy]$ ]]; then
   grub-mkconfig -o /boot/grub/grub.cfg
 else
   printf "\n"
-  echo "Os-prober not enabled."
+  echo "os-prober not enabled."
 fi
 sleep 5s
 clear
@@ -630,44 +630,33 @@ sleep 5s
 mkdir -p /etc/skel/.config/
 mkdir -p /etc/skel/bin/
 mkdir -p /usr/share/lightdm-webkit/themes/glorious
+sleep 5s
 
-# shell
-echo "Installing shell"
 printf "\n"
+echo "Setting up shell"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 cp -r dotfiles/shell/bash/* /etc/skel/
 cp -r dotfiles/shell/zsh/* /etc/skel/
 cp -r dotfiles/shell/p-script/* /etc/skel/bin/
-printf "\n"
 sleep 5s
 
-# theme
-echo "Installing themes and fonts"
 printf "\n"
+echo "Setting up config's"
+cp -r dotfiles/config/* /etc/skel/.config/
+cp -r dotfiles/local/share/* /etc/skel/.local/share/
+sleep 5s
+
+printf "\n"
+echo "Setting up themes,..."
 cp -r dotfiles/themes/themes/* /usr/share/themes/
 cp -r dotfiles/themes/icons/* /usr/share/icons/
 cp -r dotfiles/themes/plymouth/* /etc/plymouth/
+cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf /usr/share/fonts/
-printf "\n"
 sleep 5s
 
-# config
-echo "Installing configs"
 printf "\n"
-cp -r dotfiles/config/* /etc/skel/.config/
-cp -r user/local/share/* ~/.local/share/
-printf "\n"
-sleep 5s
-
-# Setting up virtualbox
-echo "Setting up virtualbox"
-modprobe vboxdrv
-gpasswd -a "$username" vboxusers
-pacman -S virtualbox-ext-vnc
-
-# plymouth config
 echo "Configuring plymouth"
-printf "\n"
 sed -i 's/^HOOKS=.*/HOOKS=(base udev plymouth autodetect modconf kms keyboard keymap consolefont block filesystems fsck)/' /etc/mkinitcpio.conf
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"/GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet splash udev.log_level=3 vt.global_cursor_default=0"/g' /etc/default/grub
 mkinitcpio -p linux
@@ -675,20 +664,8 @@ grub-mkconfig -o /boot/grub/grub.cfg
 plymouth-set-default-theme -R archfiery
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
-clear
 
-# wallpaper
-echo "Installing wallpaper"
 printf "\n"
-cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
-printf "\n"
-sleep 5s
-clear
-
-# lightdm
-echo "Setting up Desktop environment"
-printf "\n"
-
 echo "Setting up lightdm"
 latest_release_url=$(curl -s https://api.github.com/repos/eromatiya/lightdm-webkit2-theme-glorious/releases/latest | grep "browser_download_url" | cut -d '"' -f 4)
 curl -L -o glorious-latest.tar.gz "$latest_release_url"
@@ -696,10 +673,9 @@ tar -zxvf glorious-latest.tar.gz -C /usr/share/lightdm-webkit/themes/glorious --
 sed -i 's/^\(#?greeter\)-session\s*=\s*\(.*\)/greeter-session = lightdm-webkit2-greeter #\1/ #\2g' /etc/lightdm/lightdm.conf
 sed -i 's/^webkit_theme\s*=\s*\(.*\)/webkit_theme = glorious #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
 sed -i 's/^debug_mode\s*=\s*\(.*\)/debug_mode = true #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
-printf "\n"
 sleep 5s
-clear
 
+printf "\n"
 echo "Setting up EWW"
 git clone https://github.com/elkowar/eww
 cd eww
@@ -708,24 +684,20 @@ cd target/release
 chmod +x ./eww
 cp -r ./eww /usr/bin/
 cd ../../..
-printf "\n"
 sleep 5s
-clear
 
-echo "Setting up vala-pannel-appmenu"
-xfconf-query -c xsettings -p /Gtk/ShellShowsMenubar -n -t bool -s true
-xfconf-query -c xsettings -p /Gtk/ShellShowsAppmenu -n -t bool -s true
-sleep 5s
-clear
-
-# grub-theme
 echo "Installing grub-theme"
 printf "\n"
 cp -r dotfiles/themes/grub/themes/* /usr/share/grub/themes/
 sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/archfiery/theme.txt"/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
-clear
+
+# Setting up virtualbox
+echo "Setting up virtualbox"
+modprobe vboxdrv
+gpasswd -a "$username" vboxusers
+sleep 5s
 
 #remove folder
 echo "Removing dotfiles folder"
