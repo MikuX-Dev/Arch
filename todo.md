@@ -1,2 +1,2 @@
 # TODO:
-- add pkgs from saved in phone and check the readme in that last lines
+- changed /etc/skel/.dotfiles in dots so change for configs too

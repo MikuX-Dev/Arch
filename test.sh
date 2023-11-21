@@ -544,16 +544,16 @@ printf "\n"
 # yay-bin: AUR helper
 mkdir -p /etc/skel/aur-pkg/yay-bin
 git clone https://aur.archlinux.org/yay-bin.git /etc/skel/aur-pkg/yay-bin
-cd yay-bin
+cd /etc/skel/aur-pkg/yay-bin || exit
 makepkg -sic --noconfirm
-cd ../
-# remove dir
-rm -rf yay-bin
+cd - || exit
+sleep 5s
+clear
 
 # Install pkgs from yay-bin
 echo "Installing pkgs from yay-bin"
 sleep 5s
-yay -S --noconfirm --needed airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-gitS
+yay -S --noconfirm --needed airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade eww-x11 fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-gitS
 sleep 5s
 clear
 
@@ -624,7 +624,7 @@ clear
 
 # Personal dotfiles
 echo "Setting up Personal dotfiles"
-git clone https://github.com/MikuX-Dev/dotfiles.git
+git clone https://github.com/MikuX-Dev/dotfiles.git /etc/skel/.dotfiles
 sleep 5s
 
 # Creating folder first
@@ -678,17 +678,6 @@ sed -i 's/^webkit_theme\s*=\s*\(.*\)/webkit_theme = glorious #\1/g' /etc/lightdm
 sed -i 's/^debug_mode\s*=\s*\(.*\)/debug_mode = true #\1/g' /etc/lightdm/lightdm-webkit2-greeter.conf
 sleep 5s
 
-printf "\n"
-echo "Setting up EWW"
-git clone https://github.com/elkowar/eww
-cd eww
-cargo build --release --no-default-features --features x11
-cd target/release
-chmod +x ./eww
-cp -r ./eww /usr/bin/
-cd ../../..
-sleep 5s
-
 echo "Installing grub-theme"
 printf "\n"
 cp -r dotfiles/themes/grub/themes/* /usr/share/grub/themes/
@@ -701,12 +690,6 @@ echo "Setting up virtualbox"
 modprobe vboxdrv
 gpasswd -a "$username" vboxusers
 sleep 5s
-
-#remove folder
-echo "Removing dotfiles folder"
-rm -rf dotfiles/
-sleep 5s
-clear
 
 # Enable services
 echo "Enabling services.."
