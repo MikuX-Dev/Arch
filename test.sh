@@ -617,10 +617,10 @@ sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
 clear
 sleep 6s
 
-#edit sudo
-echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
-sleep 6s
-clear
+# Edit sudo
+# echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
+# sleep 6s
+# clear
 
 # Personal dotfiles
 echo "Setting up Personal dotfiles"
