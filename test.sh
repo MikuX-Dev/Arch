@@ -636,25 +636,25 @@ sleep 5s
 printf "\n"
 echo "Setting up shell"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-cp -r dotfiles/shell/bash/* /etc/skel/
-cp -r dotfiles/shell/zsh/* /etc/skel/
-cp -r dotfiles/shell/zsh/* /root/
-cp -r dotfiles/shell/p-script/* /etc/skel/bin/
+cp -r /etc/skel/.dotfiles/shell/bash/* /etc/skel/
+cp -r /etc/skel/.dotfiles/shell/zsh/* /etc/skel/
+cp -r /etc/skel/.dotfiles/shell/zsh/* /root/
+cp -r /etc/skel/.dotfiles/shell/p-script/* /etc/skel/bin/
 chsh -s /bin/zsh root
 sleep 5s
 
 printf "\n"
 echo "Setting up config's"
-cp -r dotfiles/config/* /etc/skel/.config/
-cp -r dotfiles/local/share/* /etc/skel/.local/share/
+cp -r /etc/skel/.dotfiles/config/* /etc/skel/.config/
+cp -r /etc/skel/.dotfiles/local/share/* /etc/skel/.local/share/
 sleep 5s
 
 printf "\n"
 echo "Setting up themes,..."
-cp -r dotfiles/themes/themes/* /usr/share/themes/
-cp -r dotfiles/themes/icons/* /usr/share/icons/
-cp -r dotfiles/themes/plymouth/* /etc/plymouth/
-cp -r dotfiles/wallpaper/* /usr/share/backgrounds/
+cp -r /etc/skel/.dotfiles/themes/themes/* /usr/share/themes/
+cp -r /etc/skel/.dotfiles/themes/icons/* /usr/share/icons/
+cp -r /etc/skel/.dotfiles/themes/plymouth/* /etc/plymouth/
+cp -r /etc/skel/.dotfiles/wallpaper/* /usr/share/backgrounds/
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf /usr/share/fonts/
 sleep 5s
 
@@ -680,7 +680,7 @@ sleep 5s
 
 echo "Installing grub-theme"
 printf "\n"
-cp -r dotfiles/themes/grub/themes/* /usr/share/grub/themes/
+cp -r /etc/skel/.dotfiles/themes/grub/themes/* /usr/share/grub/themes/
 sed -i 's/#GRUB_THEME="/path/to/gfxtheme"/GRUB_THEME="/usr/share/grub/themes/archfiery/theme.txt"/g' /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 5s
