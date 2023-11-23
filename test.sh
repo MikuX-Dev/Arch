@@ -29,7 +29,7 @@ clear
 
 # install package
 echo "Installing needed packages..."
-pacman -Syy reflector rsync curl --noconfirm
+pacman -Syy reflector rsync curl archlinux-keyring --noconfirm
 sleep 6s
 clear
 
@@ -414,6 +414,14 @@ arch-chroot /mnt ./post_install.sh
 clear
 sleep 6s
 
+# Gen fstab
+echo "Generating fstab file"
+printf "\n"
+genfstab -U /mnt >>/mnt/etc/fstab
+cat /mnt/etc/fstab
+sleep 6s
+clear
+
 # Unmount drives
 echo "unmounting all the drives"
 printf "\n"
@@ -545,7 +553,7 @@ printf "\n"
 mkdir -p /etc/skel/aur-pkg/yay-bin
 git clone https://aur.archlinux.org/yay-bin.git /etc/skel/aur-pkg/yay-bin
 cd /etc/skel/aur-pkg/yay-bin || exit
-makepkg -sic --noconfirm
+makepkg -si --noconfirm
 cd - || exit
 sleep 6s
 clear
@@ -553,7 +561,7 @@ clear
 # Install pkgs from yay-bin
 echo "Installing pkgs from yay-bin"
 sleep 6s
-yay -S --noconfirm --needed airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade eww-x11 fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-git stacer-bin
+yay -S --noconfirm --needed airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade eww-x11 fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-git stacer-bin tela-icon-theme
 sleep 6s
 clear
 
@@ -626,6 +634,7 @@ sleep 6s
 echo "Setting up Personal dotfiles"
 git clone https://github.com/MikuX-Dev/dotfiles.git /etc/skel/.dotfiles
 sleep 6s
+clear
 
 # Creating folder first
 echo "Creating folder's..."
@@ -634,6 +643,7 @@ mkdir -p /etc/skel/bin/
 mkdir -p /etc/skel/.config/
 mkdir -p /usr/share/lightdm-webkit/themes/glorious
 sleep 6s
+clear
 
 printf "\n"
 echo "Setting up shell"
@@ -647,12 +657,14 @@ cp -r /etc/skel/.dotfiles/shell/zsh/* /root/
 cp -r /etc/skel/.dotfiles/shell/p-script/* /root/bin/
 chsh -s /bin/zsh root
 sleep 6s
+clear
 
 printf "\n"
 echo "Setting up config's"
 cp -r /etc/skel/.dotfiles/config/* /etc/skel/.config/
 cp -r /etc/skel/.dotfiles/local/share/* /etc/skel/.local/share/
 sleep 6s
+clear
 
 printf "\n"
 echo "Setting up themes..."
@@ -661,7 +673,9 @@ cp -r /etc/skel/.dotfiles/themes/icons/* /usr/share/icons/
 cp -r /etc/skel/.dotfiles/themes/plymouth/* /etc/plymouth/
 cp -r /etc/skel/.dotfiles/wallpaper/* /usr/share/backgrounds/
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf /usr/share/fonts/
+# wget 
 sleep 6s
+clear
 
 printf "\n"
 echo "Configuring plymouth"
@@ -672,6 +686,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 plymouth-set-default-theme -R archfiery
 grub-mkconfig -o /boot/grub/grub.cfg
 sleep 6s
+clear
 
 printf "\n"
 echo "Setting up lightdm"
