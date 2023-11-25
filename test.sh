@@ -64,14 +64,14 @@ clear
 # printf "\n"
 # lsblk
 # printf "\n"
-# echo "Enter the drive to install arch linux on it. (/dev/...)"
+# echo "Enter the drive to install Arch Linux on it. (/dev/...)"
 # read -p "Enter Drive (eg. /dev/sda or /dev/vda or /dev/nvme0n1 or something similar): " drive
 # sleep 6s
 # clear
 
 # echo "Getting ready for creating partitions!"
 # echo "root and boot partitions are mandatory."
-# echo "home and swap partitions are optional but recommended!"
+# echo "Home and swap partitions are optional but recommended!"
 # echo "Also, you can create a separate partition for timeshift backup (optional)!"
 # echo "Getting ready in 9 seconds"
 # sleep 9s
@@ -80,7 +80,7 @@ clear
 # printf "\n"
 # lsblk
 # printf "\n"
-# echo "Choose a familier disk utility tool to partition your drive!"
+# echo "Choose a familiar disk utility tool to partition your drive!"
 # echo " 1. fdisk"
 # echo " 2. cfdisk"
 # echo " 3. gdisk"

@@ -19,16 +19,12 @@ Ensure that you have an internet connection on the Arch ISO. If you have a wirel
 
 - Just exec the [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) using the following command:
     ```
-    curl -L https://mikux-dev.github.io/ArchFiery/ArchFiery.sh -o ArchFiery.sh &&
-    chmod +x ArchFiery.sh &&
-    ./ArchFiery.sh
+    curl -L https://mikux-dev.github.io/ArchFiery/ArchFiery.sh -o ArchFiery.sh; chmod +x ArchFiery.sh; ./ArchFiery.sh
     ```
 
 - For testing purposes, you can also use the following command:
     ```
-    curl -L https://mikux-dev.github.io/ArchFiery/test.sh -o test.sh &&
-    chmod +x test.sh &&
-    ./test.sh
+    curl -L https://mikux-dev.github.io/ArchFiery/test.sh -o test.sh; chmod +x test.sh; ./test.sh
     ```
 
 Follow the on-screen instructions to complete the installation.
