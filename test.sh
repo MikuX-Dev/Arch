@@ -552,22 +552,31 @@ pacman -S --noconfirm --needed ack acpi adobe-source-sans-pro-fonts alacritty al
 sleep 6s
 clear
 
-# Install pkgs and tools by AUR..
-echo "Installing pkgs and tools by AUR"
-printf "\n"
-# yay-bin: AUR helper
-mkdir -p /etc/skel/aur-pkg/yay-bin
-git clone https://aur.archlinux.org/yay-bin.git /etc/skel/aur-pkg/yay-bin
-cd /etc/skel/aur-pkg/yay-bin || exit
-makepkg -si --noconfirm
-cd - || exit
-sleep 6s
-clear
+# # Install pkgs and tools by AUR..
+# echo "Installing pkgs and tools by AUR"
+# printf "\n"
+# # yay-bin: AUR helper
+# mkdir -p /etc/skel/aur-pkg/yay-bin
+# git clone https://aur.archlinux.org/yay-bin.git /etc/skel/aur-pkg/yay-bin
+# cd /etc/skel/aur-pkg/yay-bin || exit
+# makepkg -si --noconfirm
+# cd - || exit
+# sleep 6s
+# clear
 
 # Install pkgs from yay-bin
 echo "Installing pkgs from yay-bin"
-sleep 6s
-yay -S --noconfirm --needed airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade eww-x11 fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git stacer-bin tela-icon-theme thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-git
+
+packages="airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade eww-x11 fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git stacer-bin tela-icon-theme thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-git yay-bin"
+
+for package in $packages; do
+    echo "Installing $package"
+    git clone https://aur.archlinux.org/"$package"
+    cd "$package" || exit
+    makepkg -si --skippgpcheck --noconfirm --needed
+    cd - || exit
+    rm -rf "$package"
+done
 sleep 6s
 clear
 
