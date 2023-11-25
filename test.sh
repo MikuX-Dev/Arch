@@ -443,7 +443,7 @@ reboot
 
 #part2
 
-#starting post_install
+# starting post_install
 echo -ne "
 ╭─────── ArchFiery ───────╮
 │      post_install       │
@@ -570,12 +570,12 @@ echo "Installing pkgs from yay-bin"
 packages="airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade eww-x11 fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git stacer-bin tela-icon-theme thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-git yay-bin"
 
 for package in $packages; do
-    echo "Installing $package"
-    git clone https://aur.archlinux.org/"$package"
-    cd "$package" || exit
-    makepkg -si --skippgpcheck --noconfirm --needed
-    cd - || exit
-    rm -rf "$package"
+  echo "Installing $package"
+  git clone https://aur.archlinux.org/"$package"
+  cd "$package" || exit
+  makepkg -si --skippgpcheck --noconfirm --needed
+  cd - || exit
+  rm -rf "$package"
 done
 sleep 6s
 clear
@@ -631,7 +631,7 @@ passwd "$username"
 sleep 6s
 clear
 
-# Adding sudo previliages to the user you created
+# Adding sudo privileges to the user you created
 echo "NOTE: ALWAYS REMEMBER THIS USERNAME AND PASSWORD YOU PUT JUST NOW."
 printf "\n"
 sleep 6s
@@ -688,7 +688,7 @@ cp -r /etc/skel/.dotfiles/themes/icons/* /usr/share/icons/
 cp -r /etc/skel/.dotfiles/themes/plymouth/* /etc/plymouth/
 cp -r /etc/skel/.dotfiles/wallpaper/* /usr/share/backgrounds/
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf /usr/share/fonts/
-# wget 
+# wget
 sleep 6s
 clear
 
