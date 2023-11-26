@@ -423,10 +423,10 @@ aurpackages="airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-g
 
 git clone https://aur.archlinux.org/pikaur.git $SKEL/aur-pkg/pikaur
 cd $SKEL/aur-pkg/pikaur || exit
-makepkg -si --skippgpcheck --noconfirm --needed
+makepkg -fsri --skippgpcheck --noconfirm --needed
 cd - || exit
 
-pikaur -S "$aurpackages"
+pikaur -S --needed --noconfirm "$aurpackages"
 
 # Setting boot partition "EFI"
 lsblk
