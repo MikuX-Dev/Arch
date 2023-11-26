@@ -36,11 +36,3 @@ To configure [ArchFiery](https://github.com/MikuX-Dev/ArchFiery), you'll need to
 ## License:
 
 This project is licensed under the GNU General Public License v3.0. For more details, please refer to the [LICENSE](https://github.com/MikuX-Dev/ArchFiery/blob/master/LICENSE) file.
-
-## Credits:
-
-Special thanks to the following individuals for their contributions:
-
-- [Bugswriter](https://github.com/Bugswriter/arch-linux-magic) for arch-linux-magic,
-- [MatMoul](https://github.com/MatMoul/archfi) for archfi,
-- [whoisYoges](https://github.com/whoisYoges/magic-arch-installer) for magic-arch-installer.
