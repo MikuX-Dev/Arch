@@ -537,6 +537,7 @@ git clone https://github.com/adi1090x/rofi.git
 cd rofi || exit
 chmod +x setup.sh
 ./setup.sh
+cd - || exit
 
 touch $SKEL/rofi.txt
 echo "Check https://github.com/adi1090x/rofi.git for more information" >$SKEL/rofi.txt
