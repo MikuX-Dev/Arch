@@ -411,15 +411,22 @@ echo "Installing pkgs from yay-bin"
 
 aurpackages="airdroid-nativefier android-sdk-platform-tools appmenu-gtk-module-git appmenu-qt4 bluez-firmware brave-bin caffeine-ng dolphin-megasync-bin downgrade eww-x11 fancontrol-gui firebuild gtk3-nocsd-git libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3 mkinitcpio-firmware mkinitcpio-numlock mugshot nbfc obsidian-bin ocs-url portmaster-stub-bin repoctl rtl8821ce-dkms-git rtw89-dkms-git stacer-bin tela-icon-theme thunar-extended thunar-megasync-bin thunar-secure-delete thunar-shares-plugin thunar-vcs-plugin universal-android-debloater-bin vala-panel-appmenu-common-git vala-panel-appmenu-registrar-git vala-panel-appmenu-xfce-git visual-studio-code-bin xfce4-docklike-plugin xfce4-panel-profiles zsh-theme-powerlevel10k-git yay-bin"
 
-for pkgaur in $aurpackages; do
-  echo "Installing $pkgaur"
-  git clone https://aur.archlinux.org/"$pkgaur"
-  cd "$pkgaur" || exit
-  makepkg -si --skippgpcheck --noconfirm --needed
-  cd .. || exit
-  rm -rf "$pkgaur"
-done
-sleep 3s
+# for pkgaur in $aurpackages; do
+#   echo "Installing $pkgaur"
+#   git clone https://aur.archlinux.org/"$pkgaur"
+#   cd "$pkgaur" || exit
+#   makepkg -si --skippgpcheck --noconfirm --needed
+#   cd .. || exit
+#   rm -rf "$pkgaur"
+# done
+# sleep 3s
+
+git clone https://aur.archlinux.org/pikaur.git $SKEL/aur-pkg/pikaur
+cd $SKEL/aur-pkg/pikaur || exit
+makepkg -si --skippgpcheck --noconfirm --needed
+cd - || exit
+
+pikaur -S "$aurpackages"
 
 # Setting boot partition "EFI"
 lsblk
@@ -523,6 +530,16 @@ cp -r "$DOT"/config/* $SKEL/.config/
 cp -r "$DOT"/local/share/* $SKEL/.local/share/
 sleep 6s
 clear
+
+# Setup rofi
+echo "Setting up rofi"
+git clone https://github.com/adi1090x/rofi.git
+cd rofi || exit
+chmod +x setup.sh
+./setup.sh
+
+touch $SKEL/rofi.txt
+echo "Check https://github.com/adi1090x/rofi.git for more information" >$SKEL/rofi.txt
 
 # Setting up themes
 echo "Setting up themes..."
