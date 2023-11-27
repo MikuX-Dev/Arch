@@ -31,7 +31,7 @@ Follow the on-screen instructions to complete the installation.
 
 ## Configuration:
 
-To configure [ArchFiery](https://github.com/MikuX-Dev/ArchFiery), you'll need to fork the repository and edit the packages directory. And make the necessary changes according to your requirements.
+To configure [ArchFiery](https://github.com/MikuX-Dev/ArchFiery), you'll need to clone the repository and edit the packages directory. And make the necessary changes according to your requirements.
 
 ## License:
 
