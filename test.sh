@@ -589,6 +589,15 @@ grub-mkconfig -o /boot/grub/grub.cfg
 sleep 6s
 clear
 
+# setting up ufw
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow ssh
+ufw allow syncthing
+ufw limit 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+
 # Setting up virtualbox
 echo "Setting up virtualbox"
 modprobe vboxdrv
@@ -599,13 +608,21 @@ clear
 # Enable services
 echo "Enabling services.."
 printf "\n"
-enable_services=("irqbalance.service" "udisks2.service" "httpd.service" "cronie.service" "sshd.service" "lightdm-plymouth.service" "NetworkManager.service" "cups.service" "bluetooth" "ntpd.service" "dhcpcd.service" "syncthing@$username")
+enable_services=("irqbalance.service" "udisks2.service" "httpd.service" "cronie.service" "sshd.service" "lightdm-plymouth.service" "NetworkManager.service" "cups.service" "bluetooth" "ntpd.service" "dhcpcd.service" "syncthing@$username" "ufw")
 systemctl enable "${enable_services[@]}"
 sleep 6s
 clear
 
+# Setup blackarch repo
+curl -O https://blackarch.org/strap.sh
+echo 5ea40d49ecd14c2e024deecf90605426db97ea0c strap.sh | sha1sum -c
+chmod +x strap.sh
+./strap.sh
+pacman -Syyu
+rm -rf strap.sh
+
 # Clearcache
 echo "Clearing cache..."
-pacman -Scc --noconfirm
+pikaur -Scc --noconfirm
 sleep 6s
 clear
