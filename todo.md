@@ -1,2 +1,2 @@
 # TODO
-- Completed.
+[X] - syncthing @$user for it in enable services

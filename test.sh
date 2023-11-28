@@ -441,25 +441,13 @@ sleep 6s
 clear
 
 # Install grub
-echo "Installing grub bootloader in /boot/efi parttiton"
+echo "Installing grub bootloader in /boot/efi parttiton with 'os_prober' enabled"
+sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
+os-prober
+grub-mkconfig -o /boot/grub/grub.cfg
 sleep 6s
-
-# os-prober
-read -p "Are you duelbooting? [Y/n]: " use_os_prober
-if [[ $use_os_prober =~ ^[Yy]$ ]]; then
-  echo "Enabling os-prober..."
-  sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
-  os-prober
-  sleep 6s
-  grub-mkconfig -o /boot/grub/grub.cfg
-else
-  printf "\n"
-  echo "os-prober not enabled."
-fi
-sleep 6s
-clear
 
 # Setting root user
 echo "Enter password for root user: "
@@ -510,13 +498,13 @@ clear
 printf "\n"
 echo "Setting up shell"
 # $ROOTUSER
-git clone https://github.com/ohmyzsh/ohmyzsh.git /root/.ohmyzsh
+git clone https://github.com/ohmyzsh/ohmyzsh.git /root/.oh-my-zsh
 cp -r "$DOT"/shell/zsh/* /root/
 cp -r "$DOT"/shell/p-script/* /root/bin/
 chsh -s /bin/zsh root
 
 # $user
-git clone https://github.com/ohmyzsh/ohmyzsh.git $SKEL/.ohmyzsh
+git clone https://github.com/ohmyzsh/ohmyzsh.git $SKEL/.oh-my-zsh
 cp -r "$DOT"/shell/zsh/* $SKEL/
 # $user shell changed to zsh
 cp -r "$DOT"/shell/p-script/* $SKEL/bin/
@@ -539,7 +527,6 @@ chmod +x setup.sh
 ./setup.sh
 cd - || exit
 
-touch $SKEL/rofi.txt
 echo "Check https://github.com/adi1090x/rofi.git for more information" >$SKEL/rofi.txt
 
 # Setting up themes
@@ -548,8 +535,24 @@ cp -r "$DOT"/themes/themes/* $US/themes/
 cp -r "$DOT"/themes/icons/* $US/icons/
 cp -r "$DOT"/themes/plymouth/* $US/plymouth/themes/
 cp -r "$DOT"/wallpaper/* $US/backgrounds/
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf $US/fonts/
-# wget
+# wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf $US/fonts/
+# Download and install nerd-fonts
+fonts_url="https://github.com/ryanoasis/nerd-fonts/releases/latest"
+font_files=("CascadiaCode.tar.xz" "Noto.tar.xz" "JetBrainsMono.tar.xz" "Meslo.tar.xz")
+font_file_names=("CascadiaCode" "Noto" "JetBrainsMono" "Meslo")
+for ((i=0; i<${#font_files[@]}; i++)); do
+    font_file=${font_files[i]}
+    font_name=${font_file_names[i]}
+    font_url=$(curl -sL ${fonts_url} | grep -o -E "https://.*${font_file}")
+    # Create a folder with the font name
+    mkdir -p "${font_name}"
+    # Download and extract the font
+    curl -L -o "${font_file}" "${font_url}"
+    tar -xvf "${font_file}" -C "${font_name}"
+    rm "${font_file}"
+    # Move the font folder to /usr/share/fonts/
+    mv "${font_name}" $US/fonts/
+done
 sleep 6s
 clear
 
@@ -593,7 +596,7 @@ clear
 # Enable services
 echo "Enabling services.."
 printf "\n"
-enable_services=('irqbalance.service' 'udisks2.service' 'httpd.service' 'cronie.service' 'sshd.service' 'lightdm-plymouth.service' 'NetworkManager.service' 'cups.service' 'bluetooth' 'ntpd.service' 'dhcpcd.service')
+enable_services=("irqbalance.service" "udisks2.service" "httpd.service" "cronie.service" "sshd.service" "lightdm-plymouth.service" "NetworkManager.service" "cups.service" "bluetooth" "ntpd.service" "dhcpcd.service" "syncthing@$username")
 systemctl enable "${enable_services[@]}"
 sleep 6s
 clear
