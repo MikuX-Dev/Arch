@@ -205,7 +205,31 @@ sleep 6s
 clear
 
 # Installing base system
-pacstrap /mnt base base-devel linux linux-firmware linux-headers
+pacstrap /mnt base base-devel linux linux-firmware linux-headers grub os-prober efibootmgr
+sleep 6s
+clear
+
+# Setting boot partition "EFI"
+lsblk
+printf "\n"
+echo "Mounting the EFI partition to '/mnt/boot/efi'"
+efidirectory="/mnt/boot/efi/"
+if [ ! -d "$efidirectory" ]; then
+  mkdir -p "$efidirectory"
+fi
+mount "$answerefi" "$efidirectory"
+sleep 6s
+clear
+
+# Install grub
+echo "Installing grub bootloader in /boot/efi parttiton with 'os_prober' enabled"
+sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
+grub-mkconfig -o /boot/grub/grub.cfg
+os-prober
+grub-mkconfig -o /boot/grub/grub.cfg
+sleep 6s
+clear
 
 # Gen fstab
 echo "Generating fstab file"
@@ -428,27 +452,6 @@ cd - || exit
 
 pikaur -S --needed --noconfirm "$aurpackages"
 
-# Setting boot partition "EFI"
-lsblk
-printf "\n"
-echo "Mounting the EFI partition to '/boot/efi'"
-efidirectory="/boot/efi/"
-if [ ! -d "$efidirectory" ]; then
-  mkdir -p "$efidirectory"
-fi
-mount "$answerefi" "$efidirectory"
-sleep 6s
-clear
-
-# Install grub
-echo "Installing grub bootloader in /boot/efi parttiton with 'os_prober' enabled"
-sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
-grub-mkconfig -o /boot/grub/grub.cfg
-os-prober
-grub-mkconfig -o /boot/grub/grub.cfg
-sleep 6s
-
 # Setting root user
 echo "Enter password for root user: "
 passwd
@@ -540,18 +543,18 @@ cp -r "$DOT"/wallpaper/* $US/backgrounds/
 fonts_url="https://github.com/ryanoasis/nerd-fonts/releases/latest"
 font_files=("CascadiaCode.tar.xz" "Noto.tar.xz" "JetBrainsMono.tar.xz" "Meslo.tar.xz")
 font_file_names=("CascadiaCode" "Noto" "JetBrainsMono" "Meslo")
-for ((i=0; i<${#font_files[@]}; i++)); do
-    font_file=${font_files[i]}
-    font_name=${font_file_names[i]}
-    font_url=$(curl -sL ${fonts_url} | grep -o -E "https://.*${font_file}")
-    # Create a folder with the font name
-    mkdir -p "${font_name}"
-    # Download and extract the font
-    curl -L -o "${font_file}" "${font_url}"
-    tar -xvf "${font_file}" -C "${font_name}"
-    rm "${font_file}"
-    # Move the font folder to /usr/share/fonts/
-    mv "${font_name}" $US/fonts/
+for ((i = 0; i < ${#font_files[@]}; i++)); do
+  font_file=${font_files[i]}
+  font_name=${font_file_names[i]}
+  font_url=$(curl -sL ${fonts_url} | grep -o -E "https://.*${font_file}")
+  # Create a folder with the font name
+  mkdir -p "${font_name}"
+  # Download and extract the font
+  curl -L -o "${font_file}" "${font_url}"
+  tar -xvf "${font_file}" -C "${font_name}"
+  rm "${font_file}"
+  # Move the font folder to /usr/share/fonts/
+  mv "${font_name}" $US/fonts/
 done
 sleep 6s
 clear
