@@ -620,6 +620,8 @@ chmod +x strap.sh
 ./strap.sh
 pacman -Syyu
 rm -rf strap.sh
+sleep 6s
+clear
 
 # Clearcache
 echo "Clearing cache..."
