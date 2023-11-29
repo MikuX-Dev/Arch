@@ -1,10 +1,10 @@
-# ArchFiery
+# ArchFiery:
 
 > [!WARNING]
 > ArchFiery is still in development. It is not recommended to use this script for now.
 
 ## Introduction:
-ArchFiery is a simple bash script designed to facilitate the installation of Arch Linux after booting from the official Arch Linux installation media. With just two terminal commands, you can easily install Arch Linux. This script is specifically created to install packages such as the base system, bootloader, and optionally ArchFiery and Blackarch-tools ("minimum-tools" or "full-tools").
+[ArchFiery](https://github.com/MikuX-Dev/ArchFiery) is a bash script that streamlines the installation process of [ArchLinux](https://archlinux.org). By executing only two terminal commands, users can effortlessly install [ArchLinux](https://archlinux.org). This script is specifically designed to install essential packages like the base system and bootloader. Additionally, it provides the option to install [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) pkgs and [Blackarch-tools](https://blackarch.org/tools.html), which include a selection of tools from the [BlackArch](https://blackarch.org) Linux project.
 
 > [!NOTE]
 > ArchFiery is a personal archlinux installer script. It is not a part of the official Arch Linux project.
@@ -15,7 +15,7 @@ To install ArchFiery, follow these steps:
 
 - Boot using the [last Arch Linux image](https://www.archlinux.org/download/) and a [bootable device](https://wiki.archlinux.org/index.php/USB_flash_installation_media).
 
-Ensure that you have an internet connection on the Arch ISO. If you have a wireless connection, you can use the [`iwctl`](https://wiki.archlinux.org/index.php/Iwd#iwctl) command. For detailed instructions, refer to the [Network configuration](https://wiki.archlinux.org/index.php/Network_configuration) guide in the Arch Linux documentation.
+Ensure that you have an internet connection on the Arch ISO. If you have a wireless connection, you can use the [`iwctl`](https://wiki.archlinux.org/index.php/Iwd#iwctl) command. For detailed instructions, refer to the [Network configuration](https://wiki.archlinux.org/index.php/Network_configuration) guide in the [ArchLinux](https://wiki.archlinux.org/) documentation.
 
 - Just exec the [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) using the following command:
     ```
