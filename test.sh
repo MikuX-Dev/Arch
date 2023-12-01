@@ -11,10 +11,17 @@ BLUE='\033[1;34m'
 CYAN='\033[1;36m'
 RESET='\033[0m'
 
+# Function to print_color for input with default value
 function print_color {
   local color="$1"
   local message="$2"
   echo -e "${color}${message}${RESET}"
+}
+
+# Function to prompt user for input with default value
+function prompt {
+  read -p "$(print_color "${YELLOW}" "$1 [$2]: ")" input
+  echo "${input:-$2}"
 }
 
 # Start
@@ -28,7 +35,7 @@ print_color "${BLUE}" "Arch Linux Fast Install (ArchFiery) - Version: 2023.12.01
 sleep 4s
 printf "\n"
 print_color "${BLUE}" "Installation guide starts now..."
-sleep 4s
+sleep 3s
 clear
 
 # install package
@@ -62,12 +69,6 @@ print_color "${CYAN}" "Ensuring if the system clock is accurate."
 timedatectl set-ntp true
 sleep 4s
 clear
-
-# Function to prompt user for input with default value
-function prompt {
-  read -p "$(print_color "${YELLOW}" "$1 [$2]: ")" input
-  echo "${input:-$2}"
-}
 
 # Display available drives
 lsblk
@@ -387,7 +388,7 @@ sleep 4s
 clear
 
 # Install pkgs and tools by PACMAN..
-print_color "${CYAN}" "Installing pkgs and tools by PACMAN.."
+print_color "${CYAN}" "Installing PACMAN package..."
 printf "\n"
 sleep 3s
 
@@ -415,10 +416,10 @@ determine_graphics_card_type() {
     print_color "${CYAN}" "Installing AMD drivers..."
     package+=(xf86-video-amdgpu)
   elif grep -qE "Integrated Graphics Controller" <<<"${gpu_type}"; then
-    print_color "${CYAN}" "Installing integrated Graphics Controller"
+    print_color "${CYAN}" "Installing integrated Graphics Controller..."
     package+=(libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver)
   elif grep -qE "Intel Corporation UHD" <<<"${gpu_type}"; then
-    print_color "${CYAN}" "Installing Intel UHD Graphics"
+    print_color "${CYAN}" "Installing Intel UHD Graphics..."
     package+=(libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils libva-mesa-driver mesa lib32-mesa mesa-amber lib32-mesa-amber intel-media-driver)
   else
     print_color "${CYAN}" "Installing generic drivers..."
@@ -439,7 +440,7 @@ sleep 4s
 clear
 
 # Install pkgs from yay-bin
-print_color "${CYAN}" "Installing pkgs from yay-bin"
+print_color "${CYAN}" "Installing Aur package..."
 
 aurpackages=("airdroid-nativefier" "android-sdk-platform-tools" "appmenu-gtk-module-git" "appmenu-qt4" "bluez-firmware" "brave-bin" "caffeine-ng" "dolphin-megasync-bin" "downgrade" "eww-x11" "fancontrol-gui" "firebuild" "gtk3-nocsd-git" "libdbusmenu-glib" "libdbusmenu-gtk2" "libdbusmenu-gtk3" "mkinitcpio-firmware" "mkinitcpio-numlock" "mugshot" "nbfc" "obsidian-bin" "ocs-url" "portmaster-stub-bin" "repoctl" "rtl8821ce-dkms-git" "rtw89-dkms-git" "stacer-bin" "tela-icon-theme" "thunar-extended" "thunar-megasync-bin" "thunar-secure-delete" "thunar-shares-plugin" "thunar-vcs-plugin" "universal-android-debloater-bin" "vala-panel-appmenu-common-git" "vala-panel-appmenu-registrar-git" "vala-panel-appmenu-xfce-git" "xfce4-docklike-plugin" "xfce4-panel-profiles" "zsh-theme-powerlevel10k-git" "yay-bin" "tlpui")
 
@@ -488,13 +489,12 @@ sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
 clear
 sleep 4s
 
-# # Editing sudo
-# echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
-# sleep 4s
-# clear
+# Editing sudo
+echo 'Defaults env_keep += "HOME"' | tee -a /etc/sudoers
+sleep 4s
+clear
 
 # Personal dotfiles
-
 #TODO: add starship promt for .zshrc with starship config in screenshot in your Gphotos and add the .p10k file config to starship configuration.
 
 print_color "${CYAN}" "Setting up Personal dotfiles"
@@ -556,7 +556,7 @@ cp -r "$DOT"/themes/icons/* $US/icons/
 # Check if Plymouth theme directories exist and create if not
 plymouth_theme_dir="/usr/share/plymouth/themes"
 if [ ! -d "$plymouth_theme_dir" ]; then
-    mkdir -p "$plymouth_theme_dir"
+  mkdir -p "$plymouth_theme_dir"
 fi
 cp -r "$DOT"/themes/plymouth/* $US/plymouth/themes/
 
@@ -614,6 +614,7 @@ sleep 4s
 clear
 
 # setting up ufw
+print_color "${CYAN}" "Setting up UFW"
 ufw default deny incoming
 ufw default allow outgoing
 ufw allow ssh
