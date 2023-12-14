@@ -52,7 +52,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   clear
 
   # Installing fastest mirrors
-  read -p "$(print_color "${YELLOW}" "Do you want fastest mirrors? [Y/n] ")" fm
+  read -rp "$(print_color "${YELLOW}" "Do you want fastest mirrors? [Y/n] ")" fm
   if [[ $fm =~ ^[Yy]$ ]]; then
     print_color "${CYAN}" "Installing fastest mirrorlists"
     printf "\n"
@@ -307,7 +307,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   clear
 
   # Installing fastest mirrors
-  read -p "$(print_color "${YELLOW}" "Do you want fastest mirrors? [Y/n] ")" fm
+  read -rp "$(print_color "${YELLOW}" "Do you want fastest mirrors? [Y/n] ")" fm
   if [[ $fm =~ ^[Yy]$ ]]; then
     print_color "${CYAN}" "Installing fastest mirrorlists"
     printf "\n"
@@ -349,7 +349,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
 
   # Setup hostname
   print_color "${CYAN}" "Set up your hostname!"
-  read -p "$(print_color "${YELLOW}" "Enter your computer name: ")" hostname
+  read -rp "$(print_color "${YELLOW}" "Enter your computer name: ")" hostname
   echo "$hostname" >/etc/hostname
   printf "\n"
   print_color "${CYAN}" "Checking hostname (/etc/hostname)"
@@ -453,7 +453,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   # Setting regular user
   print_color "${CYAN}" "Adding regular user!"
   printf "\n"
-  read -p "$(print_color "${YELLOW}" "Enter username to add a regular user: ")" username
+  read -rp "$(print_color "${YELLOW}" "Enter username to add a regular user: ")" username
   useradd -m -G wheel -s /bin/zsh "$username"
   echo "Enter password for '$username': "
   passwd "$username"
