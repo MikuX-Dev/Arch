@@ -455,7 +455,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   printf "\n"
   read -rp "$(print_color "${YELLOW}" "Enter username to add a regular user: ")" username
   useradd -m -G wheel -s /bin/zsh "$username"
-  echo "Enter password for '$username': "
+  print_color "${CYAN}" "Enter password for '$username': "
   passwd "$username"
   clear
 
@@ -651,6 +651,6 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   pikaur -Scc --noconfirm
   clear
 else
-  echo "This system does not appear to be using UEFI. Please install Arch Linux on a UEFI-enabled system."
+  print_color "${RED}" "This system does not appear to be using UEFI. Please install Arch Linux on a UEFI-enabled system."
   exit 1
 fi
