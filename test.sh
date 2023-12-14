@@ -613,36 +613,41 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   rm -rf strap.sh
   clear
 
-  # Secondary driver setup
-  #TODO: ask first for do you want to set up the driver and then set up the driver and after setting up the driver ask for do you want to set up the another driver and at the end make sure to print the driver mount point and the folder name where it is mounted.
+  # # Secondary driver setup
+  # #TODO: ask first for do you want to set up the driver and then set up the driver and after setting up the driver ask for do you want to set up the another driver and at the end make sure to print the driver mount point and the folder name where it is mounted.
 
-  # Get block devices
-  drives=($(lsblk -d | awk '{print $1}'))
-  # Check if there is more than one drive
-  if [[ ${#drives[@]} -gt 1 ]]; then
-    print_color "${YELLOW}" "Additional drives available! Do you want to mount them?"
-    # Setup additional drives
-    while true; do
-      read -rp "$(print_color "${YELLOW}" "Mount another drive? [Y/n] ")" ans
-      case $ans in
-      [Yy]*)
-        drive2=$(prompt "Enter drive to mount (/dev/...)" "")
-        folder=$(prompt "Enter mount folder name" "")
-        mkdir -p /media/"$folder"
-        mount "$drive2" /media/"$folder"
-        ;;
-      *)
-        break
-        ;;
-      esac
-    done
-  fi
+  # # Get block devices
+  # drives=($(lsblk -d | awk '{print $1}'))
+  # # Check if there is more than one drive
+  # if [[ ${#drives[@]} -gt 1 ]]; then
+  #   print_color "${YELLOW}" "Additional drives available! Do you want to mount them?"
+  #   # Setup additional drives
+  #   while true; do
+  #     read -rp "$(print_color "${YELLOW}" "Mount another drive? [Y/n] ")" ans
+  #     case $ans in
+  #     [Yy]*)
+  #       drive2=$(prompt "Enter drive to mount (/dev/...)" "")
+  #       folder=$(prompt "Enter mount folder name" "")
+  #       mkdir -p /media/"$folder"
+  #       mount "$drive2" /media/"$folder"
+  #       ;;
+  #     *)
+  #       break
+  #       ;;
+  #     esac
+  #   done
+  # fi
+  # printf "\n"
+  # lsblk -f
+  # printf "\n"
+  # print_color "${CYAN}" "Drives mounted under /media"
 
-  printf "\n"
-  lsblk -f
-  printf "\n"
+  # Clearcache
+  print_color "${CYAN}" "Clearing cache..."
+  yay -Scc --noconfirm
+  clear
 
-  print_color "${CYAN}" "Drives mounted under /media"
+else
   print_color "${RED}" "This system does not appear to be using UEFI. Please install Arch Linux on a UEFI-enabled system."
   exit 1
 fi
