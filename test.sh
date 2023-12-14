@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+clear
+
 # Color codes
 RED='\033[1;31m'
-# GREEN='\033[1;32m'
+GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 # MAGENTA='\033[1;35m'
@@ -30,7 +32,8 @@ fi
 
 # Check if the system is using UEFI
 if [ -d "/sys/firmware/efi/efivars" ]; then
-  print_color "${YELLOW}" "UEFI detected. Proceeding with installation..."
+  print_color "${GREEN}" "UEFI detected. Proceeding with installation..."
+  sleep 3s
   # Add your Arch Linux installation commands here
   clear
   # Start
@@ -40,7 +43,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   print_color "${BLUE}" "│          relax          │"
   print_color "${BLUE}" "│        and enjoy        │"
   print_color "${BLUE}" "╰─────────────────────────╯"
-  print_color "${BLUE}" "Arch Linux Fast Install (ArchFiery) - Version: 2023.12.01 (GPL-3.0)"
+  print_color "${BLUE}" "ArchLinux Fast Install (ArchFiery) - Version: 2023.12.14 (GPL-3.0)"
   printf "\n"
   print_color "${BLUE}" "Installation guide starts now..."
   sleep 3s
@@ -265,13 +268,13 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   clear
 
   # Completed Rebooting system
-  print_color "${BLUE}" "╭─────── ArchFiery ───────╮"
-  print_color "${BLUE}" "│       Installation      │"
-  print_color "${BLUE}" "│        completed        │"
-  print_color "${BLUE}" "│    rebooting in 10s     │"
-  print_color "${BLUE}" "╰─────────────────────────╯"
+  print_color "${GREEN}" "╭─────── ArchFiery ───────╮"
+  print_color "${GREEN}" "│       Installation      │"
+  print_color "${GREEN}" "│        completed        │"
+  print_color "${GREEN}" "│    rebooting in 10s     │"
+  print_color "${GREEN}" "╰─────────────────────────╯"
   printf "\n"
-  print_color "${BLUE}" "Installation Finished. REBOOTING IN 10 SECONDS!!!"
+  print_color "${GREEN}" "Installation Finished. REBOOTING IN 10 SECONDS!!!"
   sleep 10s
   reboot
 
