@@ -66,7 +66,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
     pacman -Syy
   else
     printf "\n"
-    print_color "${CYAN}" "Skipping the fastert mirrorlist"
+    print_color "${YELLOW}" "Skipping the fastert mirrorlist"
   fi
   clear
 
@@ -167,7 +167,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   # Create separate home partition
   lsblk
   printf "\n"
-  read -rp "Did you also create a separate home partition? [y/n]: " answerhome
+  read -rp "$(print_color "${CYAN}" "Did you also create a separate home partition? [Y/n]: ")" answerhome
   case "${answerhome,,}" in
   y | yes)
     homepartition=$(prompt "Enter home partition (e.g., /dev/sda*): ")
@@ -176,7 +176,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
     mount "$homepartition" /mnt/home
     ;;
   *)
-    echo "Skipping home partition!"
+    print_color "${YELLOW}" "Skipping home partition!"
     ;;
   esac
   clear
@@ -184,7 +184,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   # Create swap partition
   lsblk
   printf "\n"
-  read -rp "Did you also create a swap partition? [y/n]: " answerswap
+  read -rp "$(print_color "${CYAN}" "Did you also create a swap partition? [Y/n]: ")" answerswap
   case "${answerswap,,}" in
   y | yes)
     swappartition=$(prompt "Enter swap partition (e.g., /dev/sda*): ")
@@ -192,7 +192,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
     swapon "$swappartition"
     ;;
   *)
-    echo "Skipping swap partition!"
+    print_color "${YELLOW}" "Skipping swap partition!"
     ;;
   esac
   clear
@@ -209,6 +209,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   sync
   printf "\n"
   lsblk
+  sleep 5s
   clear
 
   # Installing base system
@@ -230,7 +231,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   # Install grub
   print_color "${CYAN}" "Installing grub bootloader in /boot/efi parttiton with 'os_prober' enabled"
   sed -i 's/#GRUB_DISABLE_OS_PROBER=false/GRUB_DISABLE_OS_PROBER=false/g' /etc/default/grub
-  grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB --recheck
+  grub-install --target=x86_64-efi --efi-directory=/mnt/boot/efi --bootloader-id=GRUB --recheck
   grub-mkconfig -o /boot/grub/grub.cfg
   os-prober
   grub-mkconfig -o /boot/grub/grub.cfg
@@ -241,6 +242,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   printf "\n"
   genfstab -U /mnt >>/mnt/etc/fstab
   cat /mnt/etc/fstab
+  sleep 5s
   clear
 
   # Setup for post-installation
@@ -250,15 +252,8 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   arch-chroot /mnt ./post_install.sh
   clear
 
-  # Gen fstab
-  print_color "${CYAN}" "Generating fstab file"
-  printf "\n"
-  genfstab -U /mnt >>/mnt/etc/fstab
-  cat /mnt/etc/fstab
-  clear
-
   # Unmount drives
-  print_color "${CYAN}" "unmounting all the drives"
+  print_color "${YELLOW}" "unmounting all the drives"
   printf "\n"
   umount -R /mnt
   clear
@@ -360,6 +355,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   print_color "${CYAN}" "Checking hostname (/etc/hostname)"
   printf "\n"
   cat /etc/hostname
+  sleep 5s
   clear
 
   # Setting up hosts
@@ -371,6 +367,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
     echo "127.0.1.1       $hostname.localdomain $hostname"
   } >>/etc/hosts
   cat /etc/hosts
+  sleep 5s
   clear
 
   # Install pkgs and tools by PACMAN..
