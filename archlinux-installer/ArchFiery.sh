@@ -273,6 +273,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   print_color "${YELLOW}" "unmounting all the drives"
   printf "\n"
   umount -R /mnt
+  sleep 3s
   clear
 
   # Completed Rebooting system
@@ -676,6 +677,7 @@ UUID=34055d43-1795-4474-a8b6-2ced592549df /mnt/"$username"/data-linux ext4 defau
 EOF
   cat /etc/fstab
   sleep 5s
+  clear
 
 else
   print_color "${RED}" "This system does not appear to be using UEFI. Please install Arch Linux on a UEFI-enabled system."
