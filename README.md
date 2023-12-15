@@ -1,8 +1,5 @@
 # ArchFiery:
 
-> [!WARNING]
-> ArchFiery is still in development. It is not recommended to use this script for now.
-
 ## Introduction:
 [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) is a bash script that streamlines the installation process of [ArchLinux](https://archlinux.org). By executing only two terminal commands, users can effortlessly install [ArchLinux](https://archlinux.org). This script is specifically designed to install essential packages like the base system and bootloader. Additionally, it provides the option to install [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) pkgs and [Blackarch-tools](https://blackarch.org/tools.html), which include a selection of tools from the [BlackArch](https://blackarch.org) Linux project.
 
@@ -19,12 +16,7 @@ Ensure that you have an internet connection on the Arch ISO. If you have a wirel
 
 - Just exec the [ArchFiery](https://github.com/MikuX-Dev/ArchFiery) using the following command:
     ```
-    curl -L https://mikux-dev.github.io/ArchFiery/ArchFiery.sh -o ArchFiery.sh; chmod +x ArchFiery.sh; ./ArchFiery.sh
-    ```
-
-- For testing purposes, you can also use the following command:
-    ```
-    curl -L https://mikux-dev.github.io/ArchFiery/test.sh -o test.sh; chmod +x test.sh; ./test.sh
+    curl -L https://mikux-dev.github.io/ArchFiery/archlinux-installer/ArchFiery.sh -o ArchFiery.sh; chmod +x ArchFiery.sh; ./ArchFiery.sh
     ```
 
 Follow the on-screen instructions to complete the installation.
