@@ -378,11 +378,11 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   # Setting up hosts
   print_color "${CYAN}" "Setting up hosts file"
   printf "\n"
-  {
-    echo "127.0.0.1       localhost"
-    echo "::1             localhost"
-    echo "127.0.1.1       $hostname.localdomain $hostname"
-  } >>/etc/hosts
+  cat >>/etc/host <<EOF
+echo "127.0.0.1       localhost"
+echo "::1             localhost"
+echo "127.0.1.1       $hostname.localdomain $hostname"
+EOF
   cat /etc/hosts
   sleep 5s
   clear
@@ -427,7 +427,7 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
     fi
   }
 
-  package=("ack" "acpi" "adobe-source-sans-pro-fonts" "alacritty" "alsa-utils" "amd-ucode" "android-file-transfer" "apache" "arch-install-scripts" "arch-wiki-docs" "archinstall" "archiso" "atftp" "autoconf" "automake" "autorandr" "avahi" "awesome-terminal-fonts" "b43-fwcutter" "base" "base-devel" "bash" "bash-completion" "bc" "bind" "bind-tools" "bison" "blueman" "bluez" "bluez-libs" "bluez-plugins" "bluez-tools" "bluez-utils" "bolt" "boost" "boost-libs" "bridge-utils" "brightnessctl" "brltty" "broadcom-wl" "btrfs-progs" "bzip2" "bzip3" "cargo" "ccache" "cifs-utils" "clang" "clonezilla" "cloud-init" "cmake" "conky" "crda" "cronie" "cryptsetup" "ctags" "cups" "cups-filters" "cups-pdf" "curl" "darkhttpd" "ddrescue" "devtools" "dex" "dhclient" "dhcpcd" "dialog" "diffutils" "dmidecode" "dmraid" "dnscrypt-proxy" "dnsmasq" "dnsutils" "docker" "docker-buildx" "docker-compose" "docker-machine" "dolphin" "dolphin-plugins" "dosfstools" "e2fsprogs" "edk2-shell" "efibootmgr" "espeakup" "ethtool" "exa" "exfatprogs" "expac" "eza" "f2fs-tools" "fakeroot" "fatresize" "fd" "feh" "ffmpeg" "ffmpegthumbnailer" "firefox" "flameshot" "flex" "foomatic-db" "foomatic-db-engine" "foot-terminfo" "fsarchiver" "fwbuilder" "gammu" "gawk" "gcc" "gcc-libs" "gdb" "ghostscript" "git" "git-lfs" "gnome-keyring" "gnu-netcat" "gnupg" "go" "gpart" "gparted" "gpm" "gptfdisk" "grub" "grub-customizer" "gsfonts" "gst-libav" "gst-plugins-bad" "gst-plugins-good" "gst-plugins-ugly" "gstreamer" "gtk-update-icon-cache" "gufw" "gutenprint" "gvfs" "gvfs-afc" "gvfs-google" "gvfs-gphoto2" "gvfs-mtp" "gvfs-smb" "gzip" "haveged" "hdparm" "helix" "highlight" "htop" "hyperv" "inotify-tools" "intel-ucode" "ipython" "irqbalance" "irssi" "iw" "iwd" "jasper" "jfsutils" "kdeconnectconnect" "kitty-terminfo" "kvantum" "less" "lftp" "libavif" "libde265" "libdv" "libfido2" "libheif" "libmpeg2" "libreoffice-fresh" "libtheora" "libusb-compat" "libvpx" "libwebp" "libx11" "libxext" "libxinerama" "lightdm" "lightdm-gtk-greeter" "lightdm-gtk-greeter-settings" "lightdm-webkit2-greeter" "linux" "linux-atm" "linux-firmware" "linux-firmware-marvell" "linux-headers" "llvm" "logrotate" "lrzip" "lsb-release" "lsof" "lsscsi" "lua" "lvm2" "lynx" "lz4" "lzip" "lzop" "make" "man-db" "man-pages" "mc" "mdadm" "memtest86+" "memtest86+-efi" "menumaker" "mercurial" "mesa" "mkinitcpio" "mkinitcpio-archiso" "mkinitcpio-nfs-utils" "mobile-broadband-provider-info" "modemmanager" "moreutils" "most" "mousepad" "mousetweaks" "mpv" "mtools" "nano" "nbd" "ncdu" "ndisc6" "neovim" "net-tools" "nethogs" "network-manager-applet" "network-manager-sstp" "networkmanager" "networkmanager-l2tp" "networkmanager-openconnect" "networkmanager-openvpn" "networkmanager-pptp" "networkmanager-strongswan" "networkmanager-vpnc" "nfs-utils" "nilfs-utils" "nm-cloud-setup" "nm-connection-editor" "nmap" "npm" "nss-mdns" "ntfs-3g" "ntp" "numlockx" "nvme-cli" "open-iscsi" "openconnect" "openldap" "openpgp-card-tools" "openssh" "openvpn" "os-prober" "otf-libertinus" "p7zip" "pacman-contrib" "parole" "partclone" "parted" "partimage" "patch" "pavucontrol" "pcsclite" "perl" "picom" "pkgconf" "pkgfile" "plocate" "plymouth" "power-profiles-daemon" "powertop" "ppp" "pptpclient" "profile-sync-daemon" "pulseaudio-alsa" "pulseaudio-bluetooth" "pulseaudio-equalizer" "pulsemixer" "python-docker" "qt5-tools" "qt5ct" "ranger" "reflector" "reiserfsprogs" "rfkill" "ristretto" "rofi" "rofi-emoji" "rp-pppoe" "rsync" "rtorrent" "ruby" "rustup" "rxvt-unicode-terminfo" "schroedinger" "screen" "scrot" "sdparm" "sed" "sequoia-sq" "sg3_utils" "smartmontools" "smbclient" "socat" "sof-firmware" "squashfs-tools" "strace" "sudo" "syncthing" "syslinux" "systemd-resolvconf" "tar" "tcpdump" "terminus-font" "testdisk" "tex-gyre-fonts" "thermald" "thunar-archive-plugin" "thunar-media-tags-plugin" "thunar-volman" "thunderbird" "timeshift" "tldr" "tmux" "tor" "tpm2-tools" "tpm2-tss" "traceroute" "trash-cli" "tree" "ttf-fira-code" "ttf-hack-nerd" "ttf-jetbrains-mono-nerd" "ttf-ubuntu-font-family" "tumbler" "udftools" "udisks2" "ueberzug" "ufw" "unace" "unarchiver" "unrar" "unzip" "upower" "usb_modeswitch" "usbmuxd" "usbutils" "vim" "virtualbox" "virtualbox-ext-vnc" "virtualbox-guest-iso" "virtualbox-guest-utils" "virtualbox-host-modules-arch" "vlc" "vpnc" "webkit2gtk" "wezterm-terminfo" "wget" "wireguard-tools" "wireless_tools" "wireless-regdb" "wireplumber" "wpa_supplicant" "wvdial" "x264" "x265" "xarchiver" "xclip" "xcompmgr" "xdg-desktop-portal-gtk" "xdg-desktop-portal-xapp" "xdg-user-dirs" "xdg-user-dirs-gtk" "xdotool" "xfburn" "xfce4" "xfce4-battery-plugin" "xfce4-clipman-plugin" "xfce4-cpufreq-plugin" "xfce4-cpugraph-plugin" "xfce4-dict" "xfce4-diskperf-plugin" "xfce4-eyes-plugin" "xfce4-fsguard-plugin" "xfce4-genmon-plugin" "xfce4-goodies" "xfce4-mount-plugin" "xfce4-mpc-plugin" "xfce4-netload-plugin" "xfce4-notes-plugin" "xfce4-notifyd" "xfce4-power-manager" "xfce4-pulseaudio-plugin" "xfce4-screensaver" "xfce4-screenshooter" "xfce4-sensors-plugin" "xfce4-smartbookmark-plugin" "xfce4-systemload-plugin" "xfce4-taskmanager" "xfce4-time-out-plugin" "xfce4-timer-plugin" "xfce4-verve-plugin" "xfce4-wavelan-plugin" "xfce4-weather-plugin" "xfce4-whiskermenu-plugin" "xfce4-xkb-plugin" "xfsprogs" "xl2tpd" "xmlto" "xorg" "xorg-apps" "xorg-server" "xorg-xinit" "xsensors" "xvidcore" "xz" "yaml-cpp" "zip" "zsh" "zsh-autosuggestions" "zsh-completions" "zsh-history-substring-search" "zsh-syntax-highlighting" "zstd" "powertop")
+  package=("ack" "acpi" "adobe-source-sans-pro-fonts" "alacritty" "alsa-utils" "amd-ucode" "android-file-transfer" "apache" "arch-install-scripts" "arch-wiki-docs" "archinstall" "archiso" "atftp" "autoconf" "automake" "autorandr" "avahi" "awesome-terminal-fonts" "b43-fwcutter" "base" "base-devel" "bash" "bash-completion" "bc" "bind" "bind-tools" "bison" "blueman" "bluez" "bluez-libs" "bluez-plugins" "bluez-tools" "bluez-utils" "bolt" "boost" "boost-libs" "bridge-utils" "brightnessctl" "brltty" "broadcom-wl" "btrfs-progs" "bzip2" "bzip3" "cargo" "ccache" "cifs-utils" "clang" "clonezilla" "cloud-init" "cmake" "conky" "crda" "cronie" "cryptsetup" "ctags" "cups" "cups-filters" "cups-pdf" "curl" "darkhttpd" "ddrescue" "devtools" "dex" "dhclient" "dhcpcd" "dialog" "diffutils" "dmidecode" "dmraid" "dnscrypt-proxy" "dnsmasq" "dnsutils" "docker" "docker-buildx" "docker-compose" "docker-machine" "dolphin" "dolphin-plugins" "dosfstools" "e2fsprogs" "edk2-shell" "efibootmgr" "espeakup" "ethtool" "exa" "exfatprogs" "expac" "eza" "f2fs-tools" "fakeroot" "fatresize" "fd" "feh" "ffmpeg" "ffmpegthumbnailer" "firefox" "flameshot" "flex" "foomatic-db" "foomatic-db-engine" "foot-terminfo" "fsarchiver" "fwbuilder" "gammu" "gawk" "gcc" "gcc-libs" "gdb" "ghostscript" "git" "git-lfs" "gnome-keyring" "gnu-netcat" "gnupg" "go" "gpart" "gparted" "gpm" "gptfdisk" "grub" "grub-customizer" "gsfonts" "gst-libav" "gst-plugins-bad" "gst-plugins-good" "gst-plugins-ugly" "gstreamer" "gtk-update-icon-cache" "gufw" "gutenprint" "gvfs" "gvfs-afc" "gvfs-google" "gvfs-gphoto2" "gvfs-mtp" "gvfs-smb" "gzip" "haveged" "hdparm" "helix" "highlight" "htop" "hyperv" "inotify-tools" "intel-ucode" "ipython" "irqbalance" "irssi" "iw" "iwd" "jasper" "jfsutils" "kdeconnectconnect" "kitty-terminfo" "kvantum" "less" "lftp" "libavif" "libde265" "libdv" "libfido2" "libheif" "libmpeg2" "libreoffice-fresh" "libtheora" "libusb-compat" "libvpx" "libwebp" "libx11" "libxext" "libxinerama" "lightdm" "lightdm-gtk-greeter" "lightdm-gtk-greeter-settings" "lightdm-webkit2-greeter" "linux" "linux-atm" "linux-firmware" "linux-firmware-marvell" "linux-headers" "llvm" "logrotate" "lrzip" "lsb-release" "lsof" "lsscsi" "lua" "lvm2" "lynx" "lz4" "lzip" "lzop" "make" "man-db" "man-pages" "mc" "mdadm" "memtest86+" "memtest86+-efi" "menumaker" "mercurial" "mesa" "mkinitcpio" "mkinitcpio-archiso" "mkinitcpio-nfs-utils" "mobile-broadband-provider-info" "modemmanager" "moreutils" "most" "mousepad" "mousetweaks" "mpv" "mtools" "nano" "nbd" "ncdu" "ndisc6" "neovim" "net-tools" "nethogs" "network-manager-applet" "network-manager-sstp" "networkmanager" "networkmanager-l2tp" "networkmanager-openconnect" "networkmanager-openvpn" "networkmanager-pptp" "networkmanager-strongswan" "networkmanager-vpnc" "nfs-utils" "nilfs-utils" "nm-cloud-setup" "nm-connection-editor" "nmap" "npm" "nss-mdns" "ntfs-3g" "ntp" "numlockx" "nvme-cli" "open-iscsi" "openconnect" "openldap" "openpgp-card-tools" "openssh" "openvpn" "os-prober" "otf-libertinus" "p7zip" "pacman-contrib" "parole" "partclone" "parted" "partimage" "patch" "pavucontrol" "pcsclite" "perl" "picom" "pkgconf" "pkgfile" "plocate" "plymouth" "power-profiles-daemon" "powertop" "ppp" "pptpclient" "profile-sync-daemon" "pulseaudio-alsa" "pulseaudio-bluetooth" "pulseaudio-equalizer" "pulsemixer" "python-docker" "qt5-tools" "qt5ct" "ranger" "reflector" "reiserfsprogs" "rfkill" "ristretto" "rofi" "rofi-emoji" "rp-pppoe" "rsync" "rtorrent" "ruby" "rustup" "rxvt-unicode-terminfo" "schroedinger" "screen" "scrot" "sdparm" "sed" "sequoia-sq" "sg3_utils" "smartmontools" "smbclient" "socat" "sof-firmware" "squashfs-tools" "strace" "sudo" "syncthing" "syslinux" "systemd-resolvconf" "tar" "tcpdump" "terminus-font" "testdisk" "tex-gyre-fonts" "thermald" "thunar-archive-plugin" "thunar-media-tags-plugin" "thunar-volman" "thunderbird" "timeshift" "tldr" "tmux" "tor" "tpm2-tools" "tpm2-tss" "traceroute" "trash-cli" "tree" "ttf-fira-code" "ttf-hack-nerd" "ttf-jetbrains-mono-nerd" "ttf-ubuntu-font-family" "tumbler" "udftools" "udisks2" "ueberzug" "ufw" "unace" "unarchiver" "unrar" "unzip" "upower" "usb_modeswitch" "usbmuxd" "usbutils" "vim" "virtualbox" "virtualbox-ext-vnc" "virtualbox-guest-iso" "virtualbox-guest-utils" "virtualbox-host-modules-arch" "vlc" "vpnc" "webkit2gtk" "wezterm-terminfo" "wget" "wireguard-tools" "wireless_tools" "wireless-regdb" "wireplumber" "wpa_supplicant" "wvdial" "x264" "x265" "xarchiver" "xclip" "xcompmgr" "xdg-desktop-portal-gtk" "xdg-desktop-portal-xapp" "xdg-user-dirs" "xdg-user-dirs-gtk" "xdotool" "xfburn" "xfce4" "xfce4-battery-plugin" "xfce4-clipman-plugin" "xfce4-cpufreq-plugin" "xfce4-cpugraph-plugin" "xfce4-dict" "xfce4-diskperf-plugin" "xfce4-eyes-plugin" "xfce4-fsguard-plugin" "xfce4-genmon-plugin" "xfce4-goodies" "xfce4-mount-plugin" "xfce4-mpc-plugin" "xfce4-netload-plugin" "xfce4-notes-plugin" "xfce4-notifyd" "xfce4-power-manager" "xfce4-pulseaudio-plugin" "xfce4-screensaver" "xfce4-screenshooter" "xfce4-sensors-plugin" "xfce4-smartbookmark-plugin" "xfce4-systemload-plugin" "xfce4-taskmanager" "xfce4-time-out-plugin" "xfce4-timer-plugin" "xfce4-verve-plugin" "xfce4-wavelan-plugin" "xfce4-weather-plugin" "xfce4-whiskermenu-plugin" "xfce4-xkb-plugin" "xfsprogs" "xl2tpd" "xmlto" "xorg" "xorg-apps" "xorg-server" "xorg-xinit" "xsensors" "xvidcore" "xz" "yaml-cpp" "zip" "zsh" "zsh-autosuggestions" "zsh-completions" "zsh-history-substring-search" "zsh-syntax-highlighting" "zstd" "powertop" "multilib-devel" "fontconfig" "ttf-droid")
 
   determine_processor_type
   determine_graphics_card_type
@@ -441,14 +441,14 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   # Install pkgs from yay-bin
   print_color "${CYAN}" "Installing Aur package..."
 
-  aurpackages=("appmenu-gtk-module-git" "appmenu-qt4" "bluez-firmware" "brave-bin" "caffeine-ng" "dolphin-megasync-bin" "downgrade" "eww-x11" "fancontrol-gui" "firebuild" "gtk3-nocsd-git" "libdbusmenu-glib" "libdbusmenu-gtk2" "libdbusmenu-gtk3" "mkinitcpio-firmware" "mkinitcpio-numlock" "mugshot" "nbfc" "obsidian-bin" "ocs-url" "portmaster-stub-bin" "repoctl" "rtl8821ce-dkms-git" "rtw89-dkms-git" "stacer-bin" "tela-icon-theme" "thunar-extended" "thunar-megasync-bin" "thunar-secure-delete" "thunar-shares-plugin" "thunar-vcs-plugin" "universal-android-debloater-bin" "vala-panel-appmenu-common-git" "vala-panel-appmenu-registrar-git" "vala-panel-appmenu-xfce-git" "xfce4-docklike-plugin" "xfce4-panel-profiles" "zsh-theme-powerlevel10k-git" "pikaur" "tlpui" "simplescreenrecorder" "visual-studio-code-bin")
+  aurpackages=("appmenu-gtk-module-git" "appmenu-qt4" "bluez-firmware" "brave-bin" "caffeine-ng" "dolphin-megasync-bin" "downgrade" "eww-x11" "fancontrol-gui" "firebuild" "gtk3-nocsd-git" "libdbusmenu-glib" "libdbusmenu-gtk2" "libdbusmenu-gtk3" "mkinitcpio-firmware" "mkinitcpio-numlock" "mugshot" "nbfc" "obsidian-bin" "ocs-url" "portmaster-stub-bin" "repoctl" "rtl8821ce-dkms-git" "rtw89-dkms-git" "stacer-bin" "tela-icon-theme" "thunar-extended" "thunar-megasync-bin" "thunar-secure-delete" "thunar-shares-plugin" "thunar-vcs-plugin" "universal-android-debloater-bin" "vala-panel-appmenu-common-git" "vala-panel-appmenu-registrar-git" "vala-panel-appmenu-xfce-git" "xfce4-docklike-plugin" "xfce4-panel-profiles" "zsh-theme-powerlevel10k-git" "yay-bin" "tlpui" "simplescreenrecorder" "visual-studio-code-bin" "ncurses5-compat-libs" "lib32-ncurses5-compat-libs" "aosp-devel" "xml2" "lineageos-devel")
 
-  git clone https://aur.archlinux.org/yay-bin.git $SKEL/aur-pkg/yay-bin
-  cd $SKEL/aur-pkg/yay-bin || exit
+  git clone https://aur.archlinux.org/pikaur.git $SKEL/aur-pkg/pikaur
+  cd $SKEL/aur-pkg/pikaur || exit
   makepkg -fsri --skippgpcheck --noconfirm --needed
   cd - || exit
 
-  yay -S --needed --noconfirm "${aurpackages[@]}"
+  pikaur -S --needed --noconfirm "${aurpackages[@]}"
   clear
 
   # Setting root user
@@ -655,25 +655,26 @@ if [ -d "/sys/firmware/efi/efivars" ]; then
   yay -Scc --noconfirm
   clear
 
+  # Configure fstab
   print_color "${CYAN}" "Configuring fstab"
-  {
-    # CD drive laptop
-    /dev/sr0 /media/cdrom0 udf,iso9660 user,noauto 0 0
+  cat >>/etc/fstab <<EOF
+# CD drive laptop
+/dev/sr0 /media/cdrom0 udf,iso9660 user,noauto 0 0
 
-    # learn partition on /dev/sda4
-    UUID=42BCEBCEBCEBBB15 /mnt/abi/learn ntfs defaults,noatime,rw,user,x-systemd.automount,nofail 0 2
-    # personal linux-data partition on /dev/sda5
-    UUID=34055d43-1795-4474-a8b6-2ced592549df /mnt/abi/data-linux ext4 defaults,noatime,rw,user,x-systemd.automount,nofail 0 2
+# learn partition on /dev/sda4
+UUID=42BCEBCEBCEBBB15 /mnt/"$username"/learn ntfs defaults,noatime,rw,user,x-systemd.automount,nofail 0 2
+# personal linux-data partition on /dev/sda5
+UUID=34055d43-1795-4474-a8b6-2ced592549df /mnt/"$username"/data-linux ext4 defaults,noatime,rw,user,x-systemd.automount,nofail 0 2
 
-    # $USER files from data-linux
-    /mnt/abi/data-linux/Music/ /home/abi/Music/ none defaults,bind 0 0
-    /mnt/abi/data-linux/Pictures/ /home/abi/Pictures/ none defaults,bind 0 0
-    /mnt/abi/data-linux/Videos/ /home/abi/Videos/ none defaults,bind 0 0
-    /mnt/abi/data-linux/Downloads/ /home/abi/Downloads/ none defaults,bind 0 0
-    /mnt/abi/data-linux/Documents/ /home/abi/Documents/ none defaults,bind 0 0
-    /mnt/abi/data-linux/Projects/ /home/abi/projects/ none defaults,bind 0 0
-  } >>/mnt/etc/fstab
-  cat /mnt/etc/fstab
+# $username files from data-linux
+/mnt/"$username"/data-linux/Music/ /home/"$username"/Music/ none defaults,bind 0 0
+/mnt/"$username"/data-linux/Pictures/ /home/"$username"/Pictures/ none defaults,bind 0 0
+/mnt/"$username"/data-linux/Videos/ /home/"$username"/Videos/ none defaults,bind 0 0
+/mnt/"$username"/data-linux/Downloads/ /home/"$username"/Downloads/ none defaults,bind 0 0
+/mnt/"$username"/data-linux/Documents/ /home/"$username"/Documents/ none defaults,bind 0 0
+/mnt/"$username"/data-linux/Projects/ /home/"$username"/projects/ none defaults,bind 0 0
+EOF
+  cat /etc/fstab
   sleep 5s
 
 else
